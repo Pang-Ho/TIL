@@ -11,11 +11,18 @@
    **git status**로 커밋될 준비가 된 파일 확인 가능
 
 6. **git commit -m '메시지'**  을 통해 파일 변경 추가 등 저장소에 기록
+
 7. **git status**로 커밋되었는지 확인
+
 8. **git remote add origin** https://github.com/[유저네임]/[원격저장소 이름].git  을 통해 원격 저장소 정보를 추가
+
 9. **git push origin master** 을 통해 로컬 저장소 내용을 원격 저장소에 반영 
 
 * 커밋이란 파일이나 디렉토리 변경 내용을 저장소에 기록하는 작업
-
 * 파일 변경 시 add 다시하고 커밋하여 푸쉬하면 됨.
   5번부터 9번 다시 실행 (8번 빼고)
+
+## 원격저장소 위치 바꾸기
+
+* git remote -v 원격저장소 위치 확인가능
+* git remote set-url origin [주소] 로 저장소 위치 변경가능
