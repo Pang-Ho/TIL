@@ -262,6 +262,110 @@ s1.equals(s2) ==> true / s2.equals(s4) ==> true
   자릿수 결정
 
   df.format(7 / 3); => 2.33
+  
+  
 
-ㅇ
+## 컬렉션 프레임워크
+
+* 객체 여러개를 저장해두고 필요할 때마다 꺼내서 사용하는 방법
+
+  배열 이용!
+
+```java
+//길이가 10인 배열 생성
+Product[] array = new Product[10];
+//객체 추가
+array [0] = new Product("Model1");
+array [1] = new Product("Model2");
+//객체 검색?
+Product model1 = array[0];
+Product model2 = array[1];
+//객체 삭제
+array[0] = null;
+array[1] = null;
+```
+
+* 배열은 생성 및 사용이 편리하지만 객체 수가 결정되어있기 때문에 불특정 다수의 객체를 저장하기에는 문제가 있다.
+
+  이러한 문제점을 해결한 java.util 패키지에 컬렉션과 관련 인터페이스, 클래드들이 있는데, **컬렉션 프레임워크**라고 부른다.
+
+  
+
+* 프레임워크란?
+
+  사용방법을 미리 정해 놓은 라이브러리
+
+### java.util.객체여러개저장클래스
+
+| Collection 프레임워크                                        | Collection 프레임워크                                        |                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **java.util.List** 인터페이스                                | **java.util.Set** 인터페이스                                 | **java.util.Map** 인터페이스                                 |
+| class A implements List{<br />void add(Object o){...}<br />} | class xxxSet implements Set{<br />void add(Object o){...}<br />} | class xxxMap implements Map{<br />void add(Object o){...}<br />} |
+| ArrayList                                                    | HashSet                                                      | HashMap                                                      |
+| Vector                                                       | TreeSet                                                      | Hashtable                                                    |
+| LinkedList                                                   |                                                              | TreeMap                                                      |
+| Stack                                                        |                                                              | Properties                                                   |
+| 서로 다른 타입의 데이터 저장 가능<br />저장 데이터 개수 동적으로 변경됨<br />데이터 저장 순서가 유지됨 (index)<br />같은 데이터 2번 이상 저장 가능 | 서로 다른 타입의 데이터 저장 가능<br />저장데이터 개수 동적으로 변경됨<br />데이터 저장 순서가 유지안됨<br />같은 데이터 2번이상 저장 불가능 | 서로 다른 타입 데이터 저장 가능<br />저장 데이터 개수 동적 변경<br />데이터 저장 순서가 유지안됨<br />같은 key 데이터 2번 이상 저장 가능<br />데이터 (key + value) |
+
+#### java.util.List
+
+* 인터페이스 상속 구현한 클래스들 - List 포함 메소드들 오버라이딩 필수
+
+##### ArrayList
+
+* List list = new ArrayList();
+
+  1. 자바 모든 타입 저장 가능 
+
+     => 그러나 객체가 저장될 때 Object 타입으로 변환되어 저장되지만 찾아올 땐 원래 타입으로 변환해야 하므로 실행 성능에 좋지 못하다.
+
+     => 그래서 필요한 것이 제너릭!!  List<String> list = new ArrayList<String>(); 변환이 필요없다.
+
+  2. 최초 객체 저장 가능한 길이는 10 / 계속해서 10개씩 추가
+
+     ㄴ List list = new ArrayList(5, 2); => 최초 5개 그 후 2개씩 추가
+
+1. 저장 메소드
+
+   ``` java
+   list.add(100);
+   list.add(3.14);
+   list.add(true);
+   list.add(new A());
+   list.add("java");
+   list.add(2, "java"); // 지정된 인덱스에 객체 삽입
+   ```
+
+2. 삭제 메소드
+
+   ```JAVA
+   list.remove(1); // add된 3.14 삭제
+   list.remove("java") // add된 "java" 삭제
+   ```
+
+3. 수정 메소드
+
+   ```java
+   list.set(1, "aaa"); //1번 리스트 값을 "aaa"로 바꾼다.
+   ```
+
+4. 조회 메소드
+
+   ```java
+   list.size(); // 저장 데이터 개수(int) 리턴
+   list.get(1); // 저장 데이터 내용 조회 / 1번 인덱스 값 (Object 타입)리턴
+   			// toString 오버라이딩 해서 원하는 값 출력해야함. 
+   			//안그러면 패키지명.클래스명@16진수주소값이 리턴
+   list.indexOf("java"); // 특정 데이터가 저장되어있는 위치(int) 리턴 
+   list.contains("java"); // 특정 데이터의 포함여부(boolean) 리턴
+   ```
+
+#### java.util.set
+
+##### Set 컬렉션
+
+* 저장 순서가 유지되지 않음
+* 중복 데이터 저장 불가능 // null도 하나만 저장 가능
+
+* add
 
