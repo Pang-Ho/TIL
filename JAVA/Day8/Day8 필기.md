@@ -140,26 +140,40 @@ s1.equals(s2) ==> true / s2.equals(s4) ==> true
 
 * ''==" 주소값 비교 // "equals()" 문자열 내용 비교
 
-| 메소드                            |                                                              |
-| --------------------------------- | ------------------------------------------------------------ |
-| equals()                          | 문자열 대소문자 구분해서 동등 비교                           |
-| equalsIgnoreCase()                | 문자열 대소문자 구분않고 동등 비교                           |
-| toUpperCase()                     | 문자열 모두 대문자로 변경                                    |
-| toLowerCase()                     | 문자열 모두 소문자로 변경                                    |
-| 문자열.Length()                   | 문자열에선 () 표시                                           |
-| 배열.Length                       | 배열에선 () 표시x                                            |
-| split("/"), split(" ") 등등       | " " 안에 문자열을 구분하고 분리한다.                         |
-| StringBuffer / StringBuilder      | 문자열 자주 변경 저장구조?                                   |
-| StringTokenizer                   | String을 띄어쓰기로 token분리 구조                           |
-| hasMoreTokenizer()                | 띄어쓰기로 분리되어있는 데이터 다음에 또 데이터가 있는지<br />true, false |
-| nextToken()                       | 분리된 데이터를 리턴함 // 여러번 쓰면서 다음 데이터 소환     |
-| concat()                          | 두 문자열 합침                                               |
-| charAt(0~n)                       | 문자열에서 특정 위치 문자 1개 리턴                           |
-| indexOf("java")                   | 특정 문자가 몇 번째 위치에 발견되었는지 숫자 리턴<br />발견 안되면 -1 |
-| subString(1, 5)<br />subString(3) | 특정 인덱스 범위 내의 부분 문자열 리턴<br />1부터 5 전까지<br />3부터 쭉 |
-| replace("a", "b")                 | a 문자를 b로 바꿔라                                          |
-| trim()                            | 문자열 앞 뒤 공백 잘라내기                                   |
-| valueOf                           | int 를 String으로 변환                                       |
+### String 생성자
+
+* String 생성자는 byte[] 배열을 문자열로 변환하는데 쓰인다.
+
+  바이트 배열을 String으로 변환해서 출력한다면 바이트 값은 저장하고 있던 문자열 값으로 변환된다.
+
+  ```java
+  String str = new String(byte[] bytes); //바이트 배열 전체를 String 객체로 생성
+  String str = new String(byte[] bytes, String charsetName); //지정한 문자셋으로 디코딩
+  ```
+
+  
+
+| 메소드                               |                                                              |
+| ------------------------------------ | ------------------------------------------------------------ |
+| equals()                             | 문자열 대소문자 구분해서 동등 비교                           |
+| equalsIgnoreCase()                   | 문자열 대소문자 구분않고 동등 비교                           |
+| toUpperCase()                        | 문자열 모두 대문자로 변경                                    |
+| toLowerCase()                        | 문자열 모두 소문자로 변경                                    |
+| 문자열.Length()                      | 문자열에선 () 표시                                           |
+| 배열.Length                          | 배열에선 () 표시x                                            |
+| split("/"), split(" ") 등등          | " " 안에 문자열을 구분하고 분리한다.                         |
+| StringBuffer / StringBuilder         | 문자열 자주 변경 저장구조?                                   |
+| StringTokenizer("문자열" , "구분자") | String을 구분자로 token분리                                  |
+| hasMoreTokenizer()                   | 띄어쓰기로 분리되어있는 데이터 다음에 또 데이터가 있는지<br />true, false |
+| nextToken()                          | 분리된 데이터를 리턴함 // 여러번 쓰면서 다음 데이터 소환     |
+| concat()                             | 두 문자열 합침                                               |
+| charAt(0~n)                          | 문자열에서 특정 위치 문자 1개 리턴                           |
+| getBytes()                           | byte[]로 리턴                                                |
+| indexOf("java")                      | 특정 문자가 몇 번째 위치에 발견되었는지 숫자 리턴<br />발견 안되면 -1 |
+| substring(1, 5)<br />substring(3)    | 특정 인덱스 범위 내의 부분 문자열 리턴<br />1부터 5 전까지<br />3부터 쭉 |
+| replace("a", "b")                    | a 문자를 b로 바꿔라                                          |
+| trim()                               | 문자열 앞 뒤 공백 잘라내기                                   |
+| valueOf                              | int 를 String으로 변환                                       |
 
 * split()
 
@@ -249,5 +263,5 @@ s1.equals(s2) ==> true / s2.equals(s4) ==> true
 
   df.format(7 / 3); => 2.33
 
-
+ㅇ
 
