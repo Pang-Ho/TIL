@@ -64,7 +64,7 @@ DQL 조회 - select문
 * select 컴럼명
 * from 테이블명
 * [where 조회 데이터의 조건식]
-* [[group by 집계함수 적용기준 컬럼명]
+* [group by 집계함수 적용기준 컬럼명]
 * [having 집계함수 조건식]
 * [order by 정렬순서 / 컬럼명 + asc/desc + nulls first/last]
 
@@ -94,13 +94,23 @@ DQL 조회 - select문
 
   select salary*12 from employees;
   
-* 실제 컬럼명을 조회할 때만 임시로 변경 - alias
+  
+  
+* 별칭 만들기 - alias
 
   select salary 월봉, salary*12 [as] 연봉 from employees;
 
-* selec 뒤에 올 수 있는 것 * , 컬럼명, as 별칭, +-*/, 함수
+  
 
-* 모든 사원의 직종코드  종류별 1개 조회
+* select 뒤에 올 수 있는 것 
+
+  *, 컬럼명, as 별칭, +-/, 함수
+
+
+
+* distinct
+
+* 모든 사원의 직종코드 조회
 
   select job_id from employees; => 107개 동일 직종코드도 여러번 나옴
   
@@ -108,19 +118,11 @@ DQL 조회 - select문
 
   select distinct job_id from employees; => 동일 직종코드는 안나오고 직종 종류를 알 수 있음.
 
-* 이름을 출력해서 볼건데 대문자로 변경해서 볼 것이다.
-
-  select upper(first_name) from employees
+  
 
 * 주석처리 --
 
-* from - 테이블명
-
-  
-
-* select 컬럼 정보
-
-* from 테이블명 -> 테이블 "모든" 레코드 조회
+## where 조건식
 
 * where 레코드 조건식 만족
 
@@ -286,11 +288,11 @@ DQL 조회 - select문
 
   where rownum <=  5;
 
-* 급여가 많은 사원부터 5명 추출 (순서가 있음)
+* 급여가 많은 사원부터 5명 추출은 어떻게 함??
 
   select salary from employees
 
-  where rownum <= 5
+  where rownum <= 5  => 이건 급여 저장 순서대로 5명 뽑고 내림차순
 
   order by salary desc;
   
@@ -443,7 +445,7 @@ oreder by salary desc
   | ---- | ------------------------------------------------------------ |
   | 날짜 | date<br />년 월 일 시 분 초 요일<br />기본적 date 타입 형식은 rr/mm/dd 형식임<br />변경 가능함 |
   | 문자 | varchar2<br />char(2) - 2byte 문자                           |
-  |      | char(10) - 10byte - ([java)(6byte)<br />'java' => 4byte<br />varchar2(10) - 10byte <br />(java) 4byte로 동적 변경됨<br />'가나다' - 9byte(한글 1개당 3byte)<br />varchar2(4000) => 최대크기는 4000byte 한글은 1333글자 |
+  |      | char(10) - 10byte - (java)(6byte)<br />'java' => 4byte<br />varchar2(10) - 10byte <br />(java) 4byte로 동적 변경됨<br />'가나다' - 9byte(한글 1개당 3byte)<br />varchar2(4000) => 최대크기는 4000byte 한글은 1333글자 |
 
   * length => 글자 개수
   * lengthb => 글자1개 바이트 차지

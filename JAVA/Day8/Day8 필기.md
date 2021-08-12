@@ -46,17 +46,15 @@
 
     equals의 매개변수 타입은 Object로 모든 객체가 매개값으로 대입될 수 있음을 뜻한다.
 
-    두 객체를 동등 비교할 때 equals() 메소드를 흔히 사용한다. 
+    두 객체를 동등 비교할 때 = 저장하는 데이터 값이 동일 equals() 메소드를 흔히 사용한다. 
 
     * 같은 객체이건 다른 객체이건 상관없이 객체가 저장하고 있는 데이터가 동일함을 뜻함.
 
-  * String 클래스의 equals()
+  * ==
 
-    String 클래스의 equals() 메소드는 오버라이딩을 통해 데이터 번지 비교가 아닌 문자열 비교로 재정의 했기 때문이다.
+    주소 값 비교임.
 
-  ====> Boolean equals()는 객체 번지수를 비교하지만 오버라이딩을 통해 주소가 아닌 다른 대상을 비교하도록 재정의할 수 있다. 
-
-  
+    
 
   * 같은 객체에서 id 필드가 같으면 true가 나오도록 
 
@@ -74,7 +72,7 @@
    }
   }
   ```
-
+  
   * toString()
 
     Object 클래스의 toString() 메소드는 객체의 문자 정보를 리턴한다.
@@ -102,13 +100,13 @@
     		SmartPhone myPhone = new SmartPhone("삼성", "안드로이드");
     		
     		String strobj = myPhone.toString();
-    		System.out.println(myPhoe);
+    		System.out.println(myPhoe); //System.out.println(strobj); 서로 같다!!
             //s.o.p의 매개 값 myPhone은 myPhone.toString()으로 출력됨.
     	}
     }
     
     ```
-
+  
     => 여기서 System.out.println( )의 매개 값이 기본타입이라면 해당 값을 그대로 출력하지만, 매개 값으로 객체를 주면 객체의 toString()  메소드를 호출해서 리턴값을 받아 출력하도록 되어있다.
 
 ## java.lang.String
@@ -237,7 +235,7 @@ s1.equals(s2) ==> true / s2.equals(s4) ==> true
 
 ## java.util.Date / Calendar
 
-* Date 클래스의 대부분 기능은 사용자제 권도 되어 있으니 보통 Calendar 사용한다.
+* Date 클래스의 대부분 기능은 사용자제 권고 되어 있으니 보통 Calendar 사용한다.
 
 * Calendar cal = Calendar.getInstance();
 
@@ -262,6 +260,4 @@ s1.equals(s2) ==> true / s2.equals(s4) ==> true
   자릿수 결정
 
   df.format(7 / 3); => 2.33
-
-ㅇ
 
