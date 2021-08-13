@@ -1,3 +1,5 @@
+# SQL Day1
+
 # 데이터베이스
 
 * DBMS - 데이터베이스 관리시스템 -저장 조회 관리
@@ -61,12 +63,12 @@ DQL 조회 - select문
 
 작성 순서
 
-* select 컴럼명
+* select 컴럼명, 연산식, 별칭, distinct(중복제거), ||, 함수
 * from 테이블명
 * [where 조회 데이터의 조건식]
-* [[group by 집계함수 적용기준 컬럼명]
+* [group by 집계함수 적용기준 컬럼명]
 * [having 집계함수 조건식]
-* [order by 정렬순서 / 컬럼명 + asc/desc + nulls first/last]
+* [order by 정렬순서 / 컬럼명(index, 별칭) + asc/desc + nulls first/last]
 
 실행 순서
 
@@ -441,99 +443,103 @@ oreder by salary desc
 
   | 숫자 | number(38자리)<br />정수 number(5) number(5, 0)<br />실수 number(10, 2) => 정수 8자리 / 소수점이하 2자리 |
   | ---- | ------------------------------------------------------------ |
-  | 날짜 | date<br />년 월 일 시 분 초 요일<br />기본적 date 타입 형식은 rr/mm/dd 형식임<br />변경 가능함 |
-  | 문자 | varchar2<br />char(2) - 2byte 문자                           |
+  | 날짜 | 오라클의 date 타입 형식은 rr/mm/dd <br />년 월 일 시 분 초 요일 |
+  | 문자 | varchar2(100)<br />char(2) - 2byte 문자                      |
   |      | char(10) - 10byte - ([java)(6byte)<br />'java' => 4byte<br />varchar2(10) - 10byte <br />(java) 4byte로 동적 변경됨<br />'가나다' - 9byte(한글 1개당 3byte)<br />varchar2(4000) => 최대크기는 4000byte 한글은 1333글자 |
 
   * length => 글자 개수
   * lengthb => 글자1개 바이트 차지
 
-  | 집계함수   | sum avg max min count |                                        |
-  | ---------- | --------------------- | -------------------------------------- |
-  | 단일행함수 | 문자열함수            | length<br />lenghtb<br />upper / lower |
-  |            | 숫자함수              |                                        |
-  |            | 날짜함수              |                                        |
-  |            | 타입변환함수          |                                        |
-  |            | null처리함수          |                                        |
+| 집계함수   | sum avg max min count |                                                              |
+| ---------- | --------------------- | ------------------------------------------------------------ |
+| 단일행함수 | 문자형함수            | length<br />lenghtb<br />upper / lower / initcap<br />trim / ltrim / rtrim<br />lpad / rpad<br />instr('java', 'a') => 2<br />substr('java', 2, 1) => a |
+|            | 숫자함수              | ABS => 절대값<br />round(4.745, 1) => 정한 소수점 기준으로 반올림<br />mod => 나머지 값 구함<br />trunc(123.324, 2) => 정한 소수점 기준으로 버림 |
+|            | 날짜함수              |                                                              |
+|            | 타입변환함수          |                                                              |
+|            | null처리함수          |                                                              |
 
-  * 'A' - ASCII CODE
+* 'A' - ASCII CODE
 
-    select ASCII ('A') from dual;
+  select ASCII ('A') from dual;
 
-    * dual - 1행 가상 테이블로 select 결과 저장 임시 테이블
+  * dual - 1행 가상 테이블로 select 결과 저장 임시 테이블
 
-  * asciistr('가')
+* asciistr('가')
 
-    select asciistr('가') from dual;
+  select asciistr('가') from dual;
 
-    한글 유니코드 값 16진수로 나옴
+  한글 유니코드 값 16진수로 나옴
 
-  * employees 테이블에서 first_name salary 조회할 때
-    xxxx사원은 급여 xxxx를 받습니다.
+* employees 테이블에서 first_name salary 조회할 때
+  xxxx사원은 급여 xxxx를 받습니다.
 
-    select first_name || ' 사원은 급여 ' || salary || '를 받습니다 '  from employees
+  select first_name || ' 사원은 급여 ' || salary || '를 받습니다 '  from employees
 
-    || => 문자열 결합
+  || => 문자열 결합
 
-  * concate연산자
+* concate연산자
 
-    결합 문자는 2개밖에 안들어감
+  결합 문자는 2개밖에 안들어감
 
-    select concat(concat(concat(first_name, ' 사원은 급여 ' ) , salary)  '를 받습니다 ')  from employees;
+  select concat(concat(concat(first_name, ' 사원은 급여 ' ) , salary)  '를 받습니다 ')  from employees;
 
-  * instr - 특정 문자열 찾은 위치 리턴 / 몰라도 이 기능을 만드는법은 많다.
+  select 'Adam의 입사일은' || hire_date || '이고, 급여는'|| salary || '입니다.' from employees
 
-    select first_name from employees
+  where first_name = 'Adam';
 
-    where instr(first_name, 'ex') >= 1; => 0개 아닌 사람 
+* instr - 특정 문자열 찾은 위치 리턴 / 몰라도 이 기능을 만드는법은 많다.
 
-    같음 where first_name like '%ex%';
+  select first_name from employees
 
-    select first_name, instr(first_name, 'ex') from employees; => 107명 다나옴
+  where instr(first_name, 'ex') >= 1; => 0개 아닌 사람 
 
-    
+  같음 where first_name like '%ex%';
 
-  * lower 
+  select first_name, instr(first_name, 'ex') from employees; => 107명 다나옴
 
-    select first_name from employees
+  
 
-    where lower(first_name) = lower('NeeNa');
+* lower 
 
-  * upper
+  select first_name from employees
 
-  * initcap
+  where lower(first_name) = lower('NeeNa');
 
-    첫 문자만 대문자로 만들 경우
+* upper
 
-    select first_name from employees
+* initcap
 
-    where first_name = initcap('Neena');
+  첫 문자만 대문자로 만들 경우
 
-  * substr
+  select first_name from employees
 
-    substr('Neena', 1, 2) => 1번째 문자열부터 2개만 'Ne'
+  where first_name = initcap('Neena');
 
-    instr('Neena', 'Ne') => 1
+* substr
 
-  * 02년도 입사자 입사일 조회
+  substr('Neena', 1, 2) => 1번째 문자열부터 2개만 'Ne'
 
-    where hire_date >= '02/01/01' and hire_date <= '02/12/31';
+  instr('Neena', 'Ne') => 1
 
-    where hire_date like '02%';
+* 02년도 입사자 입사일 조회
 
-    where substr(hire_date, 1, 2) = '02';
+  where hire_date >= '02/01/01' and hire_date <= '02/12/31';
 
-    where instr(hire_date, 02) = 1;
+  where hire_date like '02%';
 
-    
+  where substr(hire_date, 1, 2) = '02';
 
-  * 02월 입사자 조회 생각해봥~
+  where instr(hire_date, 02) = 1;
 
-    
+  
 
-  * lpad, ltrim
+* 02월 입사자 조회 생각해봥~
 
-    lpad('문자열' , 늘일길이 , '채울 문자열') => 오른쪽 정렬, 왼쪽 정렬에 쓰임
+  
 
-    문자열을 길이로 늘리고 빈곳을 문자열로 채우는 것
+* lpad, ltrim
+
+  lpad('문자열' , 늘일길이 , '채울 문자열') => 오른쪽 정렬, 왼쪽 정렬에 쓰임
+
+  문자열을 길이로 늘리고 빈곳을 문자열로 채우는 것
 
