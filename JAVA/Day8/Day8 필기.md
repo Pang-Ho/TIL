@@ -327,6 +327,12 @@ array[1] = null;
 
 1. 저장 메소드
 
+   ```java
+   boolean add(E e) //주어진 객체를 맨 끝에 추가
+   void add(int index, E element) //주어진 인덱스에 객체 추가
+    E set(int index, E element) //주어진 인덱스에 객체를 주어진 객체로 바꿈
+   ```
+
    ``` java
    list.add(100);
    list.add(3.14);
@@ -337,6 +343,12 @@ array[1] = null;
    ```
 
 2. 삭제 메소드
+
+   ```java
+   void.clear() //저장된 모든 객체 삭제
+   E remove(int index) //주어진 인덱스에 저장된 객체 삭제
+   boolean remove(Object o) //주어진 객체 삭제
+   ```
 
    ```JAVA
    list.remove(1); // add된 3.14 삭제
@@ -350,6 +362,13 @@ array[1] = null;
    ```
 
 4. 조회 메소드
+
+   ```java
+   boolean contains(Object o) //주어진 객체가 저장되어 있는지 여부
+   E get(int index) //주어진 인덱스에 저장된 객체를 리턴
+   boolean isEmpty //컬렉션이 비어있는지 조사
+   int size() //저장되어있는 객체 수 리턴
+   ```
 
    ```java
    list.size(); // 저장 데이터 개수(int) 리턴
@@ -366,6 +385,226 @@ array[1] = null;
 
 * 저장 순서가 유지되지 않음
 * 중복 데이터 저장 불가능 // null도 하나만 저장 가능
+* 인덱스로 관리하지 않기 때문에 인덱스를 매개값으로 갖는 메소드가 없다.
 
-* add
+1. 객체 추가
+
+   ```java
+   boolean add(E e) //주어진 객체를 저장, 객체가 저장되면 true 리턴 
+       			//중복된 객체이면 falss 리턴
+   ```
+
+   ```java
+   set.add("java")
+   ```
+
+2. 객체 검색
+
+   ```java
+   boolean contains(Object o) //주어진 객체가 저장되어있는지 여부
+   boolean isEmpty() //컬렉션이 비어있는지 조사
+   Iterator<E> iterator() //저장된 객체를 한 번씩 가져오는 반복자 리턴
+   int size() //저장되어 있는 객체 수 리턴
+   ```
+
+   ```java
+   set.contins("java");
+   Iterator iterator = set.iterator();
+    ㄴ ArrayList의 토큰 같은 것이라 hasNext() / Next() / remove()
+        Iterator 인터페이스에 선언된 메소드들을 사용한다.
+   set.size();
+   ```
+
+   
+
+3. 객체 삭제
+
+   ```java
+   void clear() //저장된 모든 객체를 삭제
+   boolean remove(Object o) //주어진 객체를 삭제
+   ```
+
+   ```java
+   set.remove("java");
+   set.clear
+   ```
+
+   E라는 타입의 파라미터는 Set 인터페이스가 제네릭 타입이기 때문에 생긴다.
+
+
+
+* Iterator를 사용하지 않더라도 향상된 for문을 이용해 전체 객체 대상으로 반복 가능
+
+  ```java
+  Set<String> set = ...;
+  for(String str : set) {
+      System.out.println(str);
+  }
+  ```
+
+##### Hashset
+
+* Set 인터페이스의 구현 클래스이다.
+
+  ```java
+  Set<E> set = HashSet<E>();
+  ```
+
+
+
+#### java.util.Map
+
+* key 와 value로 구성되어있음
+
+1. 객체 추가
+
+   ```java
+   V put(K key, V vlaue) //키와 값을 지정해서 저장
+       			//동일한 키가 있을 경우 값을 대체하고 이전 값을 리턴
+   ```
+
+   ```java
+   map.put("Title", "자바");
+   map.put("Title", "SQL"); // 수정
+   ```
+
+   
+
+2. 객체 검색
+
+   ```java
+   boolean containsKey(Object key) //주어진 키 있는지 여부
+   boolean containsValue(Object value) //주어진 값 있는지 여부
+   Set<Map.Entry<K,V>> entrySet() //키와 값의 쌍으로 구성된 모든 
+       						//Map.Entry 객체를 Set에 담아 리턴
+   V get(Object key) //주어진 키가 있는 값을 리턴
+   Boolean isEmpye() //컬렉션이 비어있는지 여부
+   Set<K> keySet() //모든 키를 Set 객체에 담아서 리턴
+   int size() //저장된 키의 총 수를 리턴
+   Collection<V> values() //저장된 모든 값을 Collection에 담아서 리턴
+   ```
+
+   ```java
+   map.get("Title"); //조회
+   ```
+
+   ```java
+   Map<K, V> map = ~;
+   Set<K> keySet = map.keySet();
+   Iterator<K> keyIterator = keySet.iterator();
+   while(keyIterator.hasNext()){
+       K key = keyIterator.next();
+       V value = map.get(key);
+   }
+   ```
+
+   ```java
+   Set<Map.Entry<K, V>> entrySet = map.entrySet();
+   Iterator<Map.Entry<K, V>> entryIterator = entrySet.iterator();
+   while(entryIterator.hasNext()) {
+       Map.Entry<K, V> entry = entryIterator.next();
+       K key = entry.getKey();
+       V value = entry.getValue();
+   }
+   ```
+
+   
+
+3. 객체 삭제
+
+   ```java
+   void clear() //모든 Map.Entry(키와 값)을 삭제
+   V remove(Object key) //주어진 키와 일치하는 Map.Entry를 삭제하고 리턴
+   ```
+
+   
+
+   ```java
+   map.remove("Title"); //삭제
+   ```
+
+##### HashMap
+
+* 키와 값은 기본 타입을 사용할 수 없다.
+
+  String, Integer 등 클래스 및 인터페이스 타입만 가능하다.
+
+  ```java
+  Map<String, Integer> map = new HashMap<String, Integer>();
+  ```
+
+
+
+## 제네릭
+
+* 제네릭 즉 타입 파라미터를 왜 사용할까?
+
+  ```java
+  public class Box{
+      private Object object;
+      public void set(Object object) {
+          this.object = object
+      }
+      public Object get() {
+          return object
+      }
+  }
+  ```
+
+  ```java
+  public class BoxExample{
+      public static void main(String[] args){
+          Box box = new Box();
+          box.set("java"); //String => Object (자동타입변환)
+          String name = (String) box.get();//Obj => Str (강제타입변환)
+          
+          box.set(new Apple()); // Apple => Object (자동타입변환)
+          Apple apple = (Apple) box.get(); //Obj => App (강제타입변환)
+      }
+  }
+  ```
+
+  타입 파라미터가 없으면 저장할 때 자동타입변환이 생기고, 읽어올 때에 강제타입변환을 시키며 복잡해진다.
+
+  =>
+
+  ```java
+  public class Box<T> {
+      private T t;
+      public T get() {
+          return t;
+      }
+      public void set(T t) {
+          this.t = t;
+      }
+  }
+  ```
+
+  ```java
+  public class BoxExample {
+      public static void main(String args[]) {
+          Box<String> box = new Box<String>();
+          box.set("java");
+          String name = box.get();    
+      }
+  }
+  ```
+
+  
+
+
+
+* 이해 안가는점
+
+  ```java
+  public boolean equals(Object obj) {
+      if(obj instanceof Member) {
+          obj.name // 이건 왜 안되고
+          Member member = (Member) obj;
+          member.name // 이렇게 객체를 호출해야 필드를 쓸 수 있음?
+      }
+  }
+  ```
+
+  
 
