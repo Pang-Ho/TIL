@@ -164,7 +164,7 @@
   InputStream is = System.in; 
   int asciiCode = is.read(); //키보드로 입력하게 만들고 변수에 저장됨 
   char inputChar = (char)is.read(); //아스키코드 말고 문자로 얻고싶다면
-  System.out.println(asciiCode + inputChar);
+  System.out.println(asciiCode + inputChar); 
   ```
 
   * IOException예외가 생길 수 있다고 뜨므로 throws Exception 하면 정상 작동 된다.
@@ -181,4 +181,111 @@
 
   * 위 처럼 주어진 바이트 배열에 읽은 문자를 저장한다.
   * 실제로 읽은 바이트 수는 Java를 입력하면 J A V A 엔터 포함해서 6바이트이다. 그래서 JAVA까지 문자열로 변환하기 위해 0 ~ readBytesNo-2 를 이용하는것이다.
+
+
+
+* 이해 안가는점
+
+  ```java
+  InputStream is = System.in;
+  
+  int asciiCode = is.read();
+  
+  char cha = (char) is.read();
+  
+  //왜 두번 안쳐짐?
+  ```
+
+  ```java
+  InputStream is = System.in;
+  
+  byte[] data = new byte[100];
+  
+  int code1 = is.read(data);
+  
+  int code2 = is.read(data);
+  
+  //이건 왜 두번 쳐짐?
+  ```
+
+  ```java
+  InputStream is = System.in;
+  
+  byte[] data = new byte[100];
+  
+  int asciiCode = is.read();
+  
+  int code1 = is.read(data);
+  
+  //그럼 이건 왜 두번 안쳐짐?
+  ```
+
+  
+
+* 콘솔에서 System.in으로 데이터를 읽었다면, 반대로 콘솔로 데이터를 출력하기 위해서는 System 클래스의 out 필드를 사용한다.
+
+  ```java
+  public class OSWriteTest {
+  	public static void main(String[] args) throws Exception {
+  		OutputStream os = System.out;
+  		
+  		for(byte b=48 ; b<58 ; b++) {
+  			os.write(b);
+  		}
+  		os.write(10);
+  		
+  		for(byte b=97 ; b<123 ; b++) {
+  			os.write(b);
+  		}
+  		os.write(10); // 라인피드 : 다음 행
+  		
+  		String hangul = "가나다라마바사아자차카타파하";
+  		byte[] hangulByte = hangul.getBytes();
+  		os.write(hangulByte);
+  		
+  		os.flush();
+  	}
+  }
+  ```
+
+### Scanner 클래스
+
+* Scanner 클래스를 이용하면 콘솔로부터 기본 타입의 값을 바로 읽을 수 있다.
+
+* 또한 File, InputStream, Path 등 다양한 입력 소스를 지정할 수 있다.
+
+  ```java
+  Scanner scanner = new Scanner(System.in);
+  		
+  		System.out.println("문자열 입력 : ");
+  		String inputString = scanner.nextLine();
+  		System.out.println(inputString);
+  		System.out.println();
+  		
+  		System.out.println("정수 입력 : ");
+  		int inputInt = scanner.nextInt();
+  		System.out.println(inputInt);
+  		System.out.println();
+  		
+  		System.out.println("실수 입력 : ");
+  		double inputDouble = scanner.nextDouble();
+  		System.out.println(inputDouble);
+  ```
+
+  ```java
+  Scanner s = new Scanner(System.in);
+  		System.out.println("키보드로 정수 2개를 입력해주세요");
+  		// 100 200
+  		if(s.hasNextInt()) { //이거 없어두 됨
+  		int first = s.nextInt(); //정수 입력시에만 가능
+  		int second = s.nextInt();// 두개 써서 두개 연속 입력해야댐
+  		System.out.println(first + second);
+  		}
+  		s.nextLine(); // 이게 왜 들어가야함?
+  		System.out.println("키보드로 한글 데이터를 입력해 보세요");
+  		String word = s.nextLine();
+  		System.out.println(word);
+  ```
+
+  
 
