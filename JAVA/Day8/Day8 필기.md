@@ -287,7 +287,7 @@ array[1] = null;
 
 * 배열은 생성 및 사용이 편리하지만 객체 수가 결정되어있기 때문에 불특정 다수의 객체를 저장하기에는 문제가 있다.
 
-  이러한 문제점을 해결한 java.util 패키지에 컬렉션과 관련 인터페이스, 클래드들이 있는데, **컬렉션 프레임워크**라고 부른다.
+  이러한 문제점을 해결한 java.util 패키지에 컬렉션과 관련 인터페이스, 클래스들이 있는데, **컬렉션 프레임워크**라고 부른다.
 
   
 
@@ -477,6 +477,7 @@ array[1] = null;
    boolean containsValue(Object value) //주어진 값 있는지 여부
    Set<Map.Entry<K,V>> entrySet() //키와 값의 쌍으로 구성된 모든 
        						//Map.Entry 객체를 Set에 담아 리턴
+       //entry.getKey(), entry.getValue()
    V get(Object key) //주어진 키가 있는 값을 리턴
    Boolean isEmpye() //컬렉션이 비어있는지 여부
    Set<K> keySet() //모든 키를 Set 객체에 담아서 리턴
@@ -587,6 +588,21 @@ array[1] = null;
           box.set("java");
           String name = box.get();    
       }
+  }
+  ```
+
+* String도 받고싶고, Integer도 받고 싶다면?
+
+  ```java
+  class UserClass<T> {
+      T id;
+  }
+  class user {
+      UserClass<String> user1 = new UserClass<String>();
+      user1.id = "100-2000";
+      
+      UserClass<Integer> user2 = new UserClass<Integer<();
+      user2.id = 1002000;
   }
   ```
 
