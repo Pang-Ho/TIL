@@ -33,3 +33,24 @@ job_id, salary 조회하시오.
 
 9. 직원의 이름, 급여, 직원의 관리자 이름을 조회하시오. 단, 관리자가 없는 직원은
    '<관리자 없음>'이 출력되도록 합니다.
+
+=================================================
+1. 
+select salary, to_char(hire_date, 'yy/mm/dd hh24:mi:ss') from employees where lower(first_name) = 'adam';
+2.
+select country_id from countries where lower(country_name) = 'united states of america';
+3.
+select first_name ||'의 입사일은'|| to_char(hire_date, 'yy/mm/fmdd') ||'이고, 급여는'|| to_char(salary, '999,999l') ||'입니다.' from employees;
+4.
+select first_name, salary, hire_date from employees where length(first_name) <= 5;
+5.
+select first_name, hire_date from employees where hire_date like '___06%';
+6.
+select first_name, hire_date, salary, trunc((sysdate-hire_date)/365) 근무년차 from employees where trunc((sysdate-hire_date)/365) >=10;
+7.
+select upper(first_name), job_id, salary from employees where job_id = 'st_clerk' and salary >= 1500;
+8.
+select job_id, rpad(salary, 10 , '0') from employees where salary >= 20000; 
+select job_id, to_char(min_salary, '0000000000') from jobs where min_salary >= 20000;
+9.
+select first_name, salary, nvl(to_char(manager_id), '<관리자 없음>') from employees;

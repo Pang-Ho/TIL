@@ -10,25 +10,10 @@ select avg(salary) from employees where deparmtnet_id = 80
 
 2. 'South San Francisco'에 근무하는 직원의 최대급여보다 급여를 많이 받는 직원의 이름, 급여, 부서명, 
 부서id를 조회하시오.
-
-select max(salary)
-from employees e, departments d, locations l
-where e.department_id=d.department_id
-and d.location_id=l.location_id
-and city='South San Francisco'
-
-
-
-select first_name, salary, department_name, e.department_id
-from employees e, departments d
-where e.department_id=d.department_id
-and salary > (select max(salary)
-from employees e, departments d, locations l
-where e.department_id=d.department_id
-and d.location_id=l.location_id
-and city='South San Francisco')
-
-
+select first_name, salary, department_name, e.department_id from employees e, departments d 
+where salary > (
+select max(salary) from employees e, departments d, locations l 
+where e.department_id = d.department_id and d.location_id = l.location_id and city = 'South San Francisco');
 
 3. 각 직급별(job_title) 인원수를 조회하되 사용되지 않은 직급이 있다면 해당 직급도
 출력결과에 포함시키시오. 그리고 직급별 인원수가 3명 이상인 직급만 출력결과에 포함시키시오.
@@ -44,22 +29,19 @@ having count(employee_id) >= 3
 select to_char(hire_date,'MM') 월, count(*)
 from employees
 group by to_char(hire_date,'MM')  
-having count(*) >=5 order by 월
+having count(*) >=5 order by to_char(hire_date,'MM'
 
 select substr(hire_date,4, 2) 월, count(*)
 from employees
 group by substr(hire_date,4, 2)  
-having count(*) >=5 order by 월
+having count(*) >=5 order by to_char(hire_date,'MM'
 
 
 5. 년도별 입사자 수를 조회하시오. 
 단, 입사자수가 많은 년도부터 출력되도록 합니다.
 
-select substr(hire_date, 1, 2), count(*)
-from employees
-group by  substr(hire_date, 1, 2)  
-order by 2 desc
-
+select substr(hire_date, 1, 2), count(*) from employees group by  substr(hire_date, 1, 2) order by 2 desc
+select count(employee_id), to_char(hire_date, 'yy') from employees group by to_char(hire_date, 'yy') order by count(employee_id) desc;
 
 6. 'Southlake'에서 근무하는 직원의 이름, 급여, 직책(job_title)을 조회하시오.
 

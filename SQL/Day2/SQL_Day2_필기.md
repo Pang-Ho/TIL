@@ -39,6 +39,8 @@
 
   한글 유니코드 값 16진수로 나옴
 
+#### || || 사용법
+
 * employees 테이블에서 first_name salary 조회할 때
   xxxx사원은 급여 xxxx를 받습니다.
 
@@ -46,6 +48,15 @@
 
   || => 문자열 결합
 
+  ``` sql
+  select first_name ||'사원은 급여'|| salary ||'를 받습니다'
+  from employees;
+  1. from 앞 || 제거
+  2. 변수들 사이 , 제거
+  ```
+  
+  
+  
 * concate연산자
 
   결합 문자는 2개밖에 안들어감
@@ -152,6 +163,8 @@
 
   where commission_pct is not null
 
+#### nvl 사용법
+
 * 모든 사원 commission_pct 조회하되 null사원은 0
 
   select nvl(commission_pct, 0) from employees
@@ -205,7 +218,7 @@
 * inner join - 조건 만족 범위 내부 레코드 조인
 * outer join - 조건 만족 범위 외부 레코드 조인
 
-#### inner join
+#### inner join // null이 있으면 보여주지마
 
 * 사원 이름, 부서 이름 조회
 
@@ -217,7 +230,7 @@ where d.department_id = e.department_id;
 
 ​                 null이 없음    =  킴벌리 null => 그래서 킴벌리가 안나옴
 
-#### outer join
+#### outer join // null이 있어도 보여줘
 
 * 사원 이름, 부서 이름 조회하되 부서코드 null인 사원 포함 조회
 
@@ -545,7 +558,8 @@ Adam의 입사일은 05/11/2 이고, 급여는 7,000 입니다.
 
   왜 앙댕?
 
-  select job_id, to_char(min_salary, '0000000000') from jobs where min_salary >= 20000;
+select job_id, rpad(salary, 10 , '0') from employees where salary >= 20000; 
+select job_id, to_char(min_salary, '0000000000') from jobs where min_salary >= 20000;
 
 10. 직원의 이름, 급여, 직원의 관리자 이름을 조회하시오. 단, 관리자가 없는 직원은
     '<관리자 없음>'이 출력되도록 합니다.
