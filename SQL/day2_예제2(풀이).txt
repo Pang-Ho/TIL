@@ -1,0 +1,104 @@
+========================================
+		연습문제
+========================================
+1. 80번부서의 평균급여보다 많은 급여를 받는 직원의 이름, 부서id, 급여를 조회하시오.
+select first_name , department_id, salary
+from employees
+where salary > (
+select avg(salary) from employees where deparmtnet_id = 80
+)
+
+2. 'South San Francisco'에 근무하는 직원의 최대급여보다 급여를 많이 받는 직원의 이름, 급여, 부서명, 
+부서id를 조회하시오.
+
+select max(salary)
+from employees e, departments d, locations l
+where e.department_id=d.department_id
+and d.location_id=l.location_id
+and city='South San Francisco'
+
+
+
+select first_name, salary, department_name, e.department_id
+from employees e, departments d
+where e.department_id=d.department_id
+and salary > (select max(salary)
+from employees e, departments d, locations l
+where e.department_id=d.department_id
+and d.location_id=l.location_id
+and city='South San Francisco')
+
+
+
+3. 각 직급별(job_title) 인원수를 조회하되 사용되지 않은 직급이 있다면 해당 직급도
+출력결과에 포함시키시오. 그리고 직급별 인원수가 3명 이상인 직급만 출력결과에 포함시키시오.
+
+select job_title, count(employee_id)
+from employees e, jobs j
+where e.job_id = j.job_id
+group by job_title
+having count(employee_id) >= 3
+
+4. 월별 입사자 수를 조회하되, 입사자 수가 5명 이상인 월만 출력하시오.
+
+select to_char(hire_date,'MM') 월, count(*)
+from employees
+group by to_char(hire_date,'MM')  
+having count(*) >=5 order by 월
+
+select substr(hire_date,4, 2) 월, count(*)
+from employees
+group by substr(hire_date,4, 2)  
+having count(*) >=5 order by 월
+
+
+5. 년도별 입사자 수를 조회하시오. 
+단, 입사자수가 많은 년도부터 출력되도록 합니다.
+
+select substr(hire_date, 1, 2), count(*)
+from employees
+group by  substr(hire_date, 1, 2)  
+order by 2 desc
+
+
+6. 'Southlake'에서 근무하는 직원의 이름, 급여, 직책(job_title)을 조회하시오.
+
+select first_name, salary, job_title, city
+from employees e, jobs j, departments d, locations l
+where e.department_id = d.department_id
+and e.job_id = j.job_id
+and d.location_id = l.location_id
+and city = 'Southlake'
+
+
+
+7. 직원의 이름, 급여, 직원의 관리자 이름을 조회하시오. 단, 관리자가 없는 직원은
+   '<관리자 없음>'이 출력되도록 해야 한다.
+
+select e.first_name, e.salary, nvl(m.first_name, '관리자없음')
+from employees e, employees m
+where e.manager_id = m.employee_id(+)
+order by 3
+
+
+
+8. 각 부서 이름별로 최대급여와 최소급여를 조회하시오. 단, 최대/최소급여가 동일한
+   부서는 출력결과에서 제외시킨다.
+
+select d.department_name, max(e.salary), min(e.salary)
+from departments d, employees e
+where d.department_id = e.department_id
+group by d.department_name
+having max(e.salary) <> min(e.salary)
+
+
+9. 자신의 관리자보다 많은 급여를 받는 직원의 이름과 급여를 조회하시오.
+select me.first_name, me.salary, man.salary
+from employees me, employees man
+where me.manager_id=man.employee_id
+and me.salary > man.salary
+ 
+select e.first_name, e.salary
+from employees e
+where e.salary > (select m.salary from employees  m where e.manager_id = m.employee_id )
+

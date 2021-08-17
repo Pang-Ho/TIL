@@ -287,7 +287,7 @@ select first_name, e.department_id, department_name
 
 from departments d, employees e
 
-where d.department_id = e.department_id; => 오라클 독자적인 문법
+where d.department_id = e.department_id; => 오라클 독자적인 문법 / Oracle join 문법
 
 =>
 
@@ -295,7 +295,7 @@ select first_name, e.department_id, department_name
 
 from departments d inner join employees e
 
-on d.department_id = e.department_id;  => 모든 db 표준 문법
+on d.department_id = e.department_id;  => 모든 db 표준 문법 / ansi join 문법
 
 
 
@@ -330,7 +330,19 @@ select me.first_name 사원이름, me.manager_id, manager.first_name 상사이�
 
 from employees me, employees manager
 
-where me.manager_id = manager.employee_id(+);
+where me.manager_id = manager.employee_id(+); 
+
+​			null 존재				null 존재 x // 그러나 null값도 포함하고 싶다 할 때 null이 존재하지 않는 곳에 (+)
+
+==> 사원 부서명 조회하되 부서없는 사원 포함
+
+where me.manager_id(+) = manager.employee_id; 
+
+​			null 존재				null 존재 x 
+
+==> 우리 회사 모든 부서명, 부서원 사원 조회하되 부서원 없는 부서도 포함
+
+
 
 * employees 에서 jennifer 사원의 상사 이름 급여 조회
 
@@ -346,7 +358,7 @@ where me.manager_id = manager.employee_id(+);
 
 ----표준 join - 안시 방법----
 
-inner join : , => inner join / where => on
+inner join : , => , 들을 => inner join / where => on 
 
 outer join : (+) => left / rigter outer join   / where => on
 
@@ -411,6 +423,9 @@ outer join : (+) => left / rigter outer join   / where => on
   where department_id in (10, 50) 서브쿼리가 아니었으면 이렇게 가능
 
   => where department_id **in** (select department_id from employees where first_name= 'Jennifer');
+  
+  * in ( )  뒤 결과에 해당되는 조건이 있다면~~
+  * 다중행 서브쿼리에서 = any( ) 와 같음
 
 ### 단일행 서브쿼리의 대소비교는 > >= < <= 다중행 서브쿼리의 동일 비교는 > any  , > all
 
@@ -420,7 +435,7 @@ outer join : (+) => left / rigter outer join   / where => on
 
   where salary > (select salary from employees where first_name = 'Neena');
 
-* Jennifer의 급여보다 많이 받는 사원을 조회
+* Jennifer의 급여보다 많이 받는 사원을 조회 (제니퍼가 2명 나옴)
 
   select first_name, salary from employees
 
@@ -568,5 +583,3 @@ Adam의 입사일은 05/11/2 이고, 급여는 7,000 입니다.
 
 
 9. 자신의 관리자보다 많은 급여를 받는 직원의 이름과 급여를 조회하시오.
-
-d
