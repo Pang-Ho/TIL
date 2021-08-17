@@ -163,14 +163,13 @@
   ```java
   InputStream is = System.in; 
   int asciiCode = is.read(); //키보드로 입력하게 만들고 변수에 저장됨 
-  char inputChar = (char)is.read(); //아스키코드 말고 문자로 얻고싶다면
-  System.out.println(asciiCode + inputChar); 
+  char inputChar = (char)is.read(); //아스키코드 말고 문자로 얻고싶다면 
   ```
-
+  
   * IOException예외가 생길 수 있다고 뜨므로 throws Exception 하면 정상 작동 된다.
   * InutStream의 read() 메소드는 1바이트만 읽기 때문에 한글과 같이 2바이트를 필요로 하는 유니코드는 read()메소드로 읽을 수 없다.
   * 키보드로 입력된 한글을 얻기 위해서는 read(byte[] b)를 이용해서 전체 내용을 바이트 배열로 받고, 이 배열을 통해 String 객체를 생성하면 된다.
-
+  
   ```java
   byte[] byteData = new byte[20];
   InputStram is = System.in; //키보드 입력
@@ -178,7 +177,7 @@
   
   String strData = new String(byteData, 0 , readBytesNo -2 );
   ```
-
+  
   * 위 처럼 주어진 바이트 배열에 읽은 문자를 저장한다.
   * 실제로 읽은 바이트 수는 Java를 입력하면 J A V A 엔터 포함해서 6바이트이다. 그래서 JAVA까지 문자열로 변환하기 위해 0 ~ readBytesNo-2 를 이용하는것이다.
 
@@ -254,6 +253,13 @@
 
 * 또한 File, InputStream, Path 등 다양한 입력 소스를 지정할 수 있다.
 
+  | 리턴타입             | 메소드     |
+  | -------------------- | ---------- |
+  | boolen byte short... | nextXXX()  |
+  | String               | nextLine() |
+  
+  
+  
   ```java
   Scanner scanner = new Scanner(System.in);
   		
@@ -271,7 +277,7 @@
   		double inputDouble = scanner.nextDouble();
   		System.out.println(inputDouble);
   ```
-
+  
   ```java
   Scanner s = new Scanner(System.in);
   		System.out.println("키보드로 정수 2개를 입력해주세요");
@@ -286,6 +292,98 @@
   		String word = s.nextLine();
   		System.out.println(word);
   ```
-
   
+
+### 파일 입출력
+
+* File 클래스는 파일 크기, 속성, 이름 등의 정보를 얻어내거나 파일 생성, 삭제 기능 제공한다.
+
+* 생성자
+
+  * File f = new File("a.txt")  => c:\kdigital2\workspace\자바프로젝트폴더\a.txt
+  * File f = new File("c:\test\a.txt")
+  * File f = new File(".") => 기준폴더
+  * File f = new File("..") => 기준폴더의 상위폴더
+  * File f = new File("..\jsp")
+
+* 메소드
+
+* file.exists() => flase
+
+  | 리턴타입 | 메소드          | 설명                           |
+  | -------- | --------------- | ------------------------------ |
+  | boolean  | createNewFile() | 파일 생성                      |
+  | boolean  | mkdir()         | 새로운 디렉토리 생성           |
+  | boolean  | mkdirs()        | 경로상 없는 모든 디렉토리 생성 |
+  | boolean  | delete()        | 삭제                           |
+
+* file.exists() => true
+
+  | 리턴타입 | 메소드             | 설명                             |
+  | -------- | ------------------ | -------------------------------- |
+  | boolean  | canExecute()       | 실행할 수 있는 파일인가?         |
+  | boolean  | canRead()          | 읽을 수 있는 파일인가?           |
+  | boolean  | canWrite()         | 수정 및 저장할 수 있는 파일인가? |
+  | String   | getName()          | 파일 이름 리턴                   |
+  | String   | getParent()        | 부모 디렉토리를 리턴             |
+  | long     | length()           | 파일 크기 (byte)리턴             |
+  | long     | lastModified()     | 마지막 수정 날짜 및 시간 리턴    |
+  | String   | getCanonicalPath() | 파일 경로 리턴                   |
+
+```java
+File f = new File("a.txt"); //a.txt파일의 생성자 만들기
+System.out.println("파일 크기 byte단위 : " + f.length());
+```
+
+#### Reader / Writer
+
+```java
+Scanner s = new Scanner(System.in);
+String sFile = s.nextLine();
+String dFile = s.nextLine();
+
+FileReader fr = null;
+FileWriter fw = null;
+
+try {
+    fr = new FileReader(sFile);
+    fw = new FileReader(dFile, true); 
+    //true가 없으면 출력 파일이 존재시 내용 삭제 후 새로 만듦
+    //true가 있으면 출력 파일이 존재시 내용 유지하고 추가 출력
+}
+```
+
+* 파일 내용 복사
+
+```java
+Scanner s = new Scanner(System.in);
+s.o.p("원본 파일명 : ");
+String sFile = s.nextLine();
+s.o.p("목적지 파일명 : ");
+String dFile = s.nextLine();
+
+FileReader fr = null;
+FileWriter fw = null;
+
+try {
+    fr = new FileReader(sFile);
+    fw = new FileWriter(dFile);
+	int r;
+    while((r=fr.read()) != -1) {
+        fw.write(r);
+    }
+}
+catch (IOException e){
+    e.printStackTrace();
+}
+finally {
+    try {
+        fr.close();
+        fw.close();
+    }
+    catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+```
 
