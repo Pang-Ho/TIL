@@ -1,6 +1,6 @@
 # DAY4 JAVA+SQL
 
-1. 자바 프로그램에서 DB 저장 - 조회 기능 = JDVC
+1. 자바 프로그램에서 DB 저장 - 조회 기능 = JDBC
 
    JAVA DATABASE CONNECTIVITY
 
@@ -43,29 +43,86 @@
 
   con.close();
 
-  ```java
-  public statci void main(String[] args) {
-      try {
-          Class.forName("oracle.jdbd.driver.OracleDriver");
-          
-          Connection con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe",
-                                                       "hr", "hr");
-          String sql = "insert into emp"+
-  					" select employee_id, first_name, department_id, salary, job_id, hire_date" +
-  					" from employees where employee_id > 200";
-          con.close();
-          
-      } catch (ClassNotFoundException e) {
-          e.printStackTrace();
-      } catch (SQLEXception e) {
-          e.printStackTrace();
-      } finally {
-          con.close();
-      }
-  }
-  ```
+### insert 만들기
 
-  
+```java
+public static void main(String[] args) {
+    try {
+        //jdbc driver 호출
+        Class.forName("oracle.jdbd.driver.OracleDriver");
+        //db연결
+        Connection con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe",
+                                                     "hr", "hr");
+        //insert sql작성
+        String sql = "insert into emp"+
+					" select employee_id, first_name, department_id, salary, job_id, hire_date" +
+					" from employees where employee_id > 200";
+        //DB에게 명령문 만들기
+        Statement st = con.createStatement();
+        //sql 명령문에 저장, 전송(update)
+        int row = st.executeUpdate(sql);
+        System.out.println(row + " 개의 행 삽입되었습니다.");
+        //db연결 해제
+        con.close();
+        
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+    } catch (SQLEXception e) {
+        e.printStackTrace();
+    } finally {
+        try {
+        	if(con.isClosed() == false) {
+                con.close();
+            }    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+    }
+}
+```
+
+### update 만들기
+
+```java
+public static void main(String[] args) {
+    connection con = null;
+    try{
+        Class.forName("oracle.jdbc.driver.OracleDriver");
+        con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "hr","hr");
+        
+        String sql = "update emp set title = '미정' where salary <= 30000";
+        
+        Statement st = con.createStatement;
+        int row = st.executeUpdate(sql);
+    }
+}
+```
+
+### select 만들기
+
+```java
+public static void main(String[] args) {
+    Connection con = null;
+    try{
+        Class.forName("oracle.jdbc.driver.OracleDriver");
+        con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "hr","hr");
+        
+        String sql = "select id, name, title from emp";
+        
+        Statement st = con.createStatement;
+        Result rs = st.executeQuery(sql);
+        
+        while(re.next()) {
+            int id = rs.getInt(1);
+            String name = rs.getString("name");
+            String title = rs.getString("title");
+            s.o.p(id + "\t" + name + "\t" + title + "\t");
+        }
+        con.close();
+    }
+}
+```
 
 
 
@@ -155,3 +212,32 @@ while(rs.next()) {
 }
 ```
 
+
+
+![image-20210817155135112](../md-images/image-20210817155135112.png)
+
+emp 테이블 -> ArrayList<EmpVO>나 배열 타입으로
+
+레코드
+
+컬럼을 변수로
+
+
+
+class EmpVO{  => 레코드 1개 표현하는 객체
+
+int id; => 컬럼변수
+
+
+
+클래스명에서 XXXVO => value object 값을 저장하고 추출하는 용도의 객체
+
+​						emp테이블=>EmpVO // EmpDO = data object // EmpDTO = data transfer object
+
+​						VO에서 rs에서 값을 저장하고있다가 list.add로 전송
+
+​					XXXDAO => data access object 값에 접근하는 용도의 객체
+
+​						db에 있는 값을 자바로 가져와야하니 jdbc를 짜야함
+
+​						파일에 있는 값을 자바로 가져와야하니 파일 입력(java.io.FileReader) 를 짜야함
