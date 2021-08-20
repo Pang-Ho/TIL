@@ -70,7 +70,7 @@ orderd list
     <!-- 자바 넣을 수 잇다고 함 <% ? %> -->
 </table>
 
-<table border = 2
+<table border = 2>
 	<caption>카페 메뉴</caption>
 	<tr><td rowspan = 3>커피</td><td>아메리카노</td></tr>
 	<tr><td>카페라떼</td></tr>
@@ -103,13 +103,170 @@ video
 * name="role" => 변수인데 html에서 쓰는게 아닌 action으로 연결된 곳에 쓰일 변수임
 * type = "hidden" value가 꼭 있어야함. 사용자에게 입력 받는게 아닌  붙어서 받는 내용
 
-## input 태그
+### input 태그의 타입
 
-* text, password : 키보드 입력(화면 감추어서)
-* checkbox, radio : 화면에 출력 다중/단일 마우스 선택
-* hidden : action 속성 지정 파일 특정값 전송, value 필수
-* file, image : 파일 선택창 열림
-* submit : 클릭 버튼 / 기능 action 속성 지정파일로 전송
-* reset : 클릭 버튼 / 입력취소, 전송취소
-* button : 클릭 버튼 / 내장기능 없음 사용자 정의 동작(javascript)
+| text, password  | 키보드 입력(화면 감추어서)                             |
+| --------------- | ------------------------------------------------------ |
+| checkbox, radio | 화면에 출력 다중/단일 마우스 선택                      |
+| hidden          | action 속성 지정 파일 특정값 전송, value 필수          |
+| file, image     | 파일 선택창 열림                                       |
+| submit          | 클릭 버튼 / 기능 action 속성 지정파일로 전송           |
+| reset           | 클릭 버튼 / 입력취소, 전송취소                         |
+| button          | 클릭 버튼 / 내장기능 없음 사용자 정의 동작(javascript) |
+| html5 추가 타입 | 브라우저마다 다르거나 미지원함 특정 값으로 변경해줌    |
+| color           | 16진수로 넘어감 R G B                                  |
+| date            | yyyy-mm-dd                                             |
+| email           |                                                        |
+| number          |                                                        |
+| range           | 0 ~ 100 사이 값, max값 min값 설정가능                  |
+
+### form  태그에 들어가는 입력양식
+
+| input    | 1줄씩 입력                                                   |
+| -------- | ------------------------------------------------------------ |
+| select   | option, optinfroup 이용해서 목록 만듦 / <select multiple="multiple" |
+| textarea | clos 너비/rows 높이 => 너비=글자/높이=줄  / 키보드 여러줄 입력 |
+|          |                                                              |
+
+## 공간 분할 태그
+
+* 기능 - 표현하는 건 없음 ㅡ 그러나 다른 태그들을 그룹지어서 의미있는 공간을 차지하도록 만듦
+* div 블록형식 공간분할, span 인라인형식 공간분할
+* 시맨틱 태그 - html5가 되면서 추가된 의미있는 태그
+  * div와 span으로 충분히 만들 수 있다.
+
+![image-20210820113529217](../md-images/image-20210820113529217.png)
+
+* html5 - video, audio, header, footer, section, aside, article
+
+```html
+<div id="pink">
+    <a>
+	    <h1>
+        
+    	</h1>
+	</a>
+</div>
+<div>
+   	<a>
+		<h1>
+        
+    	</h1>
+	</a>
+</div>
+```
+
+## CSS - Cascading Style Sheet
+
+* cascade - 폭포처럼 떨어진다. => 태그에 효과들이 내부에 다 전달된다.
+
+```html
+<head>
+<title>브라우저 탭 제목</title>    
+	<style>
+        #pink {color : red;} <!--pink라는 아이디에 적용해라-->
+    </style>
+</head>
+<body>
+    
+</body>
+```
+
+* css 적용 방법
+
+  1. inline 방식 정의 : 특정 태그에만 정의할 때<태그 style="css속성명:값;"> 
+
+     ```html
+     <h1 style="color:red;"> </h1>
+     ```
+
+  2. 현재 파일 head 태그 내부에 style 태그 정의 방식
+
+     ```html
+     <head>
+         <style type="text/css">
+             h1 {color:blue;}
+         </style>
+     </head>
+     ```
+
+  3. 외부  css 파일을 만들어서 연결하는 방식
+
+     ```html
+     <head>
+         <link href="share.css" type=text/css rel="stylesheet">
+     </head>
+     ```
+
+  * css 문법
+
+    어떤 스타일을 어떤 값으로 어떤 태그에게 적용
+
+    ```html
+    <style type="text/css">
+        태그명 {color:red; background-color:green;}
+    </style>
+    ```
+
+  * css 선택 중복 우선순위
+
+    #id > tag > .class > *
+
+## css 선택자
+
+* css 적용 대상 태그 선택하는 - 선택자
+
+  li, a => li a 모두
+
+  ol li => 공백 : 포함 태그(자식의 자식의 자식... 모두) //ol 안에 있는 li 태그 
+
+  ol > li => 부등호 : 포함 태그(내 자식만)
+
+  li:first-child {color : lime;}
+
+  li:last-child {color : red;}
+
+  input[type=text] {color : red;}
+
+## css 속성
+
+```html
+<div>
+    <p>
+        안녕하세요
+    </p>
+</div>
+```
+
+margin값(웹브라우저로부터 여백) + border값(선 굵기) + padding + 내용물 크기
+
+* 박스 속성
+
+  margin, border, padding, width, height
+
+![image-20210820155109106](../md-images/image-20210820155109106.png)
+
+* margin
+
+  margin : auto => 좌우 가운데로 정렬
+
+* border
+
+  border : solid 30px blue; = border-width: 30px / border-color : blue; / border-style : solid;
+
+  border-radius : 10px;
+
+  width, color, sytle, radius
+
+* 네 방향 속성 지정하기
+
+  margin: 0 30px 0 30px // 위 오른쪽 아래 왼쪽
+
+  
+
+## 가시 속성
+
+* display : block;
+
+## 배경 속성
 
