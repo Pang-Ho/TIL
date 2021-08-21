@@ -38,11 +38,7 @@
 * null 컬럼이 많은가?
 * 중복 레코드가 여러개인가?
 
-
-
-![image-20210816095735538](../../md-images/image-20210816095735538.png)
-
-
+![image-20210821194647818](../../md-images/sql.png)
 
 * DDL을 만드는 테이블 문법
 
@@ -402,12 +398,12 @@ select * from hr.emp; => 다른계정 테이블 조회
 
 create table 테이블명(컬럼명1 타입(길이)  ???????)
 
-| not null    | id number(5) constraint 제약조건명(enp_id_nn) not null       |
+| not null    | id number(5) constraint 제약조건명(enp_id_nn) not null<br />null 불가 |
 | ----------- | ------------------------------------------------------------ |
-| unique      | id number(5) constraint 제약조건명(enp_id_uk) unique<br />null 1개만 들어갈 수 있다, 컬럼값 중복되면 안된다. |
-| primary key | id number(5) constraint 제약조건명(enp_id_pk) primary key<br />not null + unique |
-| check       | id number(5) constraint 제약조건명(enp_id_ck) check ( id >= 1000 and id <= 2000) |
-| foreign key | id number(5) constraint 제약조건명(enp_id_fk) references dept(dept_di) |
+| unique      | id number(5) constraint 제약조건명(enp_id_uk) unique<br />컬럼값 중복되면 안된다. null도 마찬가지 |
+| primary key | id number(5) constraint 제약조건명(enp_id_pk) primary key<br />not null + unique<br />null 불가, 컬럼값 중복x |
+| check       | id number(5) constraint 제약조건명(enp_id_ck) check ( id >= 1000 and id <= 2000)<br /> |
+| foreign key | id number(5) constraint 제약조건명(enp_id_fk) references dept(dept_id)<br />다른 테이블에서 primary key여야하고 그 컬럼에 없는 값은 사용불가<br />참조할테이블(참조할테이블의primary key) |
 
 
 
@@ -423,7 +419,7 @@ create table 테이블명(컬럼명1 타입(길이)  ???????)
 
 
 
-
+### 테이블 만들기
 
 | c_emp테이블                                             | c_dept 테이블                    |
 | ------------------------------------------------------- | -------------------------------- |
@@ -513,9 +509,9 @@ c_emp 테이블의 dept_id 컬럼이 c_dept 테이블의 dept_id 컬럼값 참�
 
   
 
-  * 제약조건 확인
+### 제약조건 확인
 
-  select constraint_name, constraint_type, search_condition from user_constraints where table_name='C_DEPT';
+select constraint_name, constraint_type, search_condition from user_constraints where table_name='C_DEPT';
 
 1, 2, 6, 7 , 8 장 3일간 진행됐당~
 
