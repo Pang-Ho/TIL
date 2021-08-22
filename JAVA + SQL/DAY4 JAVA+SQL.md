@@ -198,7 +198,7 @@ result 메소드
 | 자바          | resultStet                                | 오라클                                                       |
 | ------------- | ----------------------------------------- | ------------------------------------------------------------ |
 | int           | getInt("컬럼명")                          | number(n)                                                    |
-| double        | getDouble                                 | numjber(n, s)                                                |
+| double        | getDouble                                 | number(n, s)                                                 |
 | String        | getString                                 | Varchar2                                                     |
 | java.sql.Date | getDate("컬럼명")<br />getSring("indate") | date 'rr/mm/dd'<br /> 날짜데이터 select to_char (날짜데이터, 'mm,'m) |
 
