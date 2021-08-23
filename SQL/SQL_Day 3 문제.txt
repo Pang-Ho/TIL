@@ -1,0 +1,26 @@
+1.
+create table member (
+memberid vachar2(30) constraint mem_id_pk primary key,
+password varchar2(100) constraint mem_pw_nn not null,
+membername vachar2(30),
+email varchar2(30) constraint mem_mail_ck check(email like '%@%') );
+
+2.
+insert into member values('member1', 1111, '박회원', 'park@mul.com');
+insert into member values('member2', 2222, '김회원', 'kim@campu.com');
+
+commit;
+
+3.
+create table board(
+seq number(5) constraint board_seq_pk primary key,
+title vachar2(100) constraint board_title_nn not null,
+contents varchar2(4000) constraint,
+writer varchar2(30) constraint board_writer_fk references member(memberidid),
+time date,
+password number(5),
+viewcount umber(10) constraint board_view_ck check (viewcount>=0));
+
+4.
+insert into board values(1, '제목1', '내용1', 'member1', sysdate, 11111, 10);
+insert into board values(2, '제목2', '내용2', 'member2', sysdate, 22222, 20);
