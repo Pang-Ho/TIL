@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1> 잘 보이나요</h1>
+<img src = "a.jpg" alt="이미지삭제되었어요"> 
+<!-- 주석 -->
+<h1 id="here"> 잘 보이나요?</h1>
+
+<hr> <!-- 수평선 -->
+&nbsp; <!-- 공백 -->
+<p>
+단락 &nbsp;&nbsp;&nbsp;단락<br>
+2번재 줄 <br>
+3번 째 줄 <br>
+</p>
+
+<a href="http://www.daum.net"> 멀티캠퍼스 홈페이지로 이동</a><br>
+<a href="http://127.0.0.1:9090/htmltest/third.html"> 절대경로 내서버</a><br>
+<a href="third.html"> 상대경로(현재파일과 동일경로) third.html 이동</a><br>
+<a href="../other/another.html">상위 other폴더</a><br>
+
+<h1><a href = "#here"> 현재 문서의 처음 부분</a></h1>  
+<!-- 위에 id="here" 한 곳으로 이동! -->
+
+
+<i>이탤릭체 기울임</i>
+<b>볼드체 굵은글씨</b>
+
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form>
+		제목<br>
+		<input type="text" placeholder="제목 입력" name="title"><br>
+		내용<br>
+		<textaera class="form-control" rows="3" placeholder="내용 입력" name="contents"></textaera><br>
+		작성자<br>
+		<input type="text" placeholder="작성자" name="name"><br>
+		암호<br>
+		<input type="password" placeholer="암호" name="pw"><br>
+ 		
+		<input type="submit" value="글쓰기 완료">
+	</form>
+</body>
+</html>

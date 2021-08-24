@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style type="text/css">
+  .content{
+  border : 2px solid blue;
+  width : 700px;
+  margin : 40px;
+  /* position : static; */
+  position : relative;
+  top :20px;
+  left:20px;
+  }
+  b{
+  	border : 2px solid red;
+  	position: relative;
+  	top : -20px;
+  	right : 50px;
+  }
+  .box:nth-child(1)
+  </style>
+</head>
+<body>
+    <div class="content">
+      <div class="text">
+        <b>창의와 지식서비스로 조직과 개인의 경쟁력을 키우는 기업입니다.</b>
+        우리는 멀티캠퍼스는 기업교육 업계 1위로서 제조, 금융, 유통 등 다양한 영역에서 고객 성장에 필요한 최적의 역량과 기술 향상을 지원하며 고객 가치 창출에 기여하고 있습니다.
+	코로나19로 시작된 비대면 시대에 전혀 다른 새로운 교육 패러다임으로 구조를 혁신하고 차별화된 비대면 교육 서비스로 시장을 선도하겠습니다.
+	20여년 간의 교육운영 노하우가 집약된 차세대 교육 플랫폼을 통해 운영 경쟁력을 확보하고 직무별·산업별 현업에 즉시 적용 가능한 실전형 콘텐츠 생산과 품질 관리에 집중하여 대한민국 DT시대를 이끄는 디지털 인재 양성에 매진하겠습니다.
+	앞으로도 변화하는 환경에 맞는 기업 인재 육성 방향을 선제적으로 제시하고 전략적이고 효율적인 교육 파트너로서 고객과 함께 성장하겠습니다.
+      </div>
+    </div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+</body>
+</html>

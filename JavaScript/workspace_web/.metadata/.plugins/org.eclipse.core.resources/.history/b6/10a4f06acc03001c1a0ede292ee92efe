@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+var i = "출력";
+alert(i)
+console.log(i);
+document.write(i+"<br>");
+document.write(i+"<br>");
+
+var j = 10;
+var k = 3;
+document.write( parseInt(j / k) +"<br>");
+
+var s1 = "100";
+var s2 = 100;
+
+document.write( (s1 == s2) +"<br>");
+document.write( (s1 === s2) +"<br>");
+
+var v1 = "var로 선언";
+document.write(v1+"<br>");
+
+var v1 = "let으로 선언";
+document.write(v1+"<br>");
+
+const v2 = "const로 선언";
+document.write(v2+"<br>");
+
+/* let v2 = "let으로 선언";
+document.write(v2+"<br>"); */
+</script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<h1 id:"first"> Process - 1</h1>
+<h1> Process - 2</h1>
+
+<script type="text/javascript">
+
+//태그 읽어와라 dom시작
+document.getElementById(id);
+</script>
+</body>
+</html>

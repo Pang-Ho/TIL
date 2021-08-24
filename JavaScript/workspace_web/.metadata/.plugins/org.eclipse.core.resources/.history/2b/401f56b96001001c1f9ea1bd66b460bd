@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="pnik">
+	<h1>제목입니다.</h1>
+	<h6>우리 회사는 IT 개발 회사입니다.</h6>
+	</div>
+	<table border=3>
+		<tr><td>메뉴들</td><td>메뉴를 선택했을 때 상세내용들</td></tr>
+	
+	</table>
+	
+	<h6>개발자 : aaa@a.com 이메일은 여기로 보내세요</h6>
+	
+	<div> div1입니다.</div>
+	<div> div2입니다.</div>
+	<span> span1입니다.</span>
+	<span> span2입니다.</span>
+</body>
+</html>

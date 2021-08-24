@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+div{
+display : ;
+background-color:pink;
+border : solid 30px blue;
+border-radius : 50px 50px 0px 0px;
+padding : 20px;
+margin : auto;
+height : 50px;
+width : 150px;
+}
+body{
+background-color : pink;
+background-image : url('/htmltest/images/americano.jpg')
+}
+
+</style>
+</head>
+<body>
+<div><p> div 태그 입니다.</p></div>
+
+<h1>   여백을 확인하세요 </h1>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+function f1(){
+	onclick="alert('이벤트발생');
+}
+//고전이벤트모델
+var btn2 =documet.getElementById("btn2");
+btn2.onclick = function(){
+	alert("버튼2 이벤트 발생");
+}
+</script>
+</head>
+<body>
+<form action="a.html">
+<input type=text><br>
+<!-- inline 이벤트 모델 html태그 종류 -->
+<input type="button" value="버튼" onclick="f1()"><br> <!-- 기능 내장 없음 -->
+<input id="btn2" type=button value="버튼2">
+<input type="submit" value="버튼"><br> <!-- 기능 내장 action 파일로 전송 -->
+<input type="reset" value="버튼"><br> <!-- 기능 내장 입력 내용 취소 -->
+</form>
+</body>
+</html>

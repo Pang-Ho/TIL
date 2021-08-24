@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<script type="text/javascript">
+function f1(){
+	alert("f1호출");
+}
+
+/* f1();
+f1();
+f1(); */
+
+function f2(i){
+	alert("f2호출 + " + i)
+}
+
+/* f2(3);
+f2(200);
+f2(4000); */
+
+/* function f3(){
+	alert("f3호출");
+	return 100;
+}
+
+var r3 = f3();
+document.write(r3 + "<br>");
+document.write(r3*r3 + "<br>"); */
+
+function f4(i, j){
+	alert("f4호출");
+	return i*j;
+}
+
+var r4 = f4(5, 8);
+document.write(r4 + "<br>");
+document.write(r4*r4 + "<br>");
+</script>
+</body>
+</html>

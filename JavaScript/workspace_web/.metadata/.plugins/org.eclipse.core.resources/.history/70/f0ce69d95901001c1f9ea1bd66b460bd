@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form>
+		<input type="text" name="text" value="text">
+		<input type="password" name="pw" value="password">
+		<input type="file">
+		<input type="checkbox">
+		<input type="radio">
+		<input type="button">
+		<input type="reset">
+		<input type="submit">
+		<input type="image">
+	
+	
+	
+	</form>
+</body>
+</html>

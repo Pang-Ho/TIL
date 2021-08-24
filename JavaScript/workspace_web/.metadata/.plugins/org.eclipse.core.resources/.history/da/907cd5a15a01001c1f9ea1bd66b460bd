@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="hi.jsp">
+		<table>
+		<tr><td>제목</td><td><input type="text" placeholder="제목 입력" name="title" maxlength="20" size="17"></td></tr>
+		<tr><td>내용</td><td><textarea rows="3" placeholder="내용 입력" name="contents"></textarea><td></tr>
+		<tr><td>작성자</td><td>
+		<input type="radio" name="oracle">oracle
+		<input type="radio" name="jsp">jsp
+		<input type="radio" name="spring">spring
+		</td></tr>
+		<tr><td>암호</td><td><input type="password" name="pw"></td></tr>
+		
+		</table>
+
+		내용<br>
+		<textarea rows="3" placeholder="내용 입력" name="contents"></textarea><br>
+		작성자<br>
+		<input type="radio" name="oracle">oracle
+		<input type="radio" name="jsp">jsp
+		<input type="radio" name="spring">spring<br>
+		암호<br>
+		<input type="password" name="pw"><br>
+ 		
+		<input type="submit" value="글쓰기 완료">
+	</form>
+</body>
+</html>

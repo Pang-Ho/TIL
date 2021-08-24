@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>form</title>
+</head>
+<body>
+
+<form>
+	<input type="text" name="search">
+	<input type="month">
+	<input type="checkbox">
+	<input type="date">
+	<input type="color">
+	<input type="datetime">
+	<input type="file">
+	<input type="hidden">
+</form>
+
+</body>
+</html>

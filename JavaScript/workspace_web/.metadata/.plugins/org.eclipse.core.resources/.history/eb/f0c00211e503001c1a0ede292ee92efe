@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	var i;
+	var a = [i, '제목'+i, '작성자'+i, i+'0'];
+	document.write(
+			for(i = 0 ; i < 6 ; i++){
+				for(var j = 0 ; j< a.length ; j++){
+					a[j];
+				}
+			}
+	);
+</script>
+</head>
+<body>
+<table>
+	<tr><th>번호</th><th>제목</th><th>작성자</th><th>조회수</th></tr>
+	
+	<!-- 자바스크립트 반복문 사용 -->
+</table>
+</body>
+</html>

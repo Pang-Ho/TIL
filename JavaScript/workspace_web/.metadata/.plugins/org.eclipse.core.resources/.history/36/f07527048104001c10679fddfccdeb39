@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<script>
+	//객체 : 100, 김사원, 45600.99 출력가능함수
+	var emp1 = {
+			id:100,
+			name:'김사원',
+			salary:45600.99,
+			print:function(){
+				documnet.write("<h3>"+id+":"+name+":"+salary+"</h3>");
+			}
+			
+	}
+</script>
+</body>
+</html>

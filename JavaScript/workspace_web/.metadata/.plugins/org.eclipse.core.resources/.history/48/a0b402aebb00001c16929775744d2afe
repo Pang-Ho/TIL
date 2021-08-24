@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<form>
+	<input type="text" name="search">
+	<input type="month">
+	<input type="checkbox">
+	<input type="date">
+	<input type="color">
+</form>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1 id="test1">Process - 1</h1>
+<h1>Process - 2</h1>
+<a id="test1" href="">링크1</a><br>
+<a href="">링크2</a><br>
+<a href="">링크3</a><br>
+<script>
+	var one_tag = document.getElementById("test1");
+	alert(one_tag.tagName);
+	var array = document.getElementById("h1");
+</script>
+<!-- 1.같은 html 파일 내부 id 중복x 그러나 실제 실행은 가능함
+	2. 1개 태그밖에 리턴이 안됨-->
+
+</body>
+</html>

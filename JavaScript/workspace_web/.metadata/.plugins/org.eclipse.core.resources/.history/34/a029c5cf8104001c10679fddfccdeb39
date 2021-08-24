@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<script>
+	//객체 : 100, 김사원, 45600.99 출력가능함수
+	//var id = 500; // 전역변수는 window.id임
+	var emp1 = {
+			id:100,
+			name:'김사원',
+			salary:45600.99,
+			print:function(){
+				documnet.write("<h3>"+this.id+":"+this.name+":"+this.salary+"</h3>");//id랑 name은 전역변수가 아니기에 객체 내부 변수라고 말 해야됨
+			}
+	}
+	emp1.print(); //객체 내부의 함수 호출 window객체는 예외임 걔넨 함수명만 나와도 됨
+	
+	//객체 : 200, 박대리, 56000.00, 출력가능함수, 보너스가능함수
+	var emp2 = {
+			id:200,
+			name:'박대리',
+			salary:56000.00,
+			print:function(){
+				documnet.write("<h3>"+this.id+":"+this.name+":"+this.salary+"</h3>");//id랑 name은 전역변수가 아니기에 객체 내부 변수라고 말 해야됨
+			},
+			getBonus:function(){
+				return salary*0.5;
+			}
+	}
+</script>
+</body>
+</html>

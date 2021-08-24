@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div id="target"></div>
+<script>
+var div = document.getElementById("target");
+div.innerHTML = "<h1>여기는 타겟 입니다.</h1><img id='img1' src=\"/htmltest/images/google.png\">";
+//div.textContent = "<h1>여기는 타겟 입니다.</h1><img src=\"/htmltest/images/google.png\">";
+div.style.backgroundColor = "pink"; // 변수명에 - 불가능 
+
+var img = document.getElementById("img 1")
+img.backgroundcolor = "yello";
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+var i = "출력";
+alert(i)
+console.log(i);
+document.write(i+"<br>");
+document.write(i+"<br>");
+
+var j = 10;
+var k = 3;
+document.writer(j / k +"<br>")
+</script>
+</head>
+<body>
+
+</body>
+</html>

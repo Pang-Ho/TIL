@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	h1 {color : red;}
+	* {color:green}
+</style>
+</head>
+<body>
+<h1> 제목 입니다.</h1>
+
+ <a href=""> 링크 걸었습니다.</a>
+ 
+<p> 본문 입니다.</p>
+
+<h1> 중간 입니다.</h1>
+<a href="">링크2 걸었습니다.</a>
+<p> 본문2 입니다.</p>
+
+<h1> 하단 입니다.</h1>
+</body>
+</html>

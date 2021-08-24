@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>form</title>
+</head>
+<body>
+
+<form action="login.jsp">
+	아이디 입력 : <input type="text" name="Loginid" value="아이디"><br>
+	비밀번호 입력 : <input type="password" name="Loginpw"><br>
+	<input type="hidden" name="role" value="admin">
+
+	<input type="checkbox" name="title" value="emp"> 사원
+	<input type="checkbox" name="title" value="stu"> 학생
+	<input type="checkbox" name="title" value="boss"> 사장
+	<input type="checkbox" name="title" value="deri"> 대리
+	<br>
+	<input type="radio" name="dept" value="10"> 교육부
+	<input type="radio" name="dept" value="20"> 인사부
+	<input type="radio" name="dept" value="30"> it부
+	<input type="radio" name="dept" value="40"> 짜부
+	<br>
+	<input type="file" name="filename">
+	
+	<select>
+	<option>목록1 선택하면 전송</option>
+	<option>목록1</option>
+	<option>목록1</option>
+	<option>목록1</option>
+	<option>목록1</option>
+	</select>
+	<input type="submit" value="로그인">
+	<input type="reset" value="입력취소">
+	<input type="button" value="클릭버튼" onclick='alert("버튼클릭하셨넹")'><br>
+	색상선택 : <input type="color" name="col" ><br>
+	생일선택 : <input type="date" name="birth"><br>
+	이메일입력 : <input type="email" name="email"><br>
+	점수입력 : <input type="number" name="score" value="90"><br>
+	범위선택 : <input type="range" name="range" max=10 min=1><br>
+	
+	<textarea clos="5" rows="5" placeholder="안녕" >여기에 입력합니다.</textarea>
+</form>
+
+</body>
+</html>
+<!--
+http://localhost:9090/htmltest/login.jsp?Loginid=dlrhkd03&Loginpw=dfddf / jsp로 보내는 정보는 
+1. 서버 중단 상태 <= 사이트 연결할 수 없음
+2. 404 http상태 <= 서버는 시작했는데 url 파일이 없다
+3. 403
+4. 500
+-->

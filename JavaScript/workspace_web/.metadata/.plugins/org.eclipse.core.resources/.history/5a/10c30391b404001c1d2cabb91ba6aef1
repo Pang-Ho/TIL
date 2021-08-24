@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<input type="button" value="버튼"><br>
+<input type="submit" value="버튼"><br> //기능 내장 action 파일로 전송
+<input type="reset" value="버튼"><br> // 기능 내장 입력 내용 취소
+</body>
+</html>

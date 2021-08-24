@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>form</title>
+</head>
+<body>
+
+<form action="login.jsp">
+	아이디 입력 : <input type="text" name="Loginid" value="아이디"><br>
+	비밀번호 입력 : <input type="password" name="Loginpw"><br>
+	<input type="hidden" name="role" value="admin">
+	<input type="submit" value="로그인">
+	<input type="checkbox" name="title" value="emp"> 사원
+	<input type="checkbox" name="title" value="stu"> 학생
+	<input type="checkbox" name="title" value="boss"> 사장
+	<input type="checkbox" name="title" value="deri"> 대리
+</form>
+
+</body>
+</html>
+<!--
+http://localhost:9090/htmltest/login.jsp?Loginid=dlrhkd03&Loginpw=dfddf / jsp로 보내는 정보는 
+1. 서버 중단 상태 <= 사이트 연결할 수 없음
+2. 404 http상태 <= 서버는 시작했는데 url 파일이 없다
+3. 403
+4. 500
+-->

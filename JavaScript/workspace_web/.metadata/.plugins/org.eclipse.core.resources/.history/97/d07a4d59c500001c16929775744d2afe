@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>환영합니다.</h1>
+<ul type ="disc">
+	<li><a href="boardlist.html">게시물리스트</a></li>
+	<li>글쓰기</li>
+	<li>회원가입</li>
+	<li>로그인</li>
+</ul>
+</body>
+</html>

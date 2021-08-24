@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript">
+	alert("실행됩니다.")
+	</script>
+</head>
+<body>
+	<h1>자바 스크립트 포함합니다.</h1>
+	<script> src="sample.js"</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1> 잘 보이나요</h1>
+<img src = "a.jpg" alt="이미지삭제되었어요"> 
+<!-- 주석 -->
+<h1>제목1</h1>
+
+<hr> <!-- 수평선 -->
+&nbsp; <!-- 공백 -->
+<p>
+단락 &nbsp;&nbsp;&nbsp;단락<br>
+2번재 줄 <br>
+3번 째 줄 <br>
+</p>
+
+
+</body>
+</html>
