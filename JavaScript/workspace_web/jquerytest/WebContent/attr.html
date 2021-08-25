@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.cls1{background-color:pink;}
+</style>
+<script src="jquery-3.2.1.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$('img').attr("src","/htmltest/images/americano.jpg");
+		$('img').attr("width", 100);
+		$('img').attr("height", 300);
+		
+		var height = $('img').attr('height');
+		var width = $('img').attr("width");
+		var src = $("img").attr("src");
+		$('#result').html(src + width + height);
+		
+		/* $('#contents').html("<input type=password><br>"); //setter 용도 (이전 컨텐츠 삭제) */
+		var contents = $('#contents').html(); //getter용도
+		//alert(contents);
+		$('#contents').css('border', "1px solid red");
+		//$('#contents').empty();
+		
+		$("h1:last, div:last").addClass("cls1");
+		$("h1, div").removeClass();
+		
+		$("div input").val("입력하실?")
+		//alert( $("div input").val());
+		
+		$("h1:first").hide();
+		$("h1:first").fadeIn(2000);
+		
+		
+	});
+</script>
+</head>
+<body>
+<h1>이미지를 보여드리면 믿어주시겠습니까?</h1>
+<img src="/htmltest/images/android.jpg">
+<div id="result"></div>
+<div id="contents">
+	<input type="text" value="입력해주실?"><br>
+</div>
+<h1>클래스 속성을 공부합니다.</h1>
+<div class="">클래스 속성을 공부합니다.</div>
+<h3>클래스 속성을 공부합니다.</h3>
+</body>
+</html>

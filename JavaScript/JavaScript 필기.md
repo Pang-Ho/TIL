@@ -487,6 +487,118 @@ window.onload = action; //2. 윈도우 로딩이 완료되면(</html>이 끝나�
 
   
 
-  
+  ![image-20210825092234841](../md-images/image-20210825092234841.png)
 
   
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script>
+window.onload = function (){
+	var div_test = document.getElementById("test");
+	div_test.onclick = function(){
+		this.style.color = "pink";
+	}
+	div_test.onmouseover = function(){
+		this.style.color = "red";
+	}
+	div_test.onmouseout = function(){
+		this.style.color = "blue";
+	}
+	
+	var phone = document.querySelector("input[type=text]");
+	//var phone = document.getElementsByName("phone");
+	phone.onkeyup = function(e){ //매개변수 선언 - keyup 이벤트 처리하는 객체 의미
+		//0 ~ 9 => 48~57
+		if(e.keyCode >= 48 && e.keyCode <= 57){
+			document.getElementById("result").innerHTML = "적합";
+		}
+		else{
+			document.getElementById("result").innerHTML = e.keyCode + "부적합";
+		}
+	}
+	var form = document.getElementsByTagName("form")[0];
+	form.onsubmit = function(event){
+		event.preventDefault(); // submit에 
+		document.getElementById("result").innerHTML = "전송하는 기본 동작을 취소했습니다";
+	}
+	var a = document.querySelector("div > a")//div a =>div이면서 a/ div > a div바로 밑 자식태그a
+	a.onclick = function(ev){
+		ev.preventDeault();
+	}
+	
+	var radio_list = document.querySelectorAll("input[type=radio]");
+	for(var i = 0 ; i < radio_list.length ; i++){
+		radio_list[i].onchange = function(){
+		document.getElementById("result").innerHTML =this.value;
+		}
+	}
+}
+
+</script>
+</head>
+<body>
+
+<div><a href="a.html">a.html로 이동</a></div>
+<a href="c.html">c.html로 이동</a>
+
+<div id="test">여기를 클릭하면 핑크로 변합니다.</div>
+<form action="b.jsp">
+	폰번호:<input type=text name="phone"><br><!-- 원하는 형태의 경고문구 만들기 onkeyxxx -->
+	<div id="result"></div>
+	<input type=radio name="title" value="사원"> 사원
+	<input type=radio name="title" value="사원"> 대리
+	<input type=radio name="title" value="사원"> 과장
+	<input type=radio name="title" value="사원"> 부장
+	<input type=submit value="전송">
+	
+</form>
+</body>
+</html>
+```
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	window.onload = function(){
+		var col = document.querySelectorAll("input[type=radio]")
+		var div = document.getElementById("result");
+		var change = document.getElementById("change");
+		for(var i = 0 ; i < col.length ; i++){
+			col[i].onchange = function(){
+				change.style.color = this.value;
+				col[i].style.color = this.value;
+				div.textContent = this.value + ": " + this.checked;
+				div.style.color = this.value;
+			}
+		}
+		
+		
+	}
+</script>
+</head>
+<body >
+<H1 id="change"> 색상 변경하기 </H1>
+<input type="radio" value='red' name="col">빨강색
+<input type="radio" value='blue' name="col">파랑색
+<input type="radio" value='green' name="col">녹색
+<input type="radio" value='silver' name="col">회색
+<input checked type="radio" value='black' name="col">검정색
+
+<div id='result'> </div>
+
+</body>
+
+</html>
+```
+
+![image-20210825113058277](../md-images/image-20210825113058277.png)
