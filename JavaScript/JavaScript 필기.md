@@ -188,6 +188,20 @@ function f2(f) {
 f2(test);
 ```
 
+* 콜백 함수 - 함수를 매개변수로 사용하는 것
+
+```javascript
+	function callTenTimes(callback) {
+		for(var i = 0 ; i < 10 ; i++){
+			callback();
+		}
+	}
+	
+	callTenTimes(function(){
+		alert("안녕하시닷");
+	});
+```
+
 
 
 * 자바스크립트 라이브러리
@@ -210,8 +224,6 @@ f2(test);
   * f(); => 즉각 실행
   * callback 함수를 갖는 대표적
 
-콜백?
-
 ```javascript
 function now() {
     var t = new Date().toLocaleTimeString();
@@ -220,6 +232,7 @@ function now() {
 //alert(document.getElementById("here").innerHTML);//getter
 
 var id = setInterval(now, 1000); //1초마다 1번씩 시각 표시
+//setTimeout(now, 1000); 같은거임
 
 function stop() {
     clearInterval(id);
@@ -270,15 +283,20 @@ var 객체변수명 = {id:1 , name:"이자바", test:function(){....}}
 			name:'박대리',
 			salary:56000.00,
 			print:function(){
-				document.write("<h3>"+this.id+":"+this.name+":"+this.salary+"</h3>");
-                			//id랑 name은 전역변수가 아니기에 객체 내부 변수라고 말 해야됨
-			},
+				document.write("h3>"+this.id+":"+
+                       this.name+":"+this.salary+"</h3>");},
+              //id랑 name은 전역변수가 아니기에 객체 내부 변수라고 말 해야됨
 			getBonus:function(){
 				return this.salary*0.5;
 			}
 	}
     emp2.print();
     document.write((emp2.name + "의 보너스 = " + emp2.getBonus());
+                   
+    객체에서만 쓸 수 있는 반복문
+    for(var i in emp2){
+        document.write(id + name + salary);
+    }
 ```
 
 
@@ -310,7 +328,8 @@ var 객체변수명 = {id:1 , name:"이자바", test:function(){....}}
 		this.name = name;
 		this.salary = salary;
 		this.print = function(){
-			document.write("<h3>"+this.id+":"+this.name+":"+this.salary+"</h3>");
+					document.write("<h3>"+this.id+":"+
+                                   this.name+":"+this.salary+"</h3>");
 		}
 	}
 	
