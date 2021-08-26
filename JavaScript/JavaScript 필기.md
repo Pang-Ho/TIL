@@ -393,9 +393,8 @@ window.onload = action; //2. 윈도우 로딩이 완료되면(</html>이 끝나�
 <a class="test2" href="b.html">링크2</a><br>
 <a class="test2" href="c.jsp">링크3</a><br>
 <script>
-	var one_tag = document.getElementById("test1");<!-- 1.같은 html 파일 내부 id 중복x 
-    													그러나 실제 실행은 가능함
-													2. 1개 태그밖에 리턴이 안됨-->
+	var one_tag = document.getElementById("test1");
+<!-- 1.같은 html 파일 내부 id 중복x	그러나 실제 실행은 가능함				2. 1개 태그밖에 리턴이 안됨-->
 	alert(one_tag.tagName);
 	var array = document.getElementsByTagName("h1"); //태그는 1개라도 배열로 얻어짐
 	alert(array[0].innerHTML);
