@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div id="here"></div>
+<script>
+	function now() {
+		var t = new Date().toLocaleTimeString();
+		document.getElementById("here").innerHTML = t;
+	}
+	
+	var id = setInterval(now, 1000);
+	
+/* 	function stop() {
+		clearInterval(id);
+	}
+	setTimeout(stop, 5000);
+	setTimeout(function(){clearInterval(id)}, 5000) */
+	
+</script>
+</body>
+</html>

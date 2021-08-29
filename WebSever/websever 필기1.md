@@ -24,7 +24,7 @@
 
   | @WebServlet<br />3.0 이상에서 가능한 방법 | @WebServlet("url매핑")<br />class 서블릿 extends HttpServlet<br />doGet 오버라이딩 |
   | ----------------------------------------- | ------------------------------------------------------------ |
-  | web.xml                                   | class 서블릿 extends HttpServlet<br />doGet 오버라이딩<br /> <servlet><br/>  <servlet-name>t</servlet-name><br/>  <servlet-class>test.TestServlet</servlet-class><br/>  </servlet><br/>  <br/>  <servlet-mapping><br/>  <servlet-name>t</servlet-name><br/>  <url-pattern>/test</url-pattern><br/>  </servlet-mapping> |
+  | web.xml                                   | class 서블릿 extends HttpServlet<br />doGet 오버라이딩<br /> `<servlet><br/>  <servlet-name>t</servlet-name><br/>  <servlet-class>test.TestServlet</servlet-class><br/>  </servlet><br/>  <br/>  <servlet-mapping><br/>  <servlet-name>t</servlet-name><br/>  <url-pattern>/test</url-pattern><br/>  </servlet-mapping>` |
 
   확실히 @WebServlet 이 편하긴 함
 
