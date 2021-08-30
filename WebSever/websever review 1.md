@@ -29,19 +29,47 @@
 
   | @WebServlet<br />3.0 이상에서 가능한 방법 | @WebServlet("url매핑")<br />class 서블릿 extends HttpServlet<br />doGet 오버라이딩 |
   | ----------------------------------------- | ------------------------------------------------------------ |
-  | web.xml                                   | class 서블릿 extends HttpServlet<br />doGet 오버라이딩<br /> `<servlet><br/>  <servlet-name>t</servlet-name><br/>  <servlet-class>test.TestServlet</servlet-class><br/>  </servlet><br/>  <br/>  <servlet-mapping><br/>  <servlet-name>t</servlet-name><br/>  <url-pattern>/test</url-pattern><br/>  </servlet-mapping>` |
+  | web.xml                                   | class 서블릿 extends HttpServlet<br />doGet 오버라이딩<br /> |
 
-  확실히 @WebServlet 이 편하긴 함
-
-
-
-
+  ```java
+  web.xml에서 매핑하려면 바꿔야하는 부분
+  <servlet>
+      <servlet-name>t</servlet-name>  => 임시 서블릿 이름
+      <servlet-class>test.TestServlet</servlet-class> =>패키지명.서블릿실제클래스명
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>t</servlet-name> => 임시 서블릿 이름
+      <url-pattern>/test</url-pattern>
+  </servlet-mapping>
+  ```
+  
+  확실히 @WebServlet 이 편리함
+  
+  => web.xml 파일 대신 설정
+  
+  어떤 의미인지는 알아야 한다!
+  
+  <servlet
+  
+  ​	<servlet-name (임시)서블릿 이름
+  
+  ​	<servelt-class 패키지명.서블릿실제클래스명
+  
+  </servlet
+  
+  <servlet-mapping
+  
+  ​	<servlet-name (임시)서블릿이름
+  
+  ​	<url-pattern 
+  
+  </servlet-mapping
 
 
 
 ## 작성
 
-| 작성 | @WebServlet("/context명")<br />class A extends HttpServlet<br />doGet / doPost 오버라이딩<br />=> web.xml 파일 대신 설정<br />어떤 의미인지는 알아야 한다!<br /><servlet<br /><servlet-name (임시)서블릿 이름<br /><servelt-class 패키지명.서블릿실제클래스명<br /></servlet<br /><servlet-mapping<br /><servlet-name (임시)서블릿이름<br /><url-pattern <br /></servlet-mapping |
+| 작성 | @WebServlet("/context명")<br />class A extends HttpServlet<br />doGet / doPost 오버라이딩<br /> |
 | ---- | ------------------------------------------------------------ |
 
 
@@ -92,26 +120,20 @@
 
 10. destroy()가 서블릿 객체 메모리 삭제
 
-| 클라 | 서버 |
-| ---- | ---- |
-| 1    | 2    |
-| 7    | 3    |
-| 8    | 4    |
-| 9    | 5 6  |
+| 클라 | 서버   |
+| ---- | ------ |
+| 1    | 2      |
+| 7    | 3      |
+| 8    | 4      |
+| 9    | 5 6 10 |
 
 
 
-javax.servlet.http.패키지
+* url
 
-|      |      |
-| ---- | ---- |
-|      |      |
+  ? = 앞에까지만 url이고 뒤에는 데이터변수명, 데이터값 
 
-
-
-url
-
-? = 앞에까지만 url이고 뒤에는 데이터변수명, 데이터값 
+  ?id=test&pw=1111
 
 String id = request.getParameter("id"); = id에 해당하는 데이터를 불러와라
 
@@ -132,6 +154,7 @@ public class LoginFormServlet extends HttpServlet {
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
 		String[] con = request.getParameterValues("con");
+        //=> 타입이 체크박스같은 경우 여러 값을 받아오기 위한 방법
 		//처리
 		String result ="";
 		System.out.println(pw); 
@@ -152,15 +175,25 @@ public class LoginFormServlet extends HttpServlet {
 		}
 ```
 
-* get => response.setContentType("text/html;charset=utf-8");
+* get => 
+
+* response.setContentType("text/html;charset=utf-8");
+
+  브라우저 출력을 위해 인코딩하는 코드
 
   보안에 취약하고 파일 전송 불가
 
-* post = request.setCharacterEncoding("utf-8");  디코딩 필요
+* post => 
 
-​       		   response.setContentType("text/html;charset=utf-8");
+* request.setCharacterEncoding("utf-8");
 
-​		보안에 유리하고 길이 무제한
+* response.setContentType("text/html;charset=utf-8");
+
+  브라우저에서 받아오는 값을 디코딩, 브라우저 출력을 위한 인코딩 코드	
+
+  보안에 유리하고 길이 무제한
+
+  
 
 * http 프로토콜 오류코드
 
@@ -179,9 +212,9 @@ public class LoginFormServlet extends HttpServlet {
 
 ## DAO  VO 
 
-| logindb.html | LoginDBServlet                                               | MemberDAO                                       | MemberVO |
-| ------------ | ------------------------------------------------------------ | ----------------------------------------------- | -------- |
-| id, password | 2개 파라미터 입력 요청<br />응답 3가지<br />id o pw  x<br />id x<br />id o pw o | int getMember(String id, String password)<br /> |          |
+| logindb.html | LoginDBServlet                                               | MemberDAO                                       | MemberVO                                                     |
+| ------------ | ------------------------------------------------------------ | ----------------------------------------------- | ------------------------------------------------------------ |
+| id, password | 2개 파라미터 입력 요청<br />응답 3가지<br />id o pw  x<br />id x<br />id o pw o | int getMember(String id, String password)<br /> | MemberVO(String id, String password, String name, String mail){ ... } |
 
 ===================================
 
@@ -482,3 +515,18 @@ logindb.html 요청 - LogintDBServlet('logindb') 응답 x
 실습
 
 ![image-20210827172823568](../md-images/image-20210827172823568.png)
+
+
+
+* 아주 간단함
+
+```java
+if(id.equals("admin")) {
+	RequestDispatcher rd =request.getRequestDispatcher("/admin");
+	rd.forward(request, response);	
+} else {
+	RequestDispatcher rd =request.getRequestDispatcher("/user");
+	rd.forward(request, response); 	
+	}
+```
+
