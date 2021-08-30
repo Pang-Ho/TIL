@@ -38,7 +38,7 @@
 * null 컬럼이 많은가?
 * 중복 레코드가 여러개인가?
 
-![image-20210821194647818](../../md-images/sql.png)
+![image-20210821194647818](../md-images/sql.png)
 
 * DDL을 만드는 테이블 문법
 
@@ -521,7 +521,7 @@ select constraint_name, constraint_type, search_condition from user_constraints 
 
 예제
 
-![image-20210818130604159](../../md-images/image-20210818130604159.png)
+![image-20210818130604159](../md-images/image-20210818130604159.png)
 
 1. 회원테이블 만들기
 

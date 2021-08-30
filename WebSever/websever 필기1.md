@@ -1,5 +1,10 @@
 # 웹 서버
 
+## 웹 클라이언트 / 웹 서버
+
+* 웹 클라이언트 html, css, js, jquery
+* (tomcat+jdk) servlet jsp spring
+
 ## servlet 만들기 - extends HttpServlet
 
 ![image-20210826100750080](C:/Users/Pang/Desktop/TIL/md-images/image-20210826100750080.png)
@@ -33,6 +38,11 @@
 
 
 
+
+## 작성
+
+| 작성 | @WebServlet("/context명")<br />class A extends HttpServlet<br />doGet / doPost 오버라이딩<br />=> web.xml 파일 대신 설정<br />어떤 의미인지는 알아야 한다!<br /><servlet<br /><servlet-name (임시)서블릿 이름<br /><servelt-class 패키지명.서블릿실제클래스명<br /></servlet<br /><servlet-mapping<br /><servlet-name (임시)서블릿이름<br /><url-pattern <br /></servlet-mapping |
+| ---- | ------------------------------------------------------------ |
 
 
 
@@ -446,33 +456,14 @@ public class MemberVO {
 
 
 
-Aservlet에서 - Bservlet 호출
-
-```java
-class AServlet extends HttpServlet
-
-doGet(){}
-
-...
-
-
-servlet은 이 것이 불가능 하다... tomcat이 init을 호출해서 doGet메소드를 만드는건데 밑에는 init이 없음
-BServlet b = new BServlet();
-
-b.doGet(request, response){}
-```
-
-
+### Aservlet에서 - Bservlet 호출
 
 ```java
 BServlet b = new BServlet();
 b.doGet(request, response){}
 
 RequestDispatcher rd = request.getRequestDispatcher("/bservlet");
-rd.include(request, response); or rd.forward(request, response);//답은 forward된 servlet이 함
-
-
-AServlet 남은 내용 처리
+rd.include(request, response); / rd.forward(request, response);
 
 ```
 
