@@ -224,7 +224,7 @@ jsp - java server page / html + java
 | jsp action | <jsp:xxxx   />                                               |
 | jsp custom | <c:xxx    />                                                 |
 | el         | ${}<br />$("#i")                                             |
-| 내장객체   | jsp는 서블릿보다 간결하게 응답, servlet api<br />내장객체 : request, response, exception, session .... 서블릿과 달리 만들 필요가 없음 |
+| 내장객체   | jsp는 서블릿보다 간결하게 응답, servlet api 그대로 사용할 수 있음 그러나 자바 문장 구현을 없애자 해서 나온 것이 내장 객체임<br />내장객체 : request, response, exception, session, application 서블릿과 달리 만들 필요가 없음 |
 
 response.setContentType("text/html;charset=utf-8"); => contentType="text/html;charset=utf-8"
 
@@ -449,9 +449,15 @@ jsp
 
 <jsp:useBean id="vo" class="vo.MemberVO" scope="request" >
 
-<jsp:getProperty
+​									class="패키지명.클래스명"
 
-<jsp:getProperty
+<jsp:setProperty property="name" name="vo" value="java" param="id"
+
+​							짓는 이름													불러오는 파라미터 이름
+
+<jsp:getProperty property="name" name="vo"
+
+<%= 안써도 브라우저 출력됨						
 
 | a.jsp                      | b.jsp                |
 | -------------------------- | -------------------- |
@@ -563,8 +569,6 @@ param="id"
 <jsp:getProperty property="email" name="vo" />
 ```
 
-
-
 ```jsp
 <jsp:useBean id="vo" class="vo.MemberVO" scope="request"/> //전달하는 쪽 전달 받는쪽 둘 다 써야됨
 
@@ -613,6 +617,390 @@ if(requset.getAttribute("vo") ==null){
 <jsp:setProperty property="*" name="vo"/>
 
 ```
+
+
+
+* 실습
+
+action = "/jsptest/memberinform" or "memberinform"
+
+슬래쉬가 있으면 컨텍스트루트부터
+
+슬래쉬가 없으면 = 현재 파일과 같은 루트에 있다.
+
+
+
+<jsp:useBean id="vo" class="vo.MemberVO" scope="request" >
+
+​									class="패키지명.클래스명"
+
+* servlet에 넣음
+
+```java
+		String id = request.getParameter("id");
+		String pw = request.getParameter("pw");
+		
+		if(id.equals("action") && pw.equals("1111")) {
+			MemberVO vo = new MemberVO(id, Integer.parseInt(pw), "이기술", "lee@campus.net");
+			
+			
+			request.setAttribute("vo", vo);
+			RequestDispatcher rd = request.getRequestDispatcher("/memberinform.jsp");
+			rd.forward(request, response);
+		}
+		else {
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter out = response.getWriter();
+			out.print("<h3>id나 암호 입력이 올바르지 않습니다.</h3>");
+		}
+```
+
+* vo에서 정한 필드변수이름
+
+  memberid, password, membername, email
+
+```jsp
+<jsp:useBean id="vo" class="vo.MemberVO" scope="request"/>
+
+<jsp:getProperty property="memberid" name="vo"/>
+<jsp:getProperty property="password" name="vo"/>
+<jsp:getProperty property="membername" name="vo"/>
+<jsp:getProperty property="email" name="vo"/>
+
+<%-- <h1><% out.println(vo); %></h1> --%>
+```
+
+
+
+
+
+### el 언어
+
+EL : EXPRESSION LANGUAGE - 브라우저 응답 내용, 쉽고 간결한 표현이 가능한 언어, jsp 파일 내부에서 사용
+
+<% request.getParameter("id"); %>
+
+==>${param.id}
+
+${ el 언어 문법 }
+
+- 변수 연산자 제어문 객체 함수
+
+
+
+* 데이터 타입
+
+  논리값 true, false
+
+  정수, 실수 
+
+  문자열 - " ", ' '
+
+  null
+
+```jsp
+<h3>${ i2 = 100 }</h3>
+<h3>${ i3 = 3.14 }</h3>
+
+덧셈 : ${"100" + i3} => 1003.14 가 아닌 103.14
+덧셈 : ${null + i3} => 계산 못하는 것이 아닌 null을 0으로 계산
+덧셈 : ${"백" + i3} => 이건 계산 못하지만 ${"백" += i3} 이건 계산 가능
+
+나눗셈 : ${10 / 3} => 정수 실수 나누지 않아서 3.3333... 나옴
+나눗셈 : ${10 div 3}
+
+나머지 : ${10 % 3} 나머지 : ${10 mod 3}
+
+비교 : ${10 != 3} 비교 : ${10 ne 3}
+비교 : ${10 == 3}
+비교 : ${10 > 3} 비교 : ${10 gt 3} 
+비교 : ${10 >= 3} 비교 : ${10 ge 3}
+```
+
+* 형변환이 자동으로 돼서 계산이 된다.
+
+
+
+
+
+==============
+
+
+
+
+
+=============
+
+```jsp
+jsp 변수를 el에 전달
+<%
+String s = "test";
+pageContext.setAttribute("j", s); - 현재 jsp에 el 공유
+request
+session
+%>
+
+el 전달받기
+${j}
+${pageScope.j}
+
+${ me = "test2" }
+<%= pageContext.getAttribute("me") %>
+```
+
+
+
+| jsp 내장객체 | el 내장객체                                       |                         |
+| ------------ | ------------------------------------------------- | ----------------------- |
+| x            | param.파라미터명<br />paramValues.파라미터명[i]   |                         |
+| pageContext  | pageScope // 변수를 사용하는 우선순위가 가장 높음 | 현재 페이지 el에게만    |
+| request      | requestScope                                      | forward, include 까지만 |
+| session      | sessionScope                                      |                         |
+| application  | applicationScope                                  |                         |
+
+
+
+
+
+<jsp:useBean id="vo" class="vo.MemberVO" scope="request />"
+
+위는 아래랑 같음
+
+MemberVO vo = new MemberVO(); => 기본생성자로 만드는거
+
+request.setAttribute("vo", vo);
+
+### 빈 사용
+
+빈 = jsp bean = jsp 사용 자바 객체
+
+<jsp:useBean id="vo" class="vo.MemberVO" scope="request />"
+
+<jsp:setProperty name="vo" property="memberid" value=" " param=" " />
+
+<jsp:getProperty name="vo" property="memberid"/>
+
+
+
+```jsp
+<jsp:setProperty property="*" name="vo"/>
+<h1> 액션 태그로 읽어옵니다.</h1>
+<jsp:getProperty property="memberid" name="vo" />
+<jsp:getProperty property="password" name="vo" />
+<jsp:getProperty property="membername" name="vo"/>
+<jsp:getProperty property="email" name="vo" />
+
+<h1> el로 읽어옵니다.</h1>
+${ vo.memberId } <!-- vo.getMemberId() 메소드 호출과 똑같음 -->
+${ vo.password }
+${ vo.memberame }
+${ vo.email }
+
+<h1> 자바 문장으로 읽어옵니다.</h1>
+<%=vo.getMemberid() %>
+<%=vo.getPassword() %>
+<%=vo.getMembername() %>
+<%=vo.getEmail() %>
+```
+
+
+
+```jsp
+<% 
+String[] colors ={"빨강", "노", "초", "파", "보", "검", "흰"}; 
+ pageContext.setAttribute("colors", colors);
+%>
+
+<h1> el로 배열 내용을 출력합니다.</h1>
+<h3> ${colors[0] }</h3>
+
+<%
+ArrayList<MemberVO> list = new ArrayList<MemberVO>();
+ list.add(new MemberVO("Member20", 2020, "김대한", "DAE@a.com"));
+ list.add(new MemberVO("Member30", 3030, "박대한", "park@a.com"));
+ 
+ pageContext.setAttribute("el_list", list);
+%>
+<h1> el로 회원 내용을 출력합니다.</h1>
+<h3> ${el_list[0].memberid }</h3>
+<h3> ${el_list[1].memberid }</h3>
+
+<%
+HashMap<String, MemberVO> map = new HashMap<String, MemberVO>();
+ map.put("1번 회원" ,new MemberVO("Member20", 2020, "김대한", "DAE@a.com"));
+ map.put("2번 회원" ,new MemberVO("Member30", 3030, "박대한", "park@a.com"));
+ 
+ pageContext.setAttribute("el_map", map);
+%>
+<h1> el로 map을 출력합니다.</h1>
+<h3> ${el_map.1번회원 }</h3>
+<h3> ${el_map.2번회원 }</h3> => map은 안되네?? jstl을 알아야함!
+```
+
+
+
+### JSTL
+
+* 쓰기위한 준비물
+
+![image-20210901135015123](../md-images/image-20210901135015123.png)
+
+![image-20210901135037834](../md-images/image-20210901135037834.png)
+
+* jstl을 쓰는 이유는 el에 접근하기 위해서다
+
+  ```jsp
+  <c:set var="name" value="jstltest"/> == pageContext.setAttribute("name", "jstltest");
+  
+  ${name }<br>
+  <%=pageContext.getAttribute("name") %><br>
+  ```
+
+  * 둘이 똑같은 것을 추출하지만 되도록이면 ${ }를 사용하자
+  * 
+
+* set
+
+```jsp
+<c:set var="name" value="jstltest"/>
+```
+
+* out
+
+```jsp
+<c:out value="${name}"/> => 이걸 굳이??
+${name } => 이러면 되는데?
+```
+
+* remove
+
+```jsp
+<c:remove var="name"/>
+```
+
+
+
+* if
+
+  ```jsp
+  <c:if test="${empty param.id }">
+   <h1>아이디 입력은 필수사항입니다.</h1>
+  </c:if>
+  <c:if test ="${!empty param.id }">
+   <h1>${param.id } 회원님 환영입니다. 어딜 보시는거죠?</h1>
+  </c:if>
+  ```
+
+* choose
+
+  ```jsp
+  <c:choose>
+  	<c:when test="${param.age <=13 }">
+  	 <h1> 초등학생입니다. </h1>
+  	</c:when>
+  	<c:when test="${param.age <=16 }">
+  	 <h1> 중학생입니다.</h1>
+  	</c:when>
+  	<c:when test="${param.age <=19 }">
+  	 <h1> 고등학생입니다.</h1>
+  	</c:when>
+  	<c:otherwise>
+  	 <h1> 성인입니다.</h1>
+  	</c:otherwise> 
+  </c:choose>
+  ```
+
+  * forEach
+
+    * 배열
+
+    ```jsp
+    % 
+    String[] colors ={"빨강", "노", "초", "파", "보", "검", "흰"}; 
+     pageContext.setAttribute("el_colors", colors);
+    %>
+    
+    <h1> el로 배열 내용을 출력합니다.</h1>
+    <c:forEach items="${el_colors }" var="one_color">
+    <h3>${one_color }</h3>
+    </c:forEach>
+    
+    <h1> el로 배열 내용을 출력합니다.</h1>
+    <c:forEach begin="1" end="10" step="2" var="one_color">
+    <h3>${one_color }</h3>
+    </c:forEach>
+    ```
+
+    * ArrayList
+
+    ```jsp
+    <%
+    ArrayList<MemberVO> list = new ArrayList<MemberVO>();
+     list.add(new MemberVO("Member20", 2020, "김대한", "DAE@a.com"));
+     list.add(new MemberVO("Member30", 3030, "박대한", "park@a.com"));
+    pageContext.setAttribute("el_list", list);
+    %>
+    <h1> el jstl로 회원 내용을 출력합니다.</h1>
+    <c:forEach items="${el_list }" var="vo">
+    <h3> ${vo }</h3>
+    <h3> ${vo.memberid }</h3>
+    </c:forEach>
+    ```
+
+    * Map
+
+    ```jsp
+    <%
+    HashMap<String, MemberVO> map = new HashMap<String, MemberVO>();
+     map.put("1번 회원" ,new MemberVO("Member20", 2020, "김대한", "DAE@a.com"));
+     map.put("2번 회원" ,new MemberVO("Member30", 3030, "박대한", "park@a.com"));
+     
+     pageContext.setAttribute("el_map", map);
+    %>
+    <h1> el jstl로 map을 출력합니다.</h1>
+    <c:forEach items="${ el_map}" var="vo">
+     ${vo.key} : ${vo.value}
+    </c:forEach>
+    ```
+
+    * Map 응용
+
+    ```jsp
+    <% 
+    HashMap<String, String> map2 = new HashMap<String, String>();
+    map2.put("red", "빨강");
+    map2.put("orange", "주황");
+    map2.put("yellow", "노랑");
+    map2.put("green", "초록");
+    map2.put("blue", "파랑");
+    map2.put("navy", "남색");
+    map2.put("purple", "보라");
+    pageContext.setAttribute("col_map", map2);
+    %>
+    
+    <h1> el jstl로 map2를 출력합니다.</h1>
+    <c:forEach items="${col_map }" var="color">
+    <h3 style= "color:${color.key}" >${color.value }</h3>
+    </c:forEach>
+    ```
+
+    * Map에서 varStatus
+      * index
+      * count
+      * first
+      * last
+      * current
+
+    ```jsp
+    <h1> el jstl로 map2를 출력합니다.</h1>
+    <c:forEach items="${col_map }" varStatus="st">
+     <c:if test="${st.index == 3}"> or  <c:if test="${st.first}">
+    <h3 style= "color:${st.current.key}" >${st.current.value }</h3>
+     </c:if>
+    </c:forEach>
+    ```
+
+    
 
 
 
