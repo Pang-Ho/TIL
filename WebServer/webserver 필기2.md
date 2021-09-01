@@ -27,6 +27,8 @@ BServelt
 @WebServlet("/")
 request.getParameter("id");
 String name = (String)request.getAttribute("name"); // "campus" 데이터를 공유받을 수 있음
+
+공유받는 방법 2가지
 ```
 
 
@@ -58,7 +60,7 @@ String name = (String)request.getAttribute("name"); // "campus" 데이터를 공
 
 | 1. 클라이언트 요청한다.<br /><br />4. 쿠키 내용이 브라우저로 전송된다. | 2. 서버 에서 쿠키 객체로 생성한다.<br />Cookie c = new Cookie("쿠키명", "값");<br />c.setMaxAge(60x60x24); => 쿠키 살아있는 시간<br />3. 클라이언트에게 응답한다<br />response.addCookie(c); |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 5. 클라이언트 요청한다<br />(동일 서버로부터 받은 쿠키도 같이 전송) | 6. 클라이언트로부터 쿠키를 읽어온다<br />Cookies[] coo = request.getCookies(); |
+| 5. 클라이언트 요청한다<br />(동일 서버로부터 받은 쿠키도 같이 전송) | 6. 클라이언트로부터 쿠키를 읽어온다<br />Cookies[] coo = request.getCookies();<br />coo[].getName();<br />coo[].getValue(); |
 
 
 
@@ -81,13 +83,7 @@ out.println("클라이언트로 주문한 책 정보를 전송했습니다.");
 * 부라우저 종료되어도 쿠키 유지
 
 ```java
-Cookie c = new Cookie("book", "thisisjava");
 c.setMaxAge(60x60x24);
-response.addCookie(c);
-		
-response.setContentType("text/html;charset=utf-8");
-PrintWriter out = response.getWriter();
-out.println("클라이언트로 주문한 책 정보를 전송했습니다.");
 ```
 
 ![image-20210830110144309](../md-images/image-20210830110144309.png)
@@ -439,7 +435,7 @@ jsp
 
 서블릿
 
-MemberVO vo =- new MemberVO("","","","");
+MemberVO vo = new MemberVO("","","","");
 
 request.setAttribute("이름",vo);
 
