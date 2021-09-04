@@ -385,19 +385,36 @@ request.setAttribute("이름",vo);
 
 * ​	scope는 자바 빈(VO)에 대한 접근 범위를 지정하는 역할
 
-  ​	page, request, session, application
+  jsp:usebean scope=" "
+
+  page - 공유 안하고 페이지 내에서만 쓰겠다.
+
+  request - forward, include 되어도 공유하겠다.
+
+  session - 같은 브라우저 내에서는 계속 쓰겠다.
+
+  application - 서버가 시작돼서 종료까지 계속 쓰겠다.
+
+  
 
 * setter 태그 setProperty
 
 ```jsp
-<jsp:setProperty property="name" name="vo" value="java" param="id"
-				짓는 이름		useBean 이름           불러오는 파라미터
+<jsp:setProperty name="vo" property="id" value='<%=vo.getParameter("id")%>' />
 ```
+
+```jsp
+<jsp:setProperty property="memberid" name="vo" param="id"/>
+			usebean파라미터 명	useBean 이름    불러오는 파라미터 명
+```
+
+​			* 여기서 property 명과 param 명이 같다면 property와 name만 써도 된다
 
 * getter 태그 getProperty
 
 ```jsp
-<jsp:getProperty property="name" name="vo"
+<jsp:getProperty property="memberid" name="vo"/>
+                 가져올파라미터 명     가져오는 bean이름
 ```
 
 <%= 안써도 브라우저 출력됨						
@@ -430,14 +447,14 @@ action 태그와 page 태그 차이
 <%@page import="vo.MemberVO">
 <% MemberVO vo = new MemberVO();  => 기본생성자만 호출가능
 vo.setMemeberid("member1")%>  => setter 호출
-<%=vo.gerMemberid()%> =>
+<%=vo.getMemberid()%> => getter 호출
 ```
 
 ```jsp
-<jsp:useBean id="vo" class="vo.MemberVO" />
+<jsp:useBean id="vo" class="vo.MemberVO" scope="page"/>
 <jsp:setProperty name="vo" property="memberid" value="member1" />
+<jsp:setProperty name="vo" property="memberid" param="id" />
 <jsp:getProperty name="vo" property="memberid" />
-=> jsp파일 (html태그 웹디자이너 + 자바 문장 웹개발자)
 ```
 
 * 자바 코드로 짜는 방법
@@ -487,21 +504,11 @@ value 속성이 너무 길어서 param 사용하자 => param="id"처럼
 <jsp:getProperty property="email" name="vo" />
 ```
 
-* jsp:setProperty에서 property값과 파라미터 변수명이 같으면 param, value를 생략할 수 있다.
-
-* jsp:usebean scope=" "
-
-  page - 공유 안할것이다.
-
-  request - forward, include 되어도 공유하겠다.
-
-  session - 같은 브라우저 내에서는 계속 쓰겠다.
-
-  application - 서버가 시작돼서 종료까지 계속 쓰겠다.
-
 ### request
 
 ```jsp
+other.jsp
+
 <jsp:useBean id="vo" class="vo.MemberVO" scope="request"/>
  
 <h1> 액션 태그로 읽어옵니다.</h1>
@@ -516,6 +523,7 @@ value 속성이 너무 길어서 param 사용하자 => param="id"처럼
 
 = 같은 의미
 
+<%
 if(requset.getAttribute("vo") ==null){
  MemberVO vo = new MemberVO();
  request.setAttribute("vo",vo);
@@ -523,8 +531,9 @@ if(requset.getAttribute("vo") ==null){
  else{
  	MemberVO vo = request.getAttribute("vo");
  }
+%>
  
-<jsp:setProperty property="*" name="vo"/>
+<jsp:setProperty name="vo" property="*" />
 
 <jsp:forward page="other.jsp"/>
 ```
@@ -568,13 +577,17 @@ action = "/jsptest/memberinform" or "memberinform"
 
 슬래쉬가 있으면 컨텍스트루트부터
 
-슬래쉬가 없으면 = 현재 파일과 같은 루트에 있다.
+슬래쉬가 없으면 현재 파일과 같은 루트에 있다.
 
 
 
-<jsp:useBean id="vo" class="vo.MemberVO" scope="request" >
+page="/action/bottom.jsp" or "bottom.jsp"
 
-​									class="패키지명.클래스명"
+슬래쉬가 있으면 WebContent 하위폴더부터
+
+슬래쉬가 없으면 현재 파일과 같은 루트에 있다.
+
+
 
 * servlet에 넣음
 
@@ -616,9 +629,11 @@ action = "/jsptest/memberinform" or "memberinform"
 
 
 
-### el 언어
+## 표현 언어
 
-EL : EXPRESSION LANGUAGE - 브라우저 응답 내용, 쉽고 간결한 표현이 가능한 언어, jsp 파일 내부에서 사용
+* EL : EXPRESSION LANGUAGE 
+
+  스크립트 요소에 들어있는 자바 코드를 줄여 좀 더 편리하게 사용하기 위해 도입된 데이터 출력 기능
 
 <% request.getParameter("id"); %>
 
@@ -661,17 +676,18 @@ ${ el 언어 문법 }
 
 * 형변환이 자동으로 돼서 계산이 된다.
 
+* empty 연산자
+
+  자바 빈의 속성 값이 설정되어 있는지 또는 list나 map 같은 저장 객체의 값이 존재하는지 판단하는 연산자
+
+```jsp
+<jsp:useBean id="vo" class="vo.MemberVO2"/>
+<jsp:setProperty name="vo" property="id" value="member1"/>
+
+${empty id} : <%=vo.getId()%>   =>   true : member1
+```
 
 
-
-
-==============
-
-
-
-
-
-=============
 
 ```jsp
 jsp 변수를 el에 전달
