@@ -2,35 +2,41 @@
 
 ## JSP
 
-jsp - java server page / html + java
+jsp - java server page
+
+​		html + java
 
 * 처음 자바 웹서버는 서블릿 구조만 제공되었다.
 
   그 후 서블릿 기능 중 별도 화면 기능을 쉽고 간결하게 작업하기 위해 JSP가 등장했다.
 
   톰캣 서버가 jsp 내용을 자바 언어로 만들어줌
+  
+  	1. 컨테이너는 JSP파일을 자바 파일로 변환합니다
+  	2. 변환된 자바 파일을 클래스 파일로 컴파일합니다
+  	3. 컨테이너는 클래스 파일을 실행하여 부라우저로 전송합니다
 
 | 서블릿                                                       | jsp                                                          |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | 자바 언어 구현 + html태그 응답                               | 자바 언어 구현 + html태그 응답                               |
-| class A extends HttpServlet<br />doGet(){<br />응답 - 자바 언어 내부에 html 언어를 포함한 형식<br />out.prinln("<h1 ... ")} | <% 서블릿 api + db + DVO, VO객체생성 자바문장; %><br /><html<br /><body<br />html 양식 언어 내부 자바 문장 포함<br />jsp 태그와 html 태그 혼용 가능<br />서블릿처럼 메소드 오버라이딩 필요없다 |
+| 자바 언어 내부에 html 문장<br />doGet(){<br />처럼 오버라이딩 형식으로 문장 작성<br />out.prinln("<h1 ... ")} | html 언어 내부에 자바 문장<br />서블릿처럼 메소드 오버라이딩 필요없다<br /><% out.print() %> |
 
 
 
 ### 작성
 
-1. servlet api + jsp api + 내장 객체들
-2. <% %>
+1. servlet api + jsp api + html + 내장 객체들
 
-| html 태그  | html<br />css<br />js<br />jquery                            |
-| ---------- | ------------------------------------------------------------ |
-| jsp 기본   | <%  지역변수 선언, 자바 문장   %><br />표현문 태그 <%=변수명     %><br />선언문 태그 <%! 메소드 정의, 필드변수 정의    %><br />jsp 주석 태그<%--     --%><br />지시문 태그<%@    %> |
-| jsp action | <jsp:xxxx   />                                               |
-| jsp custom | <c:xxx    />                                                 |
-| el         | ${}<br />$("#i")                                             |
-| 내장객체   | jsp는 서블릿보다 간결하게 응답, servlet api 그대로 사용할 수 있음 그러나 자바 문장 구현을 없애자 해서 나온 것이 내장 객체임<br />내장객체 : request, response, exception, session, application 서블릿과 달리 만들 필요가 없음 |
+| jsp 기본 태그   | 기본 자바문장<% 지역변수 선언 %><br />표현문 태그 <%=변수명     %><br />선언문 태그 <%! 메소드 정의, 필드변수 정의    %><br />jsp 주석 태그<%--     --%><br />지시문 태그<%@    %> |
+| --------------- | ------------------------------------------------------------ |
+| jsp action 태그 | <jsp:xxxx   />                                               |
+| jsp custom 태그 | <c:xxx    />                                                 |
+| el              | ${}<br />$("#i")                                             |
+| 내장객체        | jsp는 서블릿보다 간결하게 응답, servlet api 그대로 사용할 수 있음 그러나 자바 문장 구현을 없애자 해서 나온 것이 내장 객체임<br />내장객체 : request, response, exception, session, application 서블릿과 달리 만들 필요가 없음 |
 
-response.setContentType("text/html;charset=utf-8"); => contentType="text/html;charset=utf-8"
+서블릿의 출력 형식 지정은 response.setContentType("text/html;charset=utf-8"); 
+
+=> JSP 출력 형식 지정은 contentType="text/html;charset=utf-8"
 
 
 
@@ -43,7 +49,7 @@ response.setContentType("text/html;charset=utf-8"); => contentType="text/html;ch
 
 <% String user = "test"; %> <!-- =>_jspService 메소드의 지역 변수라서 -->
 
-<h1 id="jsp"><%=user %>, <%=this.user %></h1>
+<h1 id="jsp">지역변수<%=user %>, 필드변수<%=this.user %></h1>
 ```
 
 
@@ -83,17 +89,56 @@ response.setContentType("text/html;charset=utf-8"); => contentType="text/html;ch
 
 
 
+## JSP기본태그
+
+### 페이지 디렉티브 태그
+
+```jsp
+<%@ page 속성1="" 속성2="" .... %>
+```
+
+| 속성         | 설명                                         |
+| ------------ | -------------------------------------------- |
+| info         | 페이지 설명해주는 문자열                     |
+| contentType  | jsp페이지 출력 형식 지정                     |
+| pageEncoding | jsp 페이지에서 사용하는 문자열 인코딩을 지정 |
+| import       |                                              |
+| session      |                                              |
+| buffer       |                                              |
+| autoFlush    | 출력 전 버퍼가 다 채워질 경우 동작 지정      |
+| errorPage    | 예외 발생시 예외 처리 담당 지정              |
+| isErrorPage  | 예외처리 담당 페이지인지 안내                |
+| isELIgnored  | EL 사용유무                                  |
+| languager    |                                              |
+
+### 인클루드 디렉티브 태그
+
+* 공통으로 사용하는 JSP페이지를 다른 JSP 페이지에 추가할 때 사용
+
+  ```jsp
+  <%@ include file="c.jsp"%>
+  ```
+
+  보통 페이지마다 똑같이 보여지는 메뉴가 있다면 사용
 
 
-### 내장 객체(자주 사용하는 객체 미리 변수 선언되어 제공)
 
-1. _jspService() 
+## JSP 스크립트 요소
 
-   <%! %> 태그 제외하면 jsp 모든 내용은 _jspService()실행코드가 된다.
+### 스크립트릿
 
-2. _jspService() 지역변수처럼 취급됨
+* jsp 페이지에서 여러가지 동적인 처리를 제공하는 기능으로 <% %> 기호안에 자바코드로 구현한다. //<% %> 이 기호를 스크립트릿이라고 부름
+* 선언식, 표현식, 주석문  
 
-| 내장 객체 이름 | 타입                                                         | 역할                                                         | 메소드                 |
+
+
+### 내장 객체(자주 사용하는 객체가 미리 변수 선언되어 제공)
+
+1. JSP 페이지의 내장 객체란 JSP가 서블릿으로 변환될 떄 컨테이너가 자동으로 생성시키는 서블릿 멤버 변수를 말한다.
+2. <%! %> 태그 제외하면 jsp 모든 내용은 _jspService() 메서드에 생성된 내장 객체를 저장하는 내장 변수가 선언된 코드다
+3. _jspService() 지역변수처럼 취급됨
+
+| 내장 객체 이름 | 서블릿 타입                                                  | 역할                                                         | 메소드                 |
 | -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------- |
 | request        | javax.servlet.http.HttpServletRequest                        | 요청                                                         | request.getParameter() |
 | response       | javax.servlet.http.HttpServletResponse                       | 응답                                                         |                        |
@@ -174,13 +219,50 @@ String[] con = request.getParameterValues("con");
 | 500                       | 서블릿이나 jsp 논리적인 오류                                 |
 |                           | exception 내장객체로 예외처리                                |
 
+### 예외처리 방법 3가지
+
+#### 1. try/catch RequestDispatcher
+
+```jsp
+<%
+try(){
+...
+}
+catch(Exception e){
+   ...
+RequestDispatcher rd = request.getRequestDispatcher("b.jsp");
+rd.forward(request, response);
+}
+```
+
+#### 2. errorPage/isErrorPage
+
+```jsp
+a.jsp
+<%@ page errorPage="b.jsp" >
+
+b.jsp
+<%@ page isErrorPage="true">
+```
 
 
-| a.jsp <%@ page errorPage="c.jsp"%><br />NullPointerException 발생 - 500<br />try{<br />}catch(){} | c.jsp (예외처리전담jsp)<br /><%@ page isErrorPage ="true" %> => 이제 exception 내장객체 사용 가능 |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| b.jsp<%@ page errorPage="c.jsp"%><br />NullPointerException 발생 - 500<br />try{<br />}catch(){} |                                                              |
-|                                                              |                                                              |
-|                                                              |                                                              |
+
+#### 3. web.xml 수정 / isErrerPage
+
+```xml
+<error-page>
+	<exception-type>java.lang.ArithmeticException</exception-type>
+    <location>/b.jsp</location>
+</error-page>
+```
+
+
+
+### Attribute
+
+* pagecontext, request, session, application속성을 갖고있다.
+* JSP 페이지 사이에서 정보를 주고 받거나 공유하기 위한 목적으로 사용된다.
+* request - 이 기본객체는 한번의 요청에 대해 유효하게 동작하며, 한 번의 요청을 처리하는데 사용되는 모든 jsp에서 공유된다.
 
 * 오류 전달 및 setAttribute로 오류 발생 파일명 전달
 
@@ -221,45 +303,102 @@ if(exception.getClass().getName().equals("java.lang.NumberFormatException")){
 
 ## 자바 코드를 없애는 액션 태그
 
+### forward, include
 
+* 서블릿에서 사용하던 include와 forward
 
-### jsp에서 forward, include
-
-서블릿
-
+```java
 RequestDispatcher rd = requset.getRequestDispatcher("/b or b.jsp");
+rd.include();
+rd.forward();
+```
 
-rd.include
+* jsp에서 사용할 수 있는 액션태그 inclue와 forward
 
-rd.forward
-
-
-
-jsp
-
+```jsp
 <jsp:include page="/b or b.jsp"/>
+<jsp:forward page="/b or b.jsp"/>
+```
+
+#### Include 액션태그는 공통적으로 사용하는 홈페이지의 화면에 사용된다.
+
+* image.jsp
+
+```jsp
+<%
+request.setCharacterEncoding("utf-8");
+String name = request.getParameter("name");
+String imgName = request.getParameter("imgName");
+%>
+<body>
+	<h1>이름은 <%=name></h1>
+    <img src="./img/<%=imgName %>"/>
+</body>
+```
+
+* include.jsp
+
+```jsp
+<body>
+    안녕하세요. 팡 쇼핑몰입니다.<br>
+    <jsp:include page="image.jsp" flush="true">
+    	<jsp:param name="name" value="팡"/>
+        <jsp:param name="imgName" value="pang.png"/>
+    </jsp:include>
+</body>
+```
+
+#### include 디렉티브, include 액션태그
+
+* include 디렉티브는 파일 소스만 복붙하는 정적방식
+* include 액션태그는 포함될 페이지 결과들까지 합쳐서 보이는 동적방식(param 액션태그들을 이용해 동적처리가 가능해짐)
+
+#### forward 태그
+
+* 자바태그 없이 포워딩 할 수 있는 것이 장점
+
+```jsp
+<jsp:forward page="포워딩할 jsp페이지">
+	...
+</jsp:forward>
+```
 
 
 
-서블릿
 
+
+### useBean
+
+* 서블릿에서 객체 생성 방법
+
+```java
 MemberVO vo = new MemberVO("","","","");
-
 request.setAttribute("이름",vo);
+```
 
+* jsp에서 사용할 수 있는 액션태그 useBean
 
-
-jsp
-
+```jsp
 <jsp:useBean id="vo" class="vo.MemberVO" scope="request" >
+    				class="패키지명.클래스명"
+```
 
-​									class="패키지명.클래스명"
+* ​	scope는 자바 빈(VO)에 대한 접근 범위를 지정하는 역할
 
+  ​	page, request, session, application
+
+* setter 태그 setProperty
+
+```jsp
 <jsp:setProperty property="name" name="vo" value="java" param="id"
+				짓는 이름		useBean 이름           불러오는 파라미터
+```
 
-​							짓는 이름													불러오는 파라미터 이름
+* getter 태그 getProperty
 
+```jsp
 <jsp:getProperty property="name" name="vo"
+```
 
 <%= 안써도 브라우저 출력됨						
 
@@ -287,36 +426,30 @@ action 태그와 page 태그 차이
 
 ### 생성자 호출, setter, getter  
 
+```jsp
 <%@page import="vo.MemberVO">
-
 <% MemberVO vo = new MemberVO();  => 기본생성자만 호출가능
-
 vo.setMemeberid("member1")%>  => setter 호출
-
 <%=vo.gerMemberid()%> =>
+```
 
-
-
+```jsp
 <jsp:useBean id="vo" class="vo.MemberVO" />
-
 <jsp:setProperty name="vo" property="memberid" value="member1" />
-
 <jsp:getProperty name="vo" property="memberid" />
-
 => jsp파일 (html태그 웹디자이너 + 자바 문장 웹개발자)
-
-
+```
 
 * 자바 코드로 짜는 방법
 
 ```jsp
 <%
-//request.setCharacterEncoding("utf-8");
+//파라미터 받아오기
 String memberid = request.getParameter("memberid");
 String password = request.getParameter("password");
 String membername = request.getParameter("membername");
 String email = request.getParameter("email");
-
+//생성자 생성 및 setter
 MemberVO vo = new MemberVO();
 vo.setMemberid(memberid);
 vo.setPassword(Integer.parseInt(password));
@@ -324,6 +457,7 @@ vo.setMembername(membername);
 vo.setEmail(email);
 
 %>
+<%//getter%>
 아이디:<%=vo.getMemberid() %><br>
 암호:<%=vo.getPassword() %><br>
 이름:<%=vo.getMembername()%><br>
@@ -334,14 +468,18 @@ vo.setEmail(email);
 * 액션 태그로 짜는 방법
 
 ```jsp
+//생성자 생성
 <jsp:useBean id="vo" class="vo.MemberVO"/> <!-- MemberVO 기본생성자 호출 --> 
+//setter 및 파라미터
 <jsp:setProperty property="memberid" name="vo" value="<%=request.getParameter(\"id\") %>"/>
 <jsp:setProperty property="password" name="vo" value="<%=Integer.parseInt(request.getParameter(\"pw\")) %>"/>
 <jsp:setProperty property="membername" name="vo" value="<%=request.getParameter(\"name\") %>"/>
+
 <jsp:setProperty property="email" name="vo" param="mail" %>"/>
 
-value 속성이 너무 길어서 param 사용하자
-param="id"
+value 속성이 너무 길어서 param 사용하자 => param="id"처럼
+
+//getter
 <h1> 액션 태그로 읽어옵니다.</h1>
 <jsp:getProperty property="memberid" name="vo" />
 <jsp:getProperty property="password" name="vo" />
