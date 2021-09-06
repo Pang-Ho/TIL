@@ -14,6 +14,40 @@
 
 ![image-20210901162025041](../md-images/image-20210901162025041.png)
 
+## pom.xml에서 스프링 버전 바꾸기
+
+* 처음에 스프링 버전이 3.1.1로 설정 되어있음 우린 다른걸 쓰므로...
+
+```xml
+<org.springframework-version>4.3.18.RELEASE</org.springframework-version>
+```
+
+* dependency가 라이브러리 관리하는 부분
+* 우리가 쓸 라이브러리 추가(https://mvnrepository.com/ 이곳에서 라이브러리 따로 받을 수 있고, pom.xml에 밑 처럼 써도 라이브러리는 다운받아짐)
+
+```xml
+<!-- 파일 업로드 -->
+<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+<dependency>
+    <groupId>commons-fileupload</groupId>
+    <artifactId>commons-fileupload</artifactId>
+    <version>1.3.1</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+<dependency>
+    <groupId>commons-io</groupId>
+    <artifactId>commons-io</artifactId>
+    <version>2.6</version>
+</dependency>
+```
+
+* servlet-context.xml
+
+  파일업로드-Multipart - 인식태그
+
+  <bean class Multipart 객체... 
+
 
 
 * 프레임워크
@@ -344,7 +378,7 @@ public static void main(String[] args) {
 
 ## Spring MVC
 
-### 모델 1
+### 모델 1 non-mvc
 
 * web server - servlet, jsp(html포함), dao, vo 
 * 웹서버 개발 형식 - 흐름 복잡하다. 서버 내부 jsp 파일 관계 분석이 어렵다
@@ -371,9 +405,23 @@ public static void main(String[] args) {
 
 * 모델 1보다는 규칙적이다
 
-  ​				MVC
+![image-20210906091646972](../md-images/image-20210906091646972.png)
+
+​		
+
+
+
+​	MVC
 
 ![image-20210903094453356](../md-images/image-20210903094453356.png)
+
+![image-20210906091933583](../md-images/image-20210906091933583.png)
+
+![image-20210906092158141](../md-images/image-20210906092158141.png)
+
+![image-20210906092448983](../md-images/image-20210906092448983.png)
+
+
 
 
 
@@ -695,3 +743,440 @@ loginresult.jsp
 실습
 
 ![image-20210903165636354](../md-images/image-20210903165636354.png)
+
+* servlet-context.xml
+
+```xml
+	<context:component-scan base-package="edu.spring.multi" />
+	
+	
+	<!-- mvcannotation.HelloAnnotiationController... -->
+	<context:component-scan base-package="mvcannotation"/> <!-- mvc로 이 패키지 두 개만 쓰겠다 -->
+```
+
+* MemberVO
+
+  xml에 MemberVO를 저 둘 중 패키지에 넣어주기
+
+* MemberController
+
+  list라는 모델을 넘겨야됨
+
+  		<beans:property name="prefix" value="/WEB-INF/views/" />
+  		<beans:property name="suffix" value=".jsp" />
+  		=> mv.serViewName("memberlist")를 쓰면 /WEB-INF/views/memberlist.jsp로 자동으로 된다.
+
+  ```java
+  @Controller
+  public class MemberController {
+  	@RequestMapping("/memberlist")
+  	ModelAndView getMemberList() {
+  		ArrayList<MemberVO> list = new ArrayList<MemberVO>();
+  		list.add(new MemberVO("member1", 1111, "김회원", "kim@mul.com"));
+  		list.add(new MemberVO("member2", 1111, "박대한", "kim@mul.com"));
+  		list.add(new MemberVO("member3", 1111, "김민국", "kim@mul.com"));
+  		list.add(new MemberVO("member4", 1111, "홍길동", "kim@mul.com"));
+  		list.add(new MemberVO("member5", 1111, "최회원", "kim@mul.com"));
+  		ModelAndView mv = new ModelAndView();
+  		mv.addObject("memberlist", list);
+  		mv.setViewName("member/memberlist"); //경로와 확장자가 xml에 저장
+  		return mv;
+  	}
+  ```
+
+* memberlist.jsp
+
+```jsp
+자바 코드로 짜기
+<%
+ ArrayList list = (ArrayList)request.getAttribute("memberlist");
+for(MemberVO vo : list){
+	out.println(vo);
+%>
+
+jstl로 짜기
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:forEach items="${memberlist }" var="vo">
+<h3>${vo.memberid }</h3>
+</c:forEach>
+```
+
+multi/memberlist 로만 view를 호출할 수 있음
+
+WEB-INF/view/... 에 있는 파일은 보안 폴더라서 절대 호출 불가능 controller에서 설정한 request.mapping 어노테이션에서 설정한 uri로만 간다!!
+
+
+
+
+
+## get / post
+
+http 요청 클라이언트 방식
+
+| get                                                          | post |
+| ------------------------------------------------------------ | ---- |
+| <form action=" " <br /><a href="/multi/insert> =>모든 html 하이퍼링크는 get방식임 |      |
+
+```java
+@RequestMapping("/loginform")
+public ModelAndView loginstart() {
+    ModelAndView mv = new ModelAndView();
+    mv.addObject("model", "모델값입니다."); 
+    //mv.setViewName("loginform")을 안써주는 이유는 view를 알려주지 않으면 view 이름은 요청한 uri이름과 동일해진다.
+    return mv;
+}
+```
+
+
+
+```java
+	//memeber가 추가되려면 아이디 암호 이름 이메일 입력하는 form view가 필요
+	//입력되면 db 저장(mybatis)후 출력view
+	@RequestMapping(value="/insert" , method=RequestMethod.GET )
+	String memberForm() {
+		return "member/insertform"; //member폴더안에 insertform.jsp 보여달라!!
+	}
+	
+===============================================
+	@RequestMapping(value="/insertprocess", method=RequestMethod.POST)
+	ModelAndView memberProcess(MemberVO vo) { 
+		//@RequestParam("memberid") String id => 원래 이런 형식으로 insertform에서 파라미터 받아와야됨.
+		//vo.setMemberid(request.getParameter("memberid"); + 3개 필드 setter해야하는데 이걸 안해도 되는 효과~
+		
+		ModelAndView mv = new ModelAndView();
+		
+		if(!vo.getMemberid().equals("spring")) {
+			mv.addObject("result", "정상 회원 아이디로 사용 가능합니다.");
+		}
+		else {
+			mv.addObject("result", "아이디 중복입니다. 다른 아이디 입력하세요!");
+		} //모델을 다르게
+		mv.setViewName("member/insertprocess");
+		return mv;
+	}
+```
+
+
+
+```jsp
+<h1>${param.memberid } : ${result }</h1>
+<a href="/multi/insert">회원가입</a>하러갑시다.
+```
+
+
+
+```jsp
+<h1> 회원 가입 폼</h1>
+<form action="/multi/insertprocess" method=post>
+아이디<input type="text" name="memberid"><br>
+암호<input type="password" name="password"><br>
+이름<input type="text" name="membername"><br>
+이메일<input type="text" name="email"><br>
+<input type="submit" value="회원가입">
+</form>
+```
+
+==================
+
+method 방식이 서로 다르면 RequestMapping value 값을 같게주고 쓸 수 도 있음 왜? 메소드에 따라 결과가 달라지니까
+
+
+
+## resources 폴더
+
+![image-20210906113637574](../md-images/image-20210906113637574.png)
+
+mvc와 무관한 것들 넣고 사용한다.
+
+
+
+### 이미지
+
+이미지는  webapp/resources/images 이 루트에 있어야함
+
+### jquery
+
+jquery 또한 resources 폴더에 넣고 사용
+
+```jsp
+<script src="/multi/resources/jquery-3.2.1.min.js"> </script>
+<script>
+	$(document).ready(
+		function() {
+			alert(1);
+	});
+</script>
+```
+
+
+
+## 비즈니스로직과 main    ////     mvc
+
+* 요청 - 처리(자바 수행 결과) - 응답
+* main을 빼고 Controller로 할 것이다.
+* main은 html과 연결하는 애가 아니니까
+* main 
+
+
+
+### web.xml
+
+```xml
+tomcat 서버가 /multi 컨텍스트로 정보를 전달 => root-context.xml도 읽어라
+<context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/spring/root-context.xml</param-value>
+</context-param>
+
+
+member.xml도 읽게하고 싶다. 그러면 밑 처럼 DispatcherServlet한테 이것도 읽으라고 설정
+<context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+        /WEB-INF/spring/root-context.xml
+        classpath:annotation/service/member/member.xml
+    </param-value>
+</context-param>
+
+<servlet>
+	<servlet-name>appServlet</servlet-name>
+	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	<init-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+	</init-param>
+	<load-on-startup>1</load-on-startup>
+</servlet>
+```
+
+## 하.. 왜 못찾지?
+
+* 주 원인 
+  * servlet-context를 보면   <context:component-scan base-package="mvcannotation"/> 이것도 있고
+  * 서비스단으로 만든거때문에 그럼 ????
+
+### annotation
+
+* di
+  * @Component
+  * @Repository
+  * @Service
+  * @Autowired
+* mvc
+  * @Controller
+  * @RequestMapping
+  * @RequestParam
+  * @ModelAttribute
+
+
+
+## 28장 파일 업로드
+
+* pom.xml에서 파일 업로드에 관한 라이브러리 2개 다운
+
+* servlet-context.xml에 파일업로드 기능 추가
+
+  ```xml
+  	<!-- 파일 업로드 기능 추가 -->
+  	<beans:bean id="multipartResolver" 
+  	class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+  ```
+
+* method는 post
+
+
+
+* UploadVO
+
+  ```java
+  	String name;
+  	String desciption;
+  	MultipartFile file1;
+  	MultipartFile file2;
+  ```
+
+  
+
+* UploadController
+
+  ```java
+  @Controller
+  public class UploadController {
+  	
+  	@RequestMapping(value="/fileupload", method=RequestMethod.GET)
+  	public String uploadForm() {
+  		return "/upload/uploadform";
+  	}
+  	
+  	@RequestMapping(value="/fileupload", method=RequestMethod.POST)
+  	public String uploadResult(@ModelAttribute("vo") UploadVO vo) throws IOException {
+  		
+  		//Multipart multi1 = vo.getFile1();
+  		//서버 c:/kdigital/upload 에 업로드 되게 설정하자
+  		MultipartFile multi1 = vo.getFile1();
+  		MultipartFile multi2 = vo.getFile2();
+  		//파일명 추출
+  		String filename1 = multi1.getOriginalFilename();
+  		String filename2 = multi2.getOriginalFilename();
+  		//파일 업로드
+  		String savePath = "c:/kdigital2/upload/";
+  		
+  		//파일이 계속 중복됨 어케할까?
+  		File file1 = new File(savePath + filename1);
+  		File file2 = new File(savePath + filename2);
+  		//저장
+  		multi1.transferTo(file1);
+  		multi2.transferTo(file2);
+  		
+  		return "/upload/uploadresult";
+  	}//uploadResult end
+  	//파일 안덮어쓰게 만드는 방법 = 파일 이름 안겹치게 만드는 방법
+  	public static String getUuid() {
+  		return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+  	}
+  }
+  
+  ```
+
+  
+
+* uploadform.jsp
+
+  ```jsp
+  <form action="/multi/fileupload" method="post" enctype="multipart/form-data">
+  전송자 : <input type=text name="name"><br>
+  설명 : <input type=text name="description"><br>
+  파일명1 : <input type="file" name="file1"><br>
+  파일명2 : <input type="file" name="file2"><br>
+  <input type="submit" value="전송">
+  </form>
+  ```
+
+  
+
+* uploadersult.jsp
+
+  ```jsp
+  ${vo.file1.originalFilename } <!-- String filename1 = multi1.getOriginalFilename(); 여기서 getter니까 get빼고 소문자 -->
+  ${vo.file2.originalFilename } 파일 저장완료
+  
+  ```
+
+
+
+
+
+## REST API
+
+* restful 기능 mvc
+
+  * rest
+
+    a.jsp에서 /b 실행 응답화면 b.jsp를 포함하고 싶다
+
+  * http
+
+    1. 요청 => 응답
+
+    2. 요청 처리 시간 동안 클라이언트는 대기한다. 화면에는 아무 변화가 없어야한다.
+
+       => 동기화 통신 방식(synchronous)
+
+       기본적인 http로는 비동기화 통신 방식을 구현할 수 없다.
+
+    3. 변경 => 요청 => 화면은 계속 이용할 수 있고, 응답하면 변경됨
+
+       => 비동기화 통신 방식(asynchronous)
+
+       => java script가 이 일을 해줄 수 있음 
+
+       => (초기방식 : 비동기 통신시 전달 데이터 형태)xml 자바스크립트의 객체  형식을 쓰자{"a" : "test" , "b":100, "c":true, "d":{....} }
+
+       => ajax (asynchronous javascript and xml)
+
+    
+
+    현재 방식은 json => java script object notation
+
+    자바 객체 방식 a = { "변수명" : "값"}
+
+    나중에 읽을 땐? => a.변수명
+
+    
+
+    http 이전 상태 정보를 유지할 수 없어서 추가 HttpSession 구현
+
+
+
+@ResponseBody 이 어노테이션을 쓸 예정
+
+
+
+```java
+@Controller
+class A{
+    @RequestMapping("/a")
+    String m(){
+        return "a";  => view 이름
+    }
+    
+    @RequestMapping("/b")
+    @ResponseBody => 너 문서의 바디부분만 이용할거야
+    String m2(){
+        return "b"; => "b" 결과 리턴 jsp파일이 아님 b="{"":"", "":""}"
+    }
+}
+```
+
+
+
+* ajax 쓰려면 pom.xml 다운받을 라이브러리 필요
+
+  ```xml
+  <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+  <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.12.4</version>
+  </dependency>
+  
+  ```
+
+  
+
+* ajaxlogin.jsp
+
+  ```jsp
+  <script src="/multi/resources/jquery-3.2.1.min.js"></script>
+  <script>
+  $(document).ready(function(){
+  	$("#ajaxbtn").on('click', function(){
+  		$.ajax({
+  			url : "/multi/ajax/login",
+  			data : {'id':$("#idd").val(), 'pw':$("#pass").val() },
+  			type : 'post',
+  			dataType : 'json',
+  			success : function(serverdata){
+  				alert(serverdata);
+  			}
+  		});
+  	});	
+  });
+  </script>
+  </head>
+  <body>
+  <!--  <form action="/multi/ajax/login" method=post>
+  	아이디<input type="text" name="id"><br>
+  	암호<input type="password" name="pw"><br>
+  	<input type="submit" value="로그인">
+  </form> --> 이 방식이 아닌 ajax방식으로
+  
+  
+  아이디<input type="text" name="id" id="idd"><br>
+  암호<input type="password" name="pw" id="pass"><br>
+  <button id="ajaxbtn">ajax로그인</button>
+  
+  <div id=result></div>
+  ```
+
+  
