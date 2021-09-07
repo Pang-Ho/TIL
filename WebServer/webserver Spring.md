@@ -78,6 +78,32 @@
 
 
 
+
+
+## spring xml 파일들
+
+pom.xml - 스프링 라이브러리 다운로드 및 버전 설정
+
+web.xml - 웹 관련 설정
+
+1. 스프링 시작 이전(url을 톰캣을 통해 DispatcherServlet으로 보내기 전에) 전달할 정보들
+2. url을 스프링 DispatcherServlet에 보내줌
+   3. encoding utf-8 설정을 따로 안하고 web.xml에 쓸거다
+   4. 스프링 전달 추가 설정xml 정보
+
+servlet-context.xml - 스프링 설정 내용
+
+1. jsp(view) 경로와 확장자가 써있음
+   1. 웹 정적인 요소들 - html, css, jss, image 등 resources라는 경로에 저장해라
+   2. ㅇ
+2. context:component-scan
+
+추가 설정 xml
+
+1. member.xml같이 따로 추가 설정할 것들
+
+
+
 | interface TV                                                 |                                                              |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | powerOn(), Off, SoundUp(), Down                              |                                                              |
@@ -888,7 +914,7 @@ method 방식이 서로 다르면 RequestMapping value 값을 같게주고 쓸 �
 
 mvc와 무관한 것들 넣고 사용한다.
 
-
+servlet-context.xml 파일에 정의돼있음
 
 ### 이미지
 
@@ -970,9 +996,26 @@ member.xml도 읽게하고 싶다. 그러면 밑 처럼 DispatcherServlet한테 
 
 
 
-## 28장 파일 업로드
+# 28장 파일 업로드
 
 * pom.xml에서 파일 업로드에 관한 라이브러리 2개 다운
+
+  ```xml
+  <!-- 파일 업로드 -->
+  <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+  <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.3.1</version>
+  </dependency>
+  
+  <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+  <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.6</version>
+  </dependency>
+  ```
 
 * servlet-context.xml에 파일업로드 기능 추가
 
@@ -1066,7 +1109,7 @@ member.xml도 읽게하고 싶다. 그러면 밑 처럼 DispatcherServlet한테 
 
 
 
-## REST API
+# REST API
 
 * restful 기능 mvc
 
@@ -1074,7 +1117,7 @@ member.xml도 읽게하고 싶다. 그러면 밑 처럼 DispatcherServlet한테 
 
     a.jsp에서 /b 실행 응답화면 b.jsp를 포함하고 싶다
 
-  * http
+  * ajax를 쓰려면....
 
     1. 요청 => 응답
 
@@ -1109,8 +1152,6 @@ member.xml도 읽게하고 싶다. 그러면 밑 처럼 DispatcherServlet한테 
 
 
 @ResponseBody 이 어노테이션을 쓸 예정
-
-
 
 ```java
 @Controller
@@ -1180,3 +1221,484 @@ class A{
   ```
 
   
+
+
+
+LoginAjaxController
+
+```java
+@Controller
+public class LoginAjaxController {
+	
+	@RequestMapping(value = "/ajax/login", method=RequestMethod.GET)
+	public String loginForm() {
+		return "/ajax/ajaxlogin";
+	}
+	
+	@RequestMapping(value = "/ajax/login", method=RequestMethod.POST, produces = {"application/json;charset=utf-8"})
+	@ResponseBody
+	public String loginResult(String id, String pw) {//{'id':$("#idd").val(), 'pw':$("#pass").val() }
+		//처리
+		String result = "";
+		if(id.equals("spring") && pw.equals("1111")) {
+			result = "{\"process\" : \"정상로그인\", \"role\" : \"admin\"}";
+					
+		}
+		else {
+			result = "{\"process\" : \"비정상로그인\", \"role\" : \"user\"}";
+		}
+		return result; //spring 에서 String으로 리턴되면 javascript에선 이걸 json으로 받아들임
+	}
+	
+	@RequestMapping(value = "/ajax/memberinform", method=RequestMethod.GET, produces = {"application/json;charset=utf-8"})
+	@ResponseBody
+	public MemberVO getMemberInform() {
+		MemberVO vo = new MemberVO("MEMBER1", 1111, "김기술", "tech@a.com");
+		return vo; //리턴 자바 객체를 JSON형태로 변환시켜줌
+				   //{"memberid" : "MEMBER1" , "password" : "1111",....
+	}
+	
+	@RequestMapping(value = "/ajax/memberlist", method=RequestMethod.GET, produces = {"application/json;charset=utf-8"})
+	@ResponseBody
+	public ArrayList<MemberVO> getMemberList(int count) {
+		ArrayList<MemberVO> list = new ArrayList<MemberVO>();
+		list.add(new MemberVO("member1", 1111, "김회원", "kim@mul.com"));
+		list.add(new MemberVO("member2", 1111, "박대한", "kim@mul.com"));
+		list.add(new MemberVO("member3", 1111, "김민국", "kim@mul.com"));
+		list.add(new MemberVO("member4", 1111, "홍길동", "kim@mul.com"));
+		list.add(new MemberVO("member5", 1111, "최회원", "kim@mul.com"));
+
+		return list; //배열형태로 리턴해준다
+	}
+```
+
+ajaxlogin.jsp
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="/multi/resources/jquery-3.2.1.min.js"></script>
+<script>
+$(document).ready(function(){
+	$("#ajaxbtn").on('click', function(){
+		$.ajax({
+			url : "/multi/ajax/login",
+			data : {'id':$("#idd").val(), 'pw':$("#pass").val() },
+			type : 'post',
+			dataType : 'json',
+			success : function(serverdata){
+				$("#result").html("<h1>" + serverdata.process + "역할로" + serverdata.role + "</h1>");
+				$("#result").css("color", "blue");
+			}
+		});
+	});	
+	$("#ajaxbtn2").on('click', function(){
+		$.ajax({
+			url : "/multi/ajax/meberinform",
+			type : 'get',
+			success : function(serverdata){
+				$("#result").html("<h1>" + serverdata.memberid + " " + serverdata.password + "</h1>");
+				$("#result").html("<h1>" + serverdata.membername + " " + serverdata.email + "</h1>");
+				$("#result").css("color", "blue");
+				//json을 String으로 변경
+				alert(JSON.stringify(serverdata));
+				//string을 json으로 형변환
+				 var o = JSON.parse(serverdata);
+				 alert(o);
+			}
+		});
+	});	
+	
+	$("#ajaxbtn3").on('click', function(){
+		$.ajax({
+			url : "/multi/ajax/meberlist",
+			data : {'count' : 5}, //5명의 회원정보만
+			type : 'get',
+			success : function(serverdata){
+				
+				$("#result").css("color", "blue");
+				for(var i = 0 ; i < servercata.length ; i++){
+				$("#result").append("<h1>" + serverdata[i].memberid + " " + serverdata[i].password + "</h1>");
+				$("#result").append("<h1>" + serverdata[i].membername + " " + serverdat[i].email + "</h1>");
+				}
+				//json을 String으로 변경
+				alert(JSON.stringify(serverdata[0]));
+				//string을 json으로 형변환
+				 var o = JSON.parse(serverdata[0]);
+				 alert(o);
+			}
+		});
+	});	
+	
+});
+</script>
+</head>
+<body>
+<!--  <form action="/multi/ajax/login" method=post>
+	아이디<input type="text" name="id"><br>
+	암호<input type="password" name="pw"><br>
+	<input type="submit" value="로그인">
+</form> -->
+
+
+아이디<input type="text" name="id" id="idd"><br>
+암호<input type="password" name="pw" id="pass"><br>
+<button id="ajaxbtn">ajax로그인</button>
+
+<button id="ajaxbtn2">회원정보 주세요~</button>
+
+<button id="ajaxbtn3">회원리스트 주세요~</button>
+
+<div id=result></div>
+
+</body>
+</html>
+```
+
+
+
+
+
+
+
+# mybatis
+
+jdk jdbc
+
+spring jdbc
+
+mybatis
+
+| jdk jdbc                                                     | spring jdbc    | mybatis                                                      |
+| ------------------------------------------------------------ | -------------- | ------------------------------------------------------------ |
+| java.sql.*                                                   | 스프링제공jdbc | jdbc 프레임워크                                              |
+| 코드 반복이 심하다<br />Class.forName("")<br />DriverManager.... |                | 1. xml설정<br />sql 문장 자바 코드 제거<br />2. connectionpool, sql 실행 객체 자동 생성<br />3. sql 조회 결과를 여러 타입으로 받기 |
+|                                                              |                |                                                              |
+
+## 라이브러리 다운을 위한 pom.xml 수정
+
+* spring maven 기능을 사용하는 중
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>3.4.6</version>
+</dependency>
+
+우리가 쓰던 오라클 드라이버
+<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
+<dependency>
+    <groupId>com.oracle.database.jdbc</groupId>
+    <artifactId>ojdbc8</artifactId>
+    <version>19.7.0.0</version>
+</dependency>
+
+연동하는 라이브러리
+<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis-spring</artifactId>
+    <version>1.3.2</version>
+</dependency>
+
+spring- 로 시작하는 라이브러리 버전은 spring 프레임워크랑 같아야함 4.3.18.release
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>4.3.18.RELEASE</version>
+</dependency>
+
+```
+
+![image-20210907130354717](../md-images/image-20210907130354717.png)
+
+
+
+## xml 생성
+
+* mybatis-config.xml
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8" ?>
+  <!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+    <!-- mybatis db 연결정보 세팅 파일 -->
+  <configuration>
+  
+  <!-- 1. sql 실행 결과 Resultset으로 받았었는데 EmpVO타입으로 결과를 매핑할 것이다. -->
+  <typeAliases>
+  <typeAlias type="mybatis.EmpVO" alias="empVO"/>
+  </typeAliases>
+  
+  <!-- 2. DataSource 설정 -->
+  <environments default="development">
+  	<environment id="devleopment">
+  		<transactionManager type="JDBC"/>
+  		<dataSource type="POOLED">
+  			<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+  			<property name="url" value="jdbc:oracle:thin:@localhost:1521"/>
+  			<property name="username" value="hr"/>
+  			<property name="password" value="hr"/>
+  		</dataSource>
+  	</environment>
+  </environments>
+  <!-- 3. sql 정의 매퍼 설정 -->
+  <mappers>
+  <mapper resource="mybatis/sql-mapping.xml"/>
+  </mappers>
+  
+  </configuration>
+  
+  ```
+
+* sql-mapping.xml
+
+  ```xml
+   <mapper>
+   <select id="emplist" resultType="empVO"> //EmpVO타입으로 결과를 매핑할 것이다.
+   	select * from employees
+   </select>
+   </mapper>
+  ```
+
+
+
+* mybatis-config.xml
+
+![image-20210907150317399](../md-images/image-20210907150317399.png)
+
+* sql-mapping.xml
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8" ?>
+  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+   <mapper namespace="emp">
+   <select id="emplist" resultType="empVO">
+   	select * from employees
+   </select>
+   
+   <select id="empone" resultType="empVO" parameterType="int">
+   	select * from employees where employee_id=#{id}
+   </select>
+   
+   <insert id="insertemp" parameterType="empVO">
+   	insert into employees(employee_id, first_name, last_name, email, phone_number, job_id, hire_date)
+   	values(#{employee_id}, #{first_name}, #{last_name}, #{email}, #{phone_number}, #{job_id}, sysdate)
+   </insert>
+   
+   <update id="updateemp" parameterType="empVO">
+   update employees
+   set last_name = #{last_name} , department_id= #{department_id}
+   where employee_id = #{employee_id}
+   </update>
+   
+   <delete id="deleteemp" parameterType="String">
+   delete employees where first_name like #{name}
+   </delete>
+       
+   <select id="cnt" resultType="int">
+   select count(*) from employees
+   </select>
+   
+   <select  id="empdeptlist" resultType="empVO" parameterType="int[]">
+  	select * from employees where department_id in 
+  	<foreach collection="array" item="d_list" open="(" close=")" separator=",">
+  		#{d_list}
+  	</foreach>
+   </select>
+   </mapper>
+  ```
+
+  
+
+* EmpVO
+
+  ```java
+  	int employee_id;
+  	String first_name, last_name, email, phone_number, hire_date, job_id;
+  	double salary, commission_pct;
+  	int manager_id, department_id;
+  ```
+
+  
+
+* EmpDAO
+
+  ```java
+  	SqlSession session;
+  	public void setSqlSession(SqlSession session) {
+  		this.session = session;
+  	}
+  	
+  	//sql 정의 태그 중에서 id=emplist 실행해서 결과를 가져와라
+  	public List<EmpVO> getEmpList(){
+  		List<EmpVO> list = session.selectList("emp.emplist");
+  		return list;
+  	}
+  	public EmpVO getEmpOne(int id) {	
+  	EmpVO vo = session.selectOne("emp.empone", id);
+  	return vo;
+  	//System.out.println(vo.getEmployee_id() + ":" + vo.getFirst_name() + ":" + vo.getHire_date() + ":" + vo.getSalary());
+  	}
+  	public void insertEmp(EmpVO vo) {
+  		session.insert("emp.insertemp", vo); //emp.insertemp는 sql-mapping 에서 namespace와 id임
+  	}
+  	
+  	public void updateEmp(EmpVO vo) {
+  		session.update("emp.updateemp", vo);
+  	}
+  	public void deleteEmp(String name) {
+  		session.delete("emp.deleteemp", name);
+  	}
+  	public int countEmp() {
+  		int cnt = session.selectOne("emp.cnt");
+  		return cnt;
+  	}
+  	
+  	public List<EmpVO> empDeptList(int[] dept_list) {
+  		List<EmpVO> list = session.selectList("emp.empdeptlist", dept_list);
+  		return list;
+  	}
+  ```
+
+  
+
+* EmpService
+
+  ```java
+  	public List<EmpVO> getEmpList();
+  	public EmpVO getEmpOne(int id);
+  	public void insertEmp(EmpVO vo);
+  	public void updateEmp(EmpVO vo);
+  	public void deleteEmp(String name);
+  	public int countEmp();
+  	public List<EmpVO> empDeptList(int[] a);
+  ```
+
+  
+
+* EmpServiceImpl
+
+  ```java
+  	EmpDAO dao;
+  	public void setDao(EmpDAO dao) {
+  		this.dao = dao;
+  	}
+  	@Override
+  	public List<EmpVO> getEmpList() {
+  		return dao.getEmpList();
+  	}
+  
+  	@Override
+  	public EmpVO getEmpOne(int id) {
+  		return dao.getEmpOne(id);
+  	}
+  	@Override
+  	public void insertEmp(EmpVO vo) {
+  		EmpVO RESULT = dao.getEmpOne(vo.getEmployee_id());
+  		if(RESULT == null)  {dao.insertEmp(vo);}
+  	}
+  	@Override
+  	public void updateEmp(EmpVO vo) {
+  		dao.updateEmp(vo);
+  	}
+  	@Override
+  	public void deleteEmp(String name) {
+  		name = "%" + name + "%";
+  		dao.deleteEmp(name);
+  	}
+  
+  	@Override
+  	public int countEmp() {
+  		return dao.countEmp();
+  	}
+  	@Override
+  	public List<EmpVO> empDeptList(int[] a) {
+  		return dao.empDeptList(a);
+  	}
+  ```
+
+  
+
+* EmpMain
+
+  ```java
+  	public static void main(String[] args) throws Exception {
+  		//마이바티스 설정된 것이 있으면 모든 파일 읽기
+  		SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+  		
+  		//mybatis-config.xml 불러오기, 연결, /결과타입과 sql정의를 써놓음
+  		SqlSessionFactory factory = builder.build(Resources.getResourceAsReader("mybatis/mybatis-config.xml"));
+  		
+  		//데이터베이스 연결 객체 생성
+  		SqlSession session = factory.openSession(true); //session이 커넥션임
+  		//true를 안쓰면 커밋이 자동으로 안돼서 데이터가 저장 안됨.
+  		
+  		
+  		EmpDAO dao = new EmpDAO();
+  		dao.setSqlSession(session);
+  		
+  		EmpServiceImpl service = new EmpServiceImpl();
+  		service.setDao(dao);
+  		
+  		/*List<EmpVO> list = service.getEmpList();
+  		for(EmpVO vo : list) {
+  			System.out.println(vo.getEmployee_id() + ":" + vo.getFirst_name() + ":" + vo.getHire_date() + ":" + vo.getSalary());
+  		}
+  		
+  		EmpVO vo = service.getEmpOne(150);
+  		System.out.println(vo.getEmployee_id() + ":" + vo.getFirst_name() + ":" + vo.getHire_date() + ":" + vo.getSalary());*/
+  		
+  		insert 사번이 300번이고 길동 홍 hong@a.com 010.123.4567 오늘입사 IT_PROG
+  		EmpVO vo = new EmpVO();
+  		vo.setEmployee_id(300);
+  		vo.setFirst_name("길동");
+  		vo.setLast_name("홍");
+  		vo.setEmail("hong@a.com");
+  		vo.setPhone_number("010.123.4567");
+  		vo.setJob_id("IT_PROG");
+  		
+  		service.insertEmp(vo);
+  		
+          update
+  		EmpVO vo = new EmpVO();
+  		vo.setEmployee_id(300);
+  		vo.setLast_name("김");
+  		vo.setDepartment_id(50);
+  		service.updateEmp(vo);
+  		
+  		delete
+  		String name = "길동";
+  		service.deleteEmp(name);
+          
+          int cnt = service.countEmp();
+  		System.out.println("총 사원수 = " + cnt);
+  		
+  		System.out.println("==========================");
+  		int[] dept_list = {10, 50, 80};
+  		List<EmpVO> list = service.empDeptList(dept_list);
+  		for(EmpVO vo: list) {
+  			System.out.println(vo.getFirst_name() + ":" + vo.getDepartment_id());
+  		}
+  	}
+  ```
+
+
+
+
+
+* 실습
+
+![image-20210907172042930](../md-images/image-20210907172042930.png)
+
