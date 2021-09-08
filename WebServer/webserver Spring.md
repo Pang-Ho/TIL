@@ -590,6 +590,34 @@ HelloController로 모델"hello" 뷰"hello.jsp" 만드는건 동일하였음
 |        | @ModelAttribute                                     |
 |        | @Controller- 상속 안받는 대신에 컨트롤러클래스 위에 |
 
+| @Controller           | 스프링 MVC의 컨트롤러 객체임을 명시하는 어노테이션           |
+| --------------------- | ------------------------------------------------------------ |
+| @RequestMapping       | 특정 URI에 매칭되는 클래스나 메소드임을 명시하는 어노테이션  |
+| @RequestParam         | request의 파라미터를 가져오는 기능을 하며 메소드내에 변수로 활용 |
+| @RequestHeader        | 요청(request)에서 특정 HTTP헤더 정보를 추출할 때 사용        |
+| @PathVariable         | 메소드 파라미터 앞에 사용하며 해당 URL에 { } 특정 파라미터를 변수로 활용 가능 |
+| @CookieValue          | 현재 사용자의 쿠키가 존재하는 경우 쿠키 이름을 이용해서 쿠키 값을 추출 |
+| @ModelAttribute       | view에서 전달해주는 파라미터를 클래스의 멤버변수로 binding 해주는 어노테이션 |
+| @InitBinder           | 파라미터를 수집해서 객체로 만들 경우에 커스터마이징          |
+| @ResponseBody         | JSON 형식의 데이터값을 응답할 때 사용하는 것으로 response Body에 형식이 노출객체를 return시 json 라이브러리에 의해 문자열로 변환 |
+| @RequestBody          | 요청이 들어온 데이터(Json, XML)를 클래스나 model로 매핑      |
+| @Repository           | DAO 객체                                                     |
+| @Service              | 서비스 객체                                                  |
+| @SessionAttributes    | @SessionAttributes(“name”)이라고 하면 Model에 key값이 “name”으로 있는 값은 자동으로 세션에 저장 |
+| @Runwith              | JUnit 프레임워크의 테스트를 할수 있도록 설정 @Runwith에 Runner클래스 설정시 JUnit의 내장된 runner대신 설정한 SpringJUnit4ClassRunner를 실행 |
+| @ContextConfiguration | 지정된 클래스나 문자열을 이용해 필요한 객체들을 스프링내 객체로 등록 |
+| @Log4j                | Lombok을 이용해 로그를 기록하기 위한 Logger 변수 생성        |
+| @Autowired            | 해당 인스턴스 변수에 스프링으로부터 자동으로 Bean을 주입, new 연사자와 같음 |
+| @Test                 | JUnit에서 테스트 대상을 표시하며 단위테스트 메소드임을 명시  |
+| @Component            | Component는 스프링에게 해당 클래스가 관리해야할 대상임을 표시 |
+| @Setter               | Set( ) 메소드를 자동으로 생성하여, 사용할수 있게 해줌        |
+| @Getter               | Get( ) 메소드를 자동으로 생성하여, 사용할수 있게 해줌        |
+| @GetMapping           | RequestMapping(Method=RequestMethod.GET)과 동일              |
+| @PostMapping          | RequestMapping(Method=RequestMethod.POST)과 동일             |
+| @Transactional        | 데이터베이스 트랜잭션 설정 어노테이션 (AutoCommit, rollback, commit 등) DB의 접근이 하나라도 실패시 rollback 비지니스 로직과 트랜잭션 관리는 모두 Service에서 하기때문에 Service 메소드는 @Transactional 사용 |
+| @Cacheable            | 메소드 앞에 지정하여 사용하며 메소드를 최초 호출시 캐시에 적재하고 추후 동일한 요청이 들어올 시 캐시의 결과를 리턴. 메소드의 호출 횟수를 줄여주는 어노테이션 |
+| @RestController       | Spring Restful Controller로 데이터를 반환하는 컨트롤러이다. view가 필요없는 API에 지원(Spring 4.0.1 이후)하며, @RequestMapping 메소드가 @ResponseBody 의미를 가정한다. data(json, xml) return 시 사용 |
+
 
 
 HelloAnnotationController
@@ -1169,6 +1197,13 @@ class A{
 }
 ```
 
+### 문자열을 JSON으로 JSON을 문자열로
+
+* var obj = JSON.parse(server); => 문자열을 JSON형태로 형변환
+* var string = JSON.stringify(json 객체) => JSON을 문자열로 형변환
+
+![image-20210908091930407](../md-images/image-20210908091930407.png)
+
 
 
 * ajax 쓰려면 pom.xml 다운받을 라이브러리 필요
@@ -1181,6 +1216,7 @@ class A{
       <version>2.12.4</version>
   </dependency>
   
+  객체를 JSON 형태로 바꿔주는 라이브러리
   ```
 
   
@@ -1198,7 +1234,7 @@ class A{
   			type : 'post',
   			dataType : 'json',
   			success : function(serverdata){
-  				alert(serverdata);
+  				var obj = JSON.parse(serverdata); //문자열을 json 객체로 형변환
   			}
   		});
   	});	
@@ -1206,25 +1242,14 @@ class A{
   </script>
   </head>
   <body>
-  <!--  <form action="/multi/ajax/login" method=post>
-  	아이디<input type="text" name="id"><br>
-  	암호<input type="password" name="pw"><br>
-  	<input type="submit" value="로그인">
-  </form> --> 이 방식이 아닌 ajax방식으로
-  
-  
   아이디<input type="text" name="id" id="idd"><br>
   암호<input type="password" name="pw" id="pass"><br>
   <button id="ajaxbtn">ajax로그인</button>
   
   <div id=result></div>
   ```
-
   
-
-
-
-LoginAjaxController
+* LoginAjaxController
 
 ```java
 @Controller
@@ -1368,6 +1393,22 @@ $(document).ready(function(){
 
 # mybatis
 
+## Mybatis에서 사용하는 객체들
+
+1. SqlSessionFactoryBuilder
+
+   설정한 정보들을 읽어서 SqlSessionFactory를 만드는 역할
+
+2. SqlSessionFactory
+
+   SqlSession을 만드는 역할
+
+3. SqlSession
+
+   실제 sql을 날리기 위해 필요
+
+
+
 jdk jdbc
 
 spring jdbc
@@ -1378,7 +1419,6 @@ mybatis
 | ------------------------------------------------------------ | -------------- | ------------------------------------------------------------ |
 | java.sql.*                                                   | 스프링제공jdbc | jdbc 프레임워크                                              |
 | 코드 반복이 심하다<br />Class.forName("")<br />DriverManager.... |                | 1. xml설정<br />sql 문장 자바 코드 제거<br />2. connectionpool, sql 실행 객체 자동 생성<br />3. sql 조회 결과를 여러 타입으로 받기 |
-|                                                              |                |                                                              |
 
 ## 라이브러리 다운을 위한 pom.xml 수정
 
@@ -1436,7 +1476,8 @@ spring- 로 시작하는 라이브러리 버전은 spring 프레임워크랑 같
   
   <!-- 1. sql 실행 결과 Resultset으로 받았었는데 EmpVO타입으로 결과를 매핑할 것이다. -->
   <typeAliases>
-  <typeAlias type="mybatis.EmpVO" alias="empVO"/>
+  <typeAlias type="mybatis.EmpVO" alias="empVO"/>  //result type을 alias로
+      										//type에서 패키지 빼고 소문자해서 자주씀
   </typeAliases>
   
   <!-- 2. DataSource 설정 -->
@@ -1465,8 +1506,17 @@ spring- 로 시작하는 라이브러리 버전은 spring 프레임워크랑 같
   ```xml
    <mapper>
    <select id="emplist" resultType="empVO"> //EmpVO타입으로 결과를 매핑할 것이다.
+       								<!-- resultType은 타입 알리아스와 똑같이 쓰는것임 -->
    	select * from employees
    </select>
+       
+  xml에서 반복문 쓰려면 foreach를 써야한다
+  <select  id="empdeptlist" resultType="empVO" parameterType="int[]">
+  	select * from employees where department_id in 
+  	<foreach collection="array" item="d_list" open="(" close=")" separator=",">
+  		#{d_list}
+  	</foreach>
+  </select>
    </mapper>
   ```
 
@@ -1475,6 +1525,8 @@ spring- 로 시작하는 라이브러리 버전은 spring 프레임워크랑 같
 * mybatis-config.xml
 
 ![image-20210907150317399](../md-images/image-20210907150317399.png)
+
+
 
 * sql-mapping.xml
 
@@ -1520,7 +1572,7 @@ spring- 로 시작하는 라이브러리 버전은 spring 프레임워크랑 같
    </mapper>
   ```
 
-  
+## 코드 작성
 
 * EmpVO
 
@@ -1701,4 +1753,124 @@ spring- 로 시작하는 라이브러리 버전은 spring 프레임워크랑 같
 * 실습
 
 ![image-20210907172042930](../md-images/image-20210907172042930.png)
+
+# mybatis 연동
+
+![image-20210908101951495](../md-images/image-20210908101951495.png)
+
+
+
+* mybatis-config.xml
+
+  데이터소스 생성, 타입, 매퍼파일
+
+* mapper.xml
+
+  sql 정의
+
+* xml
+
+  스프링+마이바티스  연동 설정하는 xml = 스프링 bean 설정 파일 (ioc, di 설정)
+
+* servlet-context.xml
+
+  spring mvc 설정
+
+* web.xml
+
+  웹서버 설정
+
+* pom.xml
+
+  필요한 4개 라이브러리
+
+  mybatis, ojdbc8, mybatis-spring, spring-jdbc
+
+
+
+- spring + mybatis연동
+
+  1. DataSource 생성 < mybatis-config.xml 설정 삭제
+
+  2. SqlSessionFactory 생성
+
+     -mybatis-config.xml
+
+     -sql-mapping.xml
+
+     -DataSource 를 통해서 factory 생성
+
+  3. SqlSessionTemplate 생성
+  4. <context:componet-scan ...
+
+* EmpMybatisCotroller
+
+  ```java
+  	@Autowired
+  	EmpService service;
+  	
+  	@RequestMapping("/emplist")
+  	public ModelAndView emplist() {
+  		List<EmpVO> list = service.getEmpList();
+  		ModelAndView mv = new ModelAndView();
+  		mv.addObject("emplist", list);
+  		mv.setViewName("/mybatis/emplist");
+  		return mv;
+  	}
+  	//10, 50, 80 부서원의 이름, 부서코드, 급여정보 모델 mybatis/empdeptlist.jsp
+  	//메소드 2개 만들기
+  	//1. "/empdeptlist:get방식" checkbox형태로 10, 20, 30 ... 100 번부서 나열, 복수개 선택을 보여주는 뷰 생성 메소드
+  	//2. "/empdeptlist:post방식" 1번 선택한 요소를 배열로 전달
+  	
+  	@RequestMapping(value = "/empdeptlist", method=RequestMethod.GET)
+  	public String empDeptForm() {
+  		return "/mybatis/empdeptform";
+  	}
+  	
+  	@RequestMapping(value = "/empdeptlist", method = RequestMethod.POST)
+  	public ModelAndView empDeptList(int[] dept_list) {
+  		List<EmpVO> deptlist = service.empDeptList(dept_list);
+  		ModelAndView mv = new ModelAndView();
+  		mv.addObject("empdeptlist", deptlist);
+  		mv.setViewName("/mybatis/empdeptlist");
+  		return mv;
+  	}
+  ```
+
+  
+
+* empdeptlist.jsp
+
+  ```jsp
+  <h1>선택한 부서 번호는</h1>
+  <c:forEach items="${paramValues.dept_list }" var="dept">
+   ${dept },
+  </c:forEach>
+  <h1>입니다.</h1>
+  
+  <c:forEach items="${empdeptlist }" var="vo">
+  <h3> 이름 ${vo.first_name } 부서번호 ${vo.department_id }</h3>
+  </c:forEach>
+  ```
+
+  
+
+* empdeptform.jsp
+
+  ```jsp
+  <h1>부서번호 선택</h1>
+  
+  <form action="empdeptlist" method="post" >
+  	<%for(int i = 1; i <= 10 ; i++) {%>
+  	<input type="checkbox" name="dept_list" value="<%=i*10%>"><%=i*10%>
+  	<%} %>
+  	<input type="submit" value="부서번호선택완료">
+  </form>
+  ```
+
+  
+
+
+
+
 
