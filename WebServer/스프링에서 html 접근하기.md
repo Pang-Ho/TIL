@@ -11,3 +11,8 @@ src/main/webapp/resouces/templates에 html을 저장한 경우
 * 만약 imgs/logo.png로 쓰면 http://localhost:9090/myapp/resources/templates/imgs/logo.png로 인식함
 * 결국 서로 다른 폴더에 있기에 컨텍스트 루트부터 쓴다.
 
+
+
+views에 있는 jsp가 이미지 불러올 경우
+
+src="resources/imgs/logo.png"

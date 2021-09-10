@@ -635,17 +635,50 @@ public class HelloAnnotationController {
 	@RequestMapping("/hello.spring")
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	ModelAndView mv = new ModelAndView();
-	mv.addObject("insa", "Hello spring mvc~~~");
-	mv.setViewName("hello"); //확장자 필요없음 /WEB-INF/views/hello.jsp => hello
+	mv.addObject("insa", "Hello spring mvc~~~"); //hello.jsp에게 가야할 내용
+	mv.setViewName("hello");  //너의 이름은 hello.jsp
 	return mv;
+```
+
+hello.jsp
+
+```jsp
+<body>
+<h1>컨트롤러부터 전달하는 모델 데이터</h1>
+<h3><%=request.getAttribute("insa") %></h3>
+<h3>${insa}</h3>
+    위 아래 똑같이 mv.addObject를 가져옴
+</body>
+```
+
+web.xml
+
+```xml
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+		/WEB-INF/spring/root-context.xml
+		classpath:edu/spring/semiproject/spring-mybatis.xml  => 요거 설정
+		</param-value>
+	</context-param>
 ```
 
 servlet-context.xml
 
 ```xml
-	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
-	<resources mapping="/resources/**" location="/resources/" />
+<context:component-scan base-package="edu.spring.semiproject" />
+
+어노테이션 설정은 servlet-context에서
 ```
+
+spring-mybatis.xml
+
+```xml
+<context:component-scan base-package="edu.spring.semiproject" />
+```
+
+
 
 =========================================================================
 
@@ -672,35 +705,41 @@ public class LoginController {
 		mv.setViewName("loginform");
 		return mv;
 	}
+    
 	2. view만 필요할 때
     @RequestMapping("/loginform")
 	public String loginstart() {
 		return "loginform"; //view만 필요할 때 
 	}
+    
     3. return도 싫다
      @RequestMapping("/loginform")
 	public void loginstart() {
 	}
+    
     4. view를 알려주지 않으면 view 이름은 요청한 uri이름과 동일해진다.
     @RequestMapping("/loginform")
 	public ModelAndView loginstart() {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("model", "모델값입니다.");
 		return mv;
+        
     5. String 뒤에는 생략되는게 좀.. 많다
     @RequestMapping("login")
 	public String login() {
-		return "redirect:/loginform";//redirect://uri
+		return "redirect:/loginform";//redirect:/uri
 		//String이고 redirect로 시작된다면 /loginform을 찾아서 메소드를 실행하라는 뜻
 	}
     
 	@RequestMapping("/loginresult")
 	public ModelAndView loginresult(HttpServletRequest request) {
         //post 방식으로 갈거면 한글 깨지니까 request.setCharacterEncoding("utf-8");
+        
+        public ModelAndView loginresult(@RequsetParam("id") String memberid,
+                                        @RequsetParam("pw") int pw) throws Exception{ 
         //request 필요없이 파라미터 이름이 같으면 받아올 수 있음 String인데 int로도 받아올 수 있음
         public ModelAndView loginresult(String id, int pw) throws Exception{
-        public ModelAndView loginresult(@RequsetParam("id") String memberid,@RequsetParam("pw") int pw) throws Exception{ 
-            
+       
             //객체로도 가져올 수 있음
             public ModelAndView loginresult(@ModelAttribute("vo") LoginVO vo) throws Exception{
             
@@ -1871,6 +1910,43 @@ spring- 로 시작하는 라이브러리 버전은 spring 프레임워크랑 같
   
 
 
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<!-- 스프링은 모든 객체를 사용할 때 ioc, di, @, <bean 을 이용해서 객체를 만들 수 있음 -->
+<!-- 1.DATASOURCE 설정을 mybatis-config.xml로 -->
+
+<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+	<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+	<property name="username" value="hr"/>
+	<property name="password" value="hr"/>
+</bean>
+<!-- 2.config파일, sql매핑파일 -->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<property name="dataSource" ref="dataSource"/>
+	<property name="configLocation" value="classpath:edu/spring/semiproject/mybatis-config.xml"/>
+	<property name="mapperLocation" value="classpath:edu/spring/semiproject/sql-mapping.xml"/>
+</bean>
+
+<!-- 3.SqlSessionTemplate(스프링에서 제공) SqlSession객체(mybatis에서 제공)를 통해 sql생성 -->
+<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+	<constructor-arg ref="sqlSessionFactory"></constructor-arg>
+</bean>
+
+<!-- 4.DAO, VO, SERVICE @쓸 수 있게 / @Component, @Service, @Repository, @Autowired 
+controller 시작 전에 설정 읽어오는 것 그래서 @Controller는 다른곳에 씀/  mvc 관련 어노테이션은 인식못함 
+무조건 servlet-context에서 써야함 -->
+<context:component-scan base-package="edu.spring.semiproject" />
+</beans>
+
+```
 
 
 
