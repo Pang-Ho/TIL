@@ -165,7 +165,206 @@ public class MyWebMVCConfig implements WebMvcConfigurer{
    @MapperScan(basePackageClasses = EmpDAO.class)
    ```
 
-   
+
+
+
+### 실습 DB에 파일 업로드하기
 
 * 실습
+
+데이터베이스 저장
+
+```sql
+create table files
+(name varchar2(30),
+description varchar2(2000),
+filename1 varchar2(100),
+filename2 varchar2(100)
+);
+```
+
+UploadVO
+
+```java
+	String name;
+	String description;
+	MultipartFile file1;
+	MultipartFile file2;
+	String filename1;
+	String filename2;
+```
+
+UploadController
+
+```java
+
+@Controller
+public class UploadController {
+	
+	@Autowired
+	@Qualifier("uploadservice")
+	UploadService service;
+	
+	@RequestMapping(value="/fileupload", method=RequestMethod.GET)
+	public String uploadForm() {
+		return "/upload/uploadform";
+	}
+	
+	@RequestMapping(value="/fileupload", method=RequestMethod.POST)
+	public String uploadResult(@ModelAttribute("vo") UploadVO vo) throws IOException{
+		//전송 파일 2개 객체 생성
+		MultipartFile multi1 = vo.getFile1();
+		MultipartFile multi2 = vo.getFile2();
+		//파일명 추출
+		String filename1 = multi1.getOriginalFilename();
+		String filename2 = multi2.getOriginalFilename();
+		
+		//서버 c:/kdigital2/upload 폴더 저장
+		String savePath = "c:/kdigital2/upload/";
+		
+		
+		//확장자
+		String ext1 = filename1.substring(filename1.lastIndexOf("."));
+		String ext2 = filename2.substring(filename2.lastIndexOf("."));
+		
+		filename1 = getUuid()+ext1;
+		filename2 = getUuid()+ext2;
+		
+		
+		File file1 = new File(savePath + filename1);
+		File file2 = new File(savePath + filename2);	
+		
+		//저장
+		multi1.transferTo(file1);
+		multi2.transferTo(file2);
+		
+		//db에 저장
+		vo.setFilename1(filename1);
+		vo.setFilename2(filename2);
+		
+		service.insertFiles(vo);
+		
+		//System.out.println(getUuid());
+		return "/upload/uploadresult";//${vo.file1}
+	}//uploadResult end
+
+	public static String getUuid() {
+		return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+	}
+	
+}
+```
+
+UploadDAO
+
+```java
+@Mapper
+@Repository
+public interface UploadDAO {
+	public void insertFiles(UploadVO vo);
+}
+```
+
+UploadService
+
+```java
+public interface UploadService {
+	public void insertFiles(UploadVO vo);
+}
+```
+
+UploadServiceImpl
+
+```java
+@Service("uploadservice")
+public class UploadServiceImpl implements UploadService {
+	@Autowired
+	UploadDAO dao;
+	
+	@Override
+	public void insertFiles(UploadVO vo) {
+		dao.insertFiles(vo);
+	}
+```
+
+? @Qualifire??
+
+답이 늦었습니다.  @Service("service")
+public class EmpServiceImpl implements EmpService --> 여기선 우리가 이름을 "service"라고 주었는데요 다른 이름보다 "service"라는 이름의 클래스 객체를 우선하기 때문에 그렇습니다.
+@Service("service")
+public class UploadServiceImpl implements UploadService--> 이 부분도 "service"로 이름을 변경하면 @Qualifier 안쓰셔도 됩니다. 단 현재는 그렇게 하려면 스프링 시작 클래스에서 @ComponentScan(basePackageClasses = EmpMybatisController.class) @MapperScan(basePackageClasses = EmpDAO.class) 두 부분을 주석처리한 후 해보세요. "service" 라는 이름 중복 때문에 그렇습니다.
+
+
+
+
+
+### 실습 파일 보여주기
+
+a태그로 파일 내용을 출력하는 뷰 보여주기
+
+실제 파일은 c:kdigital2\upload 폴더에 있음 그러나 MyWebMVCConfig.java에 설정한 것이 있음.
+
+* UploadController
+
+  ```java
+  	@RequestMapping(value="/myfilelist", method=RequestMethod.GET)
+  	public ModelAndView fileListForm() {
+  		ModelAndView mv = new ModelAndView();
+  		mv.setViewName("/upload/filelistform");
+  		return mv;
+          이런건 걍 스트림으로 써
+  	}
+  	@RequestMapping(value="/myfilelist", method=RequestMethod.POST)
+  	public ModelAndView fileListGet(String name) {
+  		List<UploadVO> listVO = service.fileList(name);
+  		ModelAndView mv = new ModelAndView();
+  		mv.addObject("list", listVO);
+  		mv.setViewName("/upload/filelist");
+  		return mv;
+  	}
+  ```
+
+  * UploadDAO
+
+```java
+@Mapper
+@Repository
+public interface UploadDAO {
+	public void insertFiles(UploadVO vo);
+	public List<UploadVO> selectFiles(String name);
+}
+```
+
+* UploadMapping
+
+  ```xml
+  <mapper namespace="upload.UploadDAO">
+  <select id="selectFiles" resultType="uploadVO" parameterType="String">
+   	select * from files where name=#{name}
+  </select>
+  ```
+
+  
+
+* filelistform.jsp
+
+  ```jsp
+  <form action="myfilelist" method="post">
+  	전송자 : <input type="text" name="name">
+  	<input type="submit" value="전송버튼">
+  </form>
+  ```
+
+  
+
+* filelist.jsp
+
+  ```jsp
+  <c:forEach items="${list }" var="uploadVO">
+  <h3><a href="/upload/${uploadVO.filename1 }">${uploadVO.filename1}</a></h3>
+  <h3><a href="/upload/${uploadVO.filename2 }">${uploadeVO.filename2}</a></h3>
+  </c:forEach>
+  ```
+
+  
 
