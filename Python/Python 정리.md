@@ -422,3 +422,371 @@ def var_test():
 print(global_var) => 전역변수 수정 / global이 없으면 함수에서 값이 변경이 안됨
 ```
 
+* 소수와 합성수 리스트 만드는 함수 만들기 실습
+
+![image-20210915171604045](../md-images/image-20210915171604045.png)
+
+```python
+prime =[];
+non_prime = [];
+a = 0
+def get_prime(su):
+    for i in range(2, su):
+        for j in range(2, i):
+            if (i % j) == 0 :
+                global non_prime
+                non_prime.append(i)
+                global a
+                a = 0
+                break
+            else :
+                a += 1
+                if a == (i-2) :
+                    global prime
+                    prime.append(i)
+                    a = 0
+
+
+get_prime(28)
+print(non_prime)
+print(prime)
+```
+
+* 방법2
+
+  ```python
+  def get_prime(su):
+      prime=[]
+      non_prime=[]
+  
+      for i in range(2, su+1):
+          cnt = 0
+          for j in range(1,i):
+              if i % j == 0 :
+                  cnt += 1
+          if cnt == 1:
+              prime.append(i);
+          else :
+              non_prime.append(i);
+      return prime, non_prime;
+  
+  prime_list, non_prime_list = get_prime(100)
+  print("소수리스트 - ", prime_list)
+  print("합성수리스트 - ", non_prime_list)
+  
+  ```
+
+
+
+* 자바스크립트와 파이썬은 함수를 변수로 취급한다
+
+  ```python
+  def call_func(func):
+      func()
+      
+  def f1():
+      print("출력")
+      
+  call_func(f1())
+  ```
+
+### 람다
+
+* 리턴값이 하나일 때 람다써도 됨
+
+```python
+def f2(msg):
+	return msg
+
+f2("람다")
+print( (lambda msg : msg)("람다") )
+print( (lambda : "람다")() )
+```
+
+
+
+## 모듈
+
+* import 방법
+
+  ```python
+  #기본 모듈호출
+  import math
+  print(math.trunc(3.54))
+  
+  #특정함수만 호출
+  from math import trunc
+  print(trunc(3.54)) => math. 을 안써도 됨
+  
+  #모든함수
+  from math import * => 모든 함수에 대해서 math. 안써도 됨
+  print(trunc(3.54))
+  print(sin(50))
+  
+  #별칭
+  import math as mt
+  print(mt.trunc(3.54))
+  ```
+
+  
+
+* random
+
+  ```python
+  import random
+  
+  random.randint(1, 100)
+  random.randrange(1, 101)
+  
+  import random as ra
+  ran_list = ["abc", "ABC", "가나다", 123]
+  
+  print(ra.choice(ran_list)); => 랜덤 하나 리스트
+  print(ra.sample(ran_list, 3)); => 랜덤 3개 리스트
+  ```
+
+  
+
+* time
+
+  ```python
+  import time
+  
+  time.sleep(3) => 3초 후 
+  sec = time.time() => 현재시간을 초 단위로
+  now = time.localtime(sec) => 현재시간을 년 단위로
+  print(now) => time.struct_time(tm_year=2021, ... )
+  print(now.tm_year, now.tm_mon, now.tm_mday) => 2021 9 16
+  ```
+
+* sys
+
+  ```python
+  import sys
+  
+  print(sys.builtin_module_names)
+  print(sys.path)
+  print(sys.version)
+  
+  for i in sys.argv: => 명령행 매개변수 #0번은 내 파일 위치가 나옴
+      print(i)
+  ```
+
+* os
+
+  ```python
+  import os
+  
+  print(os.name)
+  print(os.getcwd()) => 현재 파일 위치
+  print(os.listdir()) => 현재 폴더에 파일 목록
+  ```
+
+* math 모듈
+
+  ```python
+  import math
+  
+  print(round(3.54)) => 반올림은 함수로 되어있어서 import가 필요없지만
+  print(math.trunc(3.54)) => 버림의 경우 모듈에 있어서 import 필수
+  ```
+
+  
+
+##  모듈 설치 
+
+* 필요시 cmd창에서 모듈 설치
+
+  ```cmd
+  pip list #다운로드한 pip list 보여줌
+  pip3 install ... #pip3 install 모듈명
+  ```
+
+
+
+## html 정보 모듈
+
+* beautifulsoup4
+
+  ```python
+  import urllib.request as req
+  from bs4 import BeautifulSoup as bs
+  #파이썬으로 웹 서버 접속, 응답
+  response = req.urlopen("http://www.naver.com") #접속과 응답
+  print(response) #이걸론 응답 객체유형이름만 나옴 <http.client...
+  
+  #html 내용 받기 위해
+  soup = bs(response, "html.parser")
+  contents = soup.prettify()
+  print(contents) #그 페이지의 html 내용이 나옴
+  
+  #태그만 찾아서 내용 얻기
+  print(soup.find('h1')) #최초 h1 한개만 리턴 <h1>... </h1>
+  print(soup.select('h1'))
+  print(soup.findAll('h1')) #모든 h1 리스트 [<h1>...</h1>, ...]
+  
+  print(soup.find('h1').string) #태그 제거
+  
+  #태그의 요소 내용 얻기
+  print(soup.find('img')['src'])
+  print(soup.select_one('img')['src'])
+  print(soup.select_one('form')['action']) #브라우저에 보여지지 않는 것을 가져올 수 있음
+  
+  print(soup.findAll('img')['src']) #이렇게는 못받아옴
+  #반복문으로 받아오기
+  img_list = soup.findAll("img")
+  for img in img_list:
+      print(img['src'])
+  ```
+
+  
+
+* 날씨
+
+  ```python
+  import urllib.request as req
+  from bs4 import BeautifulSoup as bs
+  
+  weather = req.urlopen("http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp?stnId=108")
+  weather_bs = bs(weather, "html.parser")
+  
+  city_list = weather_bs.findAll("city")
+  for s in city_list:
+      print(s.string) => 서울 인천 ...
+  print("총 도시 수는", len(city_list), "개 입니다")
+  ```
+
+  
+
+* 실습
+
+  ```python
+  weather = req.urlopen("http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp?stnId=108")
+  weather_bs = bs(weather, "html.parser")
+  contents = weather_bs.prettyfy() => html 내용 보여줌
+  #location (/도시 city/시간 tmef/날씨 wf/최고기온 tmx/최저기온 tmn/)
+  # location 태그 내부에 city태그 = l.find('city')
+  # img태그 안에 src요소 ('img')['src']
+  #그래서 location list를 써야함
+  loca_list = weather_bs.findAll("location")
+  for l in loca_list:
+      print("============================")
+      print("도시 : ", l.find('city').string)
+      print("시간 : ", l.find('tmef').string)
+      print("날씨상태 : ", l.find('wf').string)
+      print("최고기온 : ", l.find('tmx').string)
+      print("최저기온 : ", l.find('tmn').string)
+      print("============================")
+      
+      => 혹시 첫번째 데이터가 아닌 다른 데이터를 쓰고 싶다면
+          print("도시 : ", l.findAll('city')[1].string)
+  
+  ```
+
+  
+
+## 그래프 모듈
+
+* matplotlib
+
+  ```python
+  import matplotlib.pyplot as plt
+  a = [1, 2, 3, 4, 5]
+  b = [2, 4, 6, 8, 10]
+  c = []
+  import random
+  for i in range(1, 6, 1):
+      c.append(random.randint(1,10))
+  
+  #선그래프
+  plt.savefig("graph.png") => 경로 없으면 현재파일과 같은 폴더
+  plt.plot(a,c)
+  plt.title("graph") => 제목
+  plt.xlabel("x(a)") => x 레이블 이름
+  plt.ylabel("y(c)") => y 레이블 이름
+  plt.show() => 그래프 창이 뜨면서 그래프 보여줌
+  
+  #점 그래프
+  plt.plot(a,b,"ro") => 점그래프
+  
+  #선 색상 변경
+  plt.plot(a,c, "r") => "r" 빨간 선, "b" 파란 선
+  
+  #
+  plt.plot(a,b,'b-o') => 점과 선 둘다
+  plt.plot(a,b,'b--') => 점선
+  #히스토그램(빈도수 그래프)
+  plt.hist(c)
+  plt.show()
+  
+  #그래프 겹치기 plt.show() 전에 plot을 여러 개 하면 겹쳐짐
+  #그러나 데이터들이 str이면 값이 뒤죽박죽이기에 int로 형변환 해야한다.
+  plt.subplots()
+  plt.plot(a, b)
+  plt.plot(b, a)
+  plt.hist(c)
+  plt.show()
+  
+  #그래프 동시에 보기
+  plt.subplot(2,2,1) => 2*2 1번째영역
+  plt.plot(a, b)
+  plt.subplot(2,2,2)
+  plt.plot(b, a)
+  plt.subplot(2,2,3)
+  plt.hist(c)
+  
+  plt.subplot(2,2,4)
+  plt.plot(a,b)
+  plt.title("그래프") => 글씨 폰트 바꿔야됨 한글 안보임
+  plt.xlabel("a리스트")
+  plt.ylabel("b리스트")
+  
+  plt.show()
+  ```
+
+
+
+* 실습
+
+  ```python
+  import urllib.request as req
+  from bs4 import BeautifulSoup as bs
+  weather = req.urlopen("http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp?stnId=108")
+  weather_bs = bs(weather, "html.parser")
+  
+  loca_list = weather_bs.findAll("location")
+  
+  def inlist():
+      city_list = []
+      tmx_list = []
+      tmn_list = []
+      for loca in loca_list:
+          city_list.append(loca.find('city').string)
+          tmx_list.append(int(loca.find('tmx').string))
+          tmn_list.append(int(loca.find('tmn').string))
+      return city_list, tmx_list, tmn_list
+  
+  city_list, tmx_list, tmn_list = inlist()
+  
+  import matplotlib.pyplot as plt
+  import matplotlib.font_manager as fm
+  
+  plt.rcParams["font.family"] = "D2Coding"
+  
+  plt.plot(city_list, tmx_list, "r", linestyle='-', marker='o')
+  plt.plot(city_list, tmn_list, "b", linestyle='-', marker='o')
+  plt.title("각 도시 최저 최고온도") #제목
+  plt.legend(['최고온도', '최저온도']) 
+  
+  plt.rc("axes", labelsize=20)
+  plt.xlabel("도시 이름")
+  
+  plt.rc("axes", labelsize=10)
+  plt.ylabel("온도")
+  
+  plt.show()
+  
+  ```
+
+  
+
