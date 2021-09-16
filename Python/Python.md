@@ -456,3 +456,402 @@ print(non_prime)
 print(prime)
 ```
 
+* 방법2
+
+  ```python
+  def get_prime(su):
+      prime=[]
+      non_prime=[]
+  
+      for i in range(2, su+1):
+          cnt = 0
+          for j in range(1,i):
+              if i % j == 0 :
+                  cnt += 1
+          if cnt == 1:
+              prime.append(i);
+          else :
+              non_prime.append(i);
+      return prime, non_prime;
+  
+  prime_list, non_prime_list = get_prime(100)
+  print("소수리스트 - ", prime_list)
+  print("합성수리스트 - ", non_prime_list)
+  
+  ```
+
+
+
+* 자바스크립트와 파이썬은 함수를 변수로 취급한다 = 함수를 일급객체로 취급한다.
+
+  ```python
+  def f1():
+      print("출력")
+      
+  def call_function(func):
+      func(); => 함수여야 한다.
+      
+  call_function(f1) => 
+  ```
+
+* 사용자 호출 시점 변경 함수 // 3 초 후에 출력
+
+  ```python
+  def call_func(func):
+  	import time
+  	time.sleep(3) => set time과 같은 모듈
+  	func();
+  ```
+
+* 리턴 값 하나면 람다식을 쓰는 것이 편할 걸
+
+  ```python
+  def f2(msg):
+      return msg * 3
+  
+  print( f2("람다") ) => 람다람다람다
+  
+  print( (lambda msg : msg * 3) ("람다") ) #람다식 정의
+  print( (lambda x,y : x+y ) (1, 2) )
+  print( (lambda : "파이썬") () )
+  ```
+
+
+
+## 모듈
+
+* 여러개 함수를 모아서 파이썬 py파일을 모아눈 것 = 모듈 = *.py
+* *.py 파일을 여러개 모은 것 = 패키지
+* 필요시 모듈을 설치하거나 개인이 구현
+
+모듈 선언
+
+```python
+import primetest => 내가 만든 primetest.py
+a, b = primetest.get_prime(50)
+print("소수", a)
+print("합성수", b)
+```
+
+* sys 모듈
+
+  ```python
+  import sys
+  
+  print(sys.builtin_module_names)
+  print(sys.path)
+  print(sys.version)
+  
+  for i in sys.argv: => 명령행 매개변수 #0번은 내 파일 위치가 나옴
+      print(i)
+  ```
+
+* os모듈
+
+  ```python
+  import os
+  
+  print(os.name)
+  print(os.getcwd())
+  print(os.listdir())
+  ```
+
+* time 모듈
+
+  ```python
+  import time
+  time.sleep(3)
+  sec = time.time() #현재시간 초단위로 보여줌
+  now = time.localtime(sec) #현재시간 년 단위
+  print(sec, now) => tm_year=2021, tm_mon=9, tm_mday=16, tm_hour=10
+  print(sec, now.tm_year, now.tm_mon, now.tm_mday) => 2021 9 16
+  ```
+
+* math 모듈
+
+  ```python
+  import math
+  print(round(3.54)) => 반올림은 함수로 되어있어서 import가 필요없지만
+  print(math.trunc(3.54)) => 버림의 경우 모듈에 있어서 import 필수
+  ```
+
+  
+
+* import 방법
+
+  ```python
+  #모듈명
+  import math
+  print(math.trunc(3.54))
+  
+  #특정함수
+  from math import trunc
+  print(trunc(3.54))
+  
+  #모든함수
+  from math import *
+  print(trunc(3.54))
+  print(sin(50))
+  
+  #별칭
+  import math as mt
+  ```
+
+  
+
+* random
+
+  ```python
+  import random as ra
+  ran_list = ["abc", "ABC", "가나다", 123]
+  
+  print(ra.choice(ran_list));
+  print(ra.sample(ran_list, 3));
+  ```
+
+  
+
+### 모듈 설치
+
+* 필요시 모듈 별도 설치
+
+* spring 기본 라이브러리 + ajax, upload, mybatis 라이브러리 추가한것처럼
+
+  mvnrepository에서 모아서 관리 pom.xml 작성해서 다운로드
+
+* 필요한 라이브러리 이름 다운로드 - pip3
+* pip3 install 모듈명 - cmd
+
+```cmd
+pip list
+#다운로드 한 pip list 보여줌
+pip3 install beautifulsoup4
+
+```
+
+### html 받아오는 모듈
+
+* beautifulsoup4 모듈 설치
+
+```cmd
+pip list
+#다운로드 한 pip list 보여줌
+pip3 install beautifulsoup4
+
+```
+```python
+import urllib.request as req
+from bs4 import BeautifulSoup as bs
+#파이썬 웹 서버 접속, 응답
+response = req.urlopen("http://localhost:9002/helloboot/") #접속하고 응답받음
+print(response) #이걸론 응답 객체유형이름만 나옴 <http.client.HTTPResponse object at 0x000001F96E81BF10>
+
+#접속 응답받은 것 내용보기 html내용을 볼 수 있음
+soup = bs(response, "html.parser")
+contents = soup.prettify()
+print(contents)
+
+#h1 태그만 내용 찾기
+print(soup.find("h1")) => 최초 h1 한 개만 리턴 <h1>hello boot</h1>
+print(soup.select("h1"))
+print(soup.findAll("h1")) => 리스트 형태로 가져옴 [<h1> ... </h1>, <h1> ... </h1> ]
+
+print(soup.find("h1").string) => hello boot
+
+print(soup.find("img")['src']) => 이미지 파일의 이름만 가져와라
+print(soup.select_one("img")['src'])
+print(soup.select_one("form")['action']) => 이렇게 브라우저에 보여지지 않는 것도 알 수 있음
+
+print(soup.findAll("img")['src']) => 반복문 써서 가져와야댐
+img_list = soup.findAll("img")
+for img in img_list:
+    print(img['src'])
+
+#반복문으로 findAll 가져오기
+h1_list = soup.findAll("h1")
+for h1 in h1_list:
+    print(h1.string)
+```
+
+* 웨더
+
+  ```python
+  import urllib.request as req
+  from bs4 import BeautifulSoup as bs
+  
+  weather = req.urlopen("p://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp?stnId=108")
+  weather_bs = bs(weather, "html.parser")
+  city_list = weather_bs.findAll("city")
+  for s in city_list:
+      print(s.string) => 서울 인천 ...
+  print("총 도시 수는", len(city_list), "개 입니다")
+  
+  ```
+
+* 실습
+
+![image-20210916140856651](../md-images/image-20210916140856651.png)
+
+```python
+weather = req.urlopen("http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp?stnId=108")
+weather_bs = bs(weather, "html.parser")
+contents = weather_bs.prettyfy() => html 내용 보여줌
+#location (/도시 city/시간 tmef/날씨 wf/최고기온 tmx/최저기온 tmn/)
+# location 태그 내부에 city태그 = l.find('city')
+# img태그 안에 src요소 ('img')['src']
+#그래서 location list를 써야함
+loca_list = weather_bs.findAll("location")
+for l in loca_list:
+    print("============================")
+    print("도시 : ", l.find('city').string)
+    print("시간 : ", l.find('tmef').string)
+    print("날씨상태 : ", l.find('wf').string)
+    print("최고기온 : ", l.find('tmx').string)
+    print("최저기온 : ", l.find('tmn').string)
+    print("============================")
+    
+    => 혹시 첫번째 데이터가 아닌 다른 데이터를 쓰고 싶다면
+        print("도시 : ", l.findAll('city')[1].string)
+
+```
+
+### matplotlib -  그래프 그리기
+
+* matplotlib모듈 설치
+
+```cmd
+pip3 install matplotlib
+```
+
+```python
+import matplotlib.pyplot as plt
+a = [1, 2, 3, 4, 5]
+b = [2, 4, 6, 8, 10]
+c = []
+import random
+for i in range(1, 6, 1):
+    c.append(random.randint(1,10))
+
+#선그래프
+plt.savefig("graph.png") => 경로 없으면 현재파일과 같은 폴더
+plt.plot(a,c, "r")
+plt.title("graph") => 제목
+plt.xlabel("x(a)") => x 레이블 이름
+plt.ylabel("y(c)") => y 레이블 이름
+plt.show() => 그래프 창이 뜨면서 그래프 보여줌
+
+#점 그래프
+plt.plot(a,b,"ro") => 점그래프
+
+#선 색상 변경
+plt.plot(a,c, "r") => "r" 빨간 선, "b" 파란 선
+
+#
+plt.plot(a,b,'b-o') => 점과 선 둘다
+plt.plot(a,b,'b--') => 점선
+#히스토그램(빈도수 그래프)
+plt.hist(c)
+plt.show()
+
+#그래프 겹치기
+plt.subplots()
+plt.plot(a, b)
+plt.plot(b, a)
+plt.hist(c)
+plt.show()
+
+#그래프 동시에 보기
+plt.subplot(2,2,1) => 2*2 1번째영역
+plt.plot(a, b)
+plt.subplot(2,2,2)
+plt.plot(b, a)
+plt.subplot(2,2,3)
+plt.hist(c)
+
+plt.subplot(2,2,4)
+plt.plot(a,b)
+plt.title("그래프") => 글씨 폰트 바꿔야됨 한글 안보임
+plt.xlabel("a리스트")
+plt.ylabel("b리스트")
+
+plt.show()
+```
+
+
+
+### 컴퓨터 글꼴 확인
+
+```python
+#컴 글꼴
+import matplotlib.font_manager as fm
+font_list=[]
+for f in fm.fontManager.ttflist:
+    font_list.append(f.name)
+
+font_list.sort() #sort는 정렬 상태 변경
+
+for fname in font_list:
+    print(fname) #알파벳 정렬 순서대로 나올 것
+```
+
+### 그래프 글꼴 바꾸기
+
+```python
+plt.rcParams["font.family"] = "D2Coding"; #한글 설정
+plt.rcParams["font.size"] = 20
+plt.rcParams["figure.figsize"] = (10, 6)
+plt.rcParams["xtick.labelsize"] = 10 #x축 제목 글씨 크기
+plt.rcParams["axes.labelsize"] = 8 #x축 데이터 글씨크기
+
+plt.rc('font', size=20)        # 기본 폰트 크기
+plt.rc('axes', labelsize=20)   # x,y축 label 폰트 크기
+plt.rc('xtick', labelsize=50)  # x축 눈금 폰트 크기 
+plt.rc('ytick', labelsize=20)  # y축 눈금 폰트 크기
+plt.rc('legend', fontsize=20)  # 범례 폰트 크기
+plt.rc('figure', titlesize=50) # figure title 폰트 크기
+
+#그래프 모양 바꾸기
+#plt.rcParams["lines.linestyle"] = "-.";
+```
+
+* 실습
+
+```python
+import urllib.request as req
+from bs4 import BeautifulSoup as bs
+weather = req.urlopen("http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp?stnId=108")
+weather_bs = bs(weather, "html.parser")
+loca_list = weather_bs.findAll("location")
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+def inlist():
+    city_list = []
+    tmx_list = []
+    tmn_list = []
+    for loca in loca_list:
+        city_list.append(loca.find('city').string)
+        tmx_list.append(int(loca.find('tmx').string))
+        tmn_list.append(int(loca.find('tmn').string))
+    return city_list, tmx_list, tmn_list
+
+city_list, tmx_list, tmn_list = inlist()
+
+
+
+plt.rcParams["font.family"] = "D2Coding"
+
+plt.plot(city_list, tmx_list, "r", linestyle='-', marker='o')
+plt.plot(city_list, tmn_list, "b", linestyle='-', marker='o')
+plt.title("각 도시 최저 최고온도")
+plt.legend(['최고온도', '최저온도'])
+
+plt.rc("axes", labelsize=20)
+plt.xlabel("도시 이름")
+
+plt.rc("axes", labelsize=10)
+plt.ylabel("온도")
+
+plt.show()
+
+```
+
