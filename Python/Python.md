@@ -773,7 +773,7 @@ plt.plot(a,b)
 plt.title("그래프") => 글씨 폰트 바꿔야됨 한글 안보임
 plt.xlabel("a리스트")
 plt.ylabel("b리스트")
-
+plt.savefig('savefig_default.png') #이미지 파일로 저장
 plt.show()
 ```
 
@@ -835,8 +835,15 @@ def inlist():
     return city_list, tmx_list, tmn_list
 
 city_list, tmx_list, tmn_list = inlist()
-
-
+########################
+#정수 변경 2
+for tmx in range(0, len(tmx_list)+1, 1):
+    tmx_list[tmx] = int(tmx_list[tmx])
+########################
+#정수변경3
+tmx_list = list(map(int, tmx_list)) #map(함수, 적용함수)
+tmn_list = list(map(int, tmn_list))
+########################
 
 plt.rcParams["font.family"] = "D2Coding"
 
@@ -855,4 +862,362 @@ plt.show()
 
 ```
 
-d
+
+
+### requests 모듈
+
+* get
+
+```python
+import requests
+#http://localhost:9002/helloboot
+fromserver = requests.get("http://localhost:9002/hellopython")
+print(fromserver.status_code)
+fromserver = requests.get("http://localhost:9002/hellopython?name=pythontest")
+print(fromserver.status_code)
+
+if fromserver.status_code == 200 :
+    print(fromserver.text)
+    print(fromserver.json) #@ResponseBody만 선언되었을 때 가능
+    print(fromserver.encoding)
+    print(fromserver.headers['content-type'])#produces 가져옴
+```
+
+* post
+
+```python
+fromserver = requests.post("http://localhost:9002/hellopython", data={'name':'pythontest'})
+
+print(fromserver.status_code)
+
+if fromserver.status_code == 200 :
+    print(fromserver.text)
+    print(fromserver.json) #@ResponseBody만 선언되었을 때 가능
+    print(fromserver.encoding)
+    print(fromserver.headers['content-type'])#produces 가져옴
+```
+
+
+
+* PythonController
+
+```java
+@Controller
+public class PythonController {
+	
+	@ResponseBody
+	@RequestMapping(value="/hellopython", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
+	//default							없으면 get, post둘다		produces ="text/html"
+	public ArrayList<String> hello2(String name){
+		ArrayList<String> list = new ArrayList<String>();
+		if(name.equals("pythontest")) {
+			list.add("자바 프로그램");
+			list.add("sql 프로그램");
+			list.add("web server 프로그램");
+			list.add("web client 프로그램");
+			list.add("spring 프로그램");
+		}
+		else {
+			list.add("===============");
+		}
+		return list;
+	}
+}
+```
+
+
+
+### 업로드 웹서버와 연결
+
+```python
+#파이썬 테이블, 그래프 그림 이미지 저장
+data_dict={'name':'전송자', 'description':'설명'}
+
+file1 = open('day3.py', 'rt', encoding='utf-8')
+file2 = open('city_weather.png', 'rb')
+#절대경로로 쓸 수 있음 C:/kdigital2/python397/소스/city_weather.png
+files_dict={'file1':file1, 'file2':file2}
+fromserver = requests.post(
+    "http://localhost:9002/fileupload", data=data_dict, files=files_dict)
+print(fromserver.text)
+```
+
+* 파이썬 => 스프링서버 => 마이바티스 => 오라클db
+
+
+
+### 사용자 생성 모듈
+
+* import xxx란 것은
+
+  우선 xxx.py를 실행한 후에 기존 코드를 실행해라 라는 의미
+
+* sub.py
+
+```python
+pi = 3.141592
+
+#원의 반지름 입력 - 정수 변환
+def radius_input():
+    r = input("반지름 : ")
+    return int(r)
+
+#원의 면적
+def get_area(r):
+    return r * r * pi
+
+#원의 둘레
+def get_circum(r):
+    return r * 2 * pi
+
+#sub.py 실행시에만 실행 시작
+#다른 py import 실행시에는 실행 x
+if __name__ == "__main__" :
+    print("현재모듈명 : ", __name__)
+    r = sub.radius_input()
+    print(r = sub.radius_input())
+    print(sub.get_area(r))
+    print(sub.get_circum(r)) 
+
+```
+
+* main.py
+
+  ```python
+  import sub
+  #sub.py 실행 문장이 먼저 실행됨
+  
+  print("현재모듈명 : ", __name__)
+  r = sub.radius_input()
+  print(r = sub.radius_input())
+  print(sub.get_area(r))
+  print(sub.get_circum(r)) 
+  ```
+
+  
+
+## 예외처리
+
+```python
+try :
+    #문제가 없을 경우 실행할 코드
+except :
+    #문제가 생겼을 경우 실행할 코드
+```
+
+* NameError
+* IndexError
+
+```python
+try:
+    money = input("대출금액 상환개월 수 입력하세요 : ")# 10000 12
+    data = money.split()
+    loan = int(data[0])
+    month = int(data[1])
+    print(loan, month)
+    monthly_return = loan / month
+    #파이썬에서 정의되지 않은 예외를 정의
+    if month <= 0 :
+        raise ValueError("개월 수는 음수나 0 입력이 불가합니다.")
+except ValueError as ve:
+    #print("숫자를 입력하세요")
+    print(ve) #위 에러 내용으로
+except IndexError:
+    print("ex)10000 12 처럼 양식을 맞춰 입력하세요")
+except :
+    pass #현재 미구현
+else :
+    #예외없이 정상 시행시 실행
+    print(loan, '금액', month,'개월동안' , monthly_return ,'원 씩 달에 갚을 예정')
+finally :
+    #예외 발생 여부 무관 항상 실행
+    print("영업 시간 종료")
+```
+
+
+
+## 파일 입출력
+
+* 입력 - 'r'
+  출력 - 'w'
+  이미지 파일 입력 - 'rb'
+  텍스트 출력 - 'w', 'wt'
+  현재 py 모듈 파일과 같은 경로에 존재해야함
+  C:/kdigital2/python397/소스/day3.py
+
+* 프린트의 숨겨진 기능 print(line, sep= " ", end="\n")
+* 'wt' 파일이 없으면 생성하고 내용 입력, 
+  파일이 있으면 내용 삭제하고 내용입력
+  'at' 파일이 없으면 파일 생성하고 내용 입력 , 파일이 있으면 내용 추가
+
+```python
+try:
+    file = open("C:/kdigital2/mymodules/main.py", "rt", encoding="utf-8")
+    print(file.read())
+except FileNotFoundError:
+    print("파일 경로 파일 명 확인하세요~")
+file.close();
+```
+
+```python
+#파일 라인 단위 읽어서 1번 라인 -- xxx 리스트 저장
+file = open("C:/kdigital2/mymodules/sub.py", "rt", encoding="utf-8")
+
+for line in file: #라인 반복하면서 \n이 계속 출력
+    #print(line) 공백이 너무 많음 print(line, sep= " ", end="\n")
+    print(line, sep= " ", end="")
+file.close()
+```
+
+```python
+#파일 라인 단위 읽어서 1번 라인 -- xxx 리스트 저장
+file = open("C:/kdigital2/mymodules/sub.py", "rt", encoding="utf-8")
+
+file_list = []
+index = 1
+for line in file: #라인 반복하면서 \n이 계속 출력
+    #print(line) 공백이 너무 많음 print(line, sep= " ", end="\n")
+    file_list.append(str(index) + "번라인 - " + line)
+    index += 1
+file.close()
+
+for line in file_list:
+    print(line)
+```
+
+```python
+#이미지 파일은 안보인다 
+file = open("C:/kdigital2/python397/소스/city_weather.png", "rb")
+print(file.read())
+
+```
+
+
+
+```python
+#파일이 없으면 생성 'wt'
+#파일이 있으면 기존 내용 추가 'at'
+file = open('C:/kdigital2/mymodules/a.txt', 'at')
+file.write('새로운 파일을 생성합니다. \n두번 째 줄입니다. \n')
+file.close()
+
+# sub.py 파일 입력 - 라인번호 추가 - file_list 저장 - sub_copy.py
+file = open('C:/kdigital2/mymodules/sub_copy.py', 'wt', encoding='utf-8')
+file.writelines(file_list)
+file.close()
+```
+
+
+
+```python
+# sub.py 파일 입력 - 라인번호 추가 - file_list 저장 내용 가운데 print단어 포함 라인만 -sub_copy_print.py
+file = open('C:/kdigital2/mymodules/sub_copy_print.py', 'wt', encoding='utf-8')
+for line in file_list:
+    #line.find('print') >=0
+    if 'print' in line:
+        file.writelines(line)
+file.close()
+```
+
+
+
+* 실습
+
+  
+
+![image-20210917154716305](../md-images/image-20210917154716305.png)
+
+* 나
+
+```python
+file = open("c:/kdigital2/python397/소스/usedcars.csv", "rt")
+file_list = []
+index = 2
+for line in file:
+    file_list.append(line)
+file_list.pop(0)
+file.close()
+
+mileage_list = []
+for i in range(0, len(file_list)):
+    info_list = file_list[i].split(",")
+    
+    mileage_list.append(int(info_list[3]))
+    mileage = int(info_list[3])
+    if mileage >= 100000:
+        file_list[i] += '폐차직전'
+    elif mileage >= 50000:
+        file_list[i] += ('심각한 중고')
+    elif mileage >= 10000:
+        file_list[i] += ('양호한 중고')
+    else :
+        file_list[i] += ('새차같은 중고')
+
+status_list = []
+for i in range(0,len(file_list)):
+    info_list = file_list[i].split("\n")
+    status_list.append(info_list[1])
+
+print("폐차직전 - ", status_list.count("폐차직전"), "대")
+print("심각한 중고 - ", status_list.count("심각한 중고"), "대")
+print("양호한 중고 - ", status_list.count("양호한 중고"), "대")
+print("새차같은 중고 - ", status_list.count("새차같은 중고"), "대")
+
+import matplotlib.pyplot as plt
+plt.rcParams["font.family"] = "D2Coding"
+x = range(1, len(mileage_list)+1)
+y = mileage_list
+
+plt.title("차량 상태값")
+plt.rc("axes", labelsize=20)
+plt.xlabel("차 번호")
+
+plt.rc("axes", labelsize=20)
+plt.ylabel("mileage")
+plt.plot(x, y)
+plt.show()
+
+```
+
+* 강사님
+
+```python
+file = open("usedcars.csv", "rt") #텍스트를 포함하고 있기 때문에 'rt' 'r'만써도됨
+
+carstate = [] #차량상태만 저장 리스트
+mileage_list = [] #마일리지 저장 리스트
+carstate_cnt = [] # 차량 상태 수
+for line in file:
+    line_list = line.split(',')
+    mileage = line_list[3]
+    if mileage.isdigit() and int(mileage) >= 100000:
+        line_list.append("폐차직전")
+    elif mileage.isdigit() and int(mileage) >= 50000:
+        line_list.append("심각한중고")
+    elif mileage.isdigit() and int(mileage) >= 10000:
+        line_list.append("양호한중고")
+    elif mileage.isdigit() and int(mileage) < 10000:
+        line_list.append("새차같은중고")
+    else:
+        line_list.append("차량상태")
+    print(line_list)
+    carstate.append(line_list[6])
+    mileage_list.append(line_list[3])
+file.close();
+
+carstate_value = ['폐차직전', '심각한중고', '양호한중고', '새차같은중고', '차량상태']
+for one_state in carstate_value:
+    print(one_state, " : " , carstate.count(one_state))
+    carstate_cnt.append(carstate.count(one_state))
+print("폐차직전 - ", carstate.count("폐차직전"), "대")
+print("심각한중고 - ", carstate.count("심각한중고"), "대")
+print("양호한중고 - ", carstate.count("양호한중고"), "대")
+print("새차같은중고 - ", carstate.count("새차같은중고"), "대")
+
+import matplotlib.pyplot as plt
+plt.rcParams["font.family"] = "D2Coding"
+plt.hist(carstate)
+plt.show()
+
+```
+
