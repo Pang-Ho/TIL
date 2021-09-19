@@ -8,13 +8,13 @@
 
 * 자바스크립트와 달리 자동형변환 없음
 
-  str, int, float
+  str, int, float, bool
 
   ```python
   d1 = 'python'
   d2 = 200
-  d1 + d2 (x)
-  d1 + str(d2) (o)
+  d1 + d2 (x) #자동형변환이 없음
+  d1 + str(d2) (o) #형변환 필요
   ```
 
 ## 다중 데이터
@@ -26,18 +26,26 @@
   print(list) => 리스트 그대로 나옴
   list[2]
   list[1:5]
-  list+list
-  list*3
-  len(list) => 리스트 길이
+  list+list => 가능
+  list*3 => 가능!!
+  len(list) => 리스트 길이 #range(1, len(list))
   
   list[5] = "새로 추가"
   list[5] = "기존 변경"
+  
+  #리스트 안에 리스
+  list[4] => [1,2,3]
+  list[4][2] => 3
+  #리스트 메소드
   list.append("마지막에 추가")
   list.insert(2, "정해진 위치에 추가")
   list.pop() => 마지막 데이터 삭제
   list.pop(2) => 2번째 요소 삭제
   list.remove(1) => 첫번째로 나오는 1이라는 데이터를 삭제
   list.remove(True)
+  list.index(3.14) => 1 #일치하는 데이터의 인덱스
+  list.sort() / list.sort(reverse = True) #데이터 정렬
+  list.reverse #리스트 요소 순서 반대로 뒤집는다
   del list[0] => 특정 인덱스 값 삭제
   ```
 
@@ -45,9 +53,12 @@
 
   ```python
   tuple1 = (1, 2, 3, 4, 5) => 튜플은 수정이 불가
-  tuple2 = 1, 2, 3, 4, 5
-  tuple3 = 1,
-  t1, t2, t3, t4, t5 = tuple1 => 변수 설정해서 값 받아오기
+  tuple2 = 1, 2, 3, 4, 5 #괄호가 없으면 튜플
+  tuple3 = 1, #요소가 하나인 튜플
+  t1, t2, t3, t4, t5 = tuple1 #변수에 요소 할당
+  #튜플 메소드
+  tuple1.index(3)
+  tuple1.count(1)
   ```
 
 * dictionary
@@ -64,13 +75,19 @@
   dic1.values() => dict_values(['','',''])
   dic.items() => dict_items([,],[,],[,])
   => 리스트가 아님
+  
+  #딕셔너리 연산자 in
+  'id' in dic1.keys() => True #'id'라는 key가 dic1 키 목록 안에 있는지 확인
+  #딕셔너리 메소드
+  dic1.pop('pw') => 키가 'pw'인 요소 삭제
+  dic1.clear()
   ```
 
 * 내장 함수
 
   ```python
   dir(__builtins__) => 내장함수 목록
-  dri(dir(list1)) => list1에 적용 가능한 내장함수 목록
+  dir(dir(list1)) => list1에 적용 가능한 내장함수 목록
   keyword.kwlist => 파이썬 키워드 목록
   ```
 
@@ -83,9 +100,9 @@
   ```python
   d1 = 'python'
   d1[0] => p
-  d1[0:3] => pyth
+  d1[0:3] => pyt
   d1[2:] => thon
-  d1[:3] => pyth
+  d1[:3] => pyt
   ```
 
 * in, find, count
@@ -94,7 +111,7 @@
   d1 = 'multicampus'
   'cam' in d1 => True d1안에 'cam'이 있니?
   list = ['a','b','c','d']
-  list in [0] => False list 안에 [0]리스트가 있니?
+  'a' in list => False list안에 'a'가 있니?
   
   d1.find('cam') => 5 5번째부터 보인다
   d1.count('cam') => 1 'cam'은 한 번 보인다
@@ -116,6 +133,8 @@
   ```python
   d1 = 'python'
   len(d1) => 문자 개수는 6개 
+  ist1 = [['a'],'b','c','d','e']
+  len(list1) => 리스트 길이는 5
   ```
 
 * upper, split
@@ -131,7 +150,7 @@
 
   ```python
   d1 = '21341'
-  d1.isnumeric() => True 숫자로만 이루어진 문자열
+  d1.isnumeric() => True 숫자로만 이루어진 문자열이 맞다!
   ```
 
 * format
@@ -148,7 +167,7 @@
   키보드 입력
   print("숫자 1개를 입력하시오 : ")
   first = input()
-  type(first) => str
+  type(first) #str이므로 필요시 형변환 해야한다.
   ```
 
   
@@ -166,15 +185,15 @@
 
   ```python
   bool(0) => False #0이 아닌 수는 True
-  bool('') => False #모든 리스트 형태들은 비어있으면 Flase
+  bool('') => False 
+  bool([1,2]) => True #모든 리스트 형태들은 비어있으면 Flase
   ```
-
+  
   
 
 ## 조건문
 
 * 들여쓰기로 구역 구별
-* import 모듈을 써야 모듈 사용 가능(파이썬이 제공하는 라이브러리)
 
 ```python
 if 10 < 5 :
@@ -185,12 +204,12 @@ else :
 print("if문 상관없이 출력된다")
 ```
 
-
+* import 모듈을 써야 모듈 사용 가능(파이썬이 제공하는 라이브러리)
 
 ```python
 import random
 score = random.randint(1,100)
-score = random.randrange(1,101)#같은 표현
+score = random.randrange(1,101)#위와 같은 표현
 if 100 >= score and score >= 80 :
     print("이수")
 elif score >= 60 :
@@ -224,17 +243,14 @@ else :
 * for 유한 횟수
 
 ```python
-num=input();
 for i in (1,2,3,4,5,6,7,8,9,10) : #튜플 데이터
     print(i)
     print("번 째 반복중")
 
-num=input();
 for i in [1,2,3,4,5,6,7,8,9,10] : #리스트 데이터
     print(i)
     print("번 째 반복중")
 
-num=input();
 for i in {1,2,3,4,5,6,7,8,9,10} : #딕셔너리 데이터 (key를 안쓰면 key와 value는 같은 값)
     print(i)
     print("번 째 반복중")
@@ -245,45 +261,52 @@ for i in {1,2,3,4,5,6,7,8,9,10} : #딕셔너리 데이터 (key를 안쓰면 key�
 * while 횟수를 모를 때
 
 ```python
-mynum = random.randint(1,100);
-while True :
-    print("숫자 입력해주세요")
-    yournum = int(input())
-    if yournum > mynum :
-        print(yournum, "보다 작습니다.")
-    elif yournum == mynum :
-        print("잘했어!")
+while True:
+    try:
+        print("숫자를 입력해주세요")
+        user_num = int(input())
+    except ValueError:
+        print("숫자만 입력해주세요")
+        continue
+    if user_num > num:
+        print(user_num, "보다 작은 수예요")
+    elif user_num < num:
+        print(user_num, "보다 큰 수예요")
+    elif user_num == num:
+        print("정답!", num," 이었습니다!")
         break
-    else :
-        print(yournum, "보다 큽니다.")
 ```
 
 * range(start, value, end)
 
-```python
-print(list(range(1, 11, 1))) #1부터 11이전값까지 1씩 증가
-print(list(range(11))) #0부터 11이전까지 1씩 증가
+  ```python
+  print( range(1,4,1) ) => range(1,4) #range자체가 리스트는아님
+  print( list( range(1,4,1) ) ) => [1,2,3,4] #리스트로 만들어줌
+  
+  range(11) #0부터 11이전까지 1씩 증가
+  
+  print( list([0,1,2,3,4]) ) => [0,1,2,3,4]
+  print( [0,2,3,4] ) => [0,2,3,4]
+  ```
 
-for i in range(11):
-    print(i)
-    
+  
+
+```python
 list2 = ["python", "multi", 100, True]
 print(list2)
 
+#리스트의 값을 하나씩 출력하고 싶을 때
 for i in list2:
     print(i)
-
+#리스트의 길이만큼 반복하고 싶을 때
 for i in range( len(list2) ): #range(4)이니까 0 1 2 3
     print(i, list2[i])
 ```
 
-* continue와 튜플
+* continue와 딕셔너리
 
 ```python
 dic2 = {"k1":1, "k2":2, "k3":3, "k4":4, "k5":5}
-
-print(type(("k1",1)))
-k, v = ("k1", 1)
 
 for k, v in dic2.items() :
     if k=='k3' :
@@ -334,17 +357,15 @@ for k, v in dic2.items() :
 * 가변 매개변수가 있는 함수
 
   ```python
-  def message(*message, n=5):
-      for i in range(1, n+1):
-          for j in message:
-              print(j)
+  def message(*message):
+      return message
               
-  message("파이썬", "자바", "sql")
+  message("파이썬", "자바", "sql") #반복문 한 것 처럼 튜플로 리턴됨
   ```
-
+  
   * 가변 매개변수 있는 함수 정의
-    * 매개변수 앞에 * 하나면 튜플 * 두개면 딕셔너리가 된다.
-
+    * 매개변수 앞에 * 하나면 튜플  * 두개면 딕셔너리가 된다.
+  
   ```python
   def dynamic_message(*message, n=5):
       for i in range(1, n+1):
@@ -353,14 +374,14 @@ for k, v in dic2.items() :
               
   dynamic_message("파이썬", "자바", "sql")
   ```
-
+  
   ```python
   def playerteam(**player):
       for k in player.keys():
           print('{0} 플레이어는 {1}팀이다'.format(k, player[k]))
   playerteam(박지성="한국", 이에마스="일본")
   ```
-
+  
   
 
   * 리턴값 있는 함수
@@ -372,22 +393,22 @@ for k, v in dic2.items() :
         print("노 리턴")
     r = no_return() => None
     ```
-
+  
   ```python
   def return():
   	print("리턴")
       result = 10 + 10
-      return result, "리턴값"
+      return result, "리턴값" #여러 값을 리턴할 수 있음
   r= return => (20, "리턴값")
   type(r3) => 튜플
   
-  r = return3()
+  r = return3() #리턴값을 튜플로 받기
   print(r[0], r[1])
   
-  first, second = return3()
+  first, second = return3() #리턴 값을 각 변수로 받기
   print(first, second); => 20 "리턴값"
   ```
-
+  
   
 
 
@@ -537,7 +558,7 @@ print( (lambda : "람다")() )
   
   random.randint(1, 100)
   random.randrange(1, 101)
-  
+  ====================================
   import random as ra
   ran_list = ["abc", "ABC", "가나다", 123]
   
@@ -679,7 +700,7 @@ print( (lambda : "람다")() )
       print("============================")
       
       => 혹시 첫번째 데이터가 아닌 다른 데이터를 쓰고 싶다면
-          print("도시 : ", l.findAll('city')[1].string)
+          print("시간 : ", l.findAll('tmef')[1].string)
   
   ```
 
@@ -744,6 +765,38 @@ print( (lambda : "람다")() )
   plt.show()
   ```
 
+### 컴퓨터 글꼴 확인
+
+```python
+import matplotlib.font_manager as fm
+font_list=[]
+for f in fm.fontManager.ttflist:
+    font_list.append(f.name)
+    
+#알파벳 순서로 정렬
+font_list.sort()
+for fname in font_list:
+    print(fname)
+```
+
+### 그래프 글꼴 바꾸기
+
+```python
+import matplotlib.pyplot as plt
+plt.rcParams["font.family"] = "D2Coding"
+```
+
+### 그래프 모습 바꾸기
+
+```python
+plt.rc('font', size=20)       # 기본 폰트 크기
+plt.rc('axes', labelsize=20)  # x,y축 label 폰트 크기 안바뀜 확인하셈
+plt.rc('xtick', labelsize=50) # x축 눈금 폰트 크기
+plt.rc('ytick', labelsize=50) # y축 눈금 폰트 크기
+plt.rc('legend', fontsize=20) # 범례 폰트 크기
+plt.rc('figure', titlesize=50)# 제목 폰트 크기
+```
+
 
 
 * 실습
@@ -790,3 +843,143 @@ print( (lambda : "람다")() )
 
   
 
+## requests 모듈
+
+* 웹서버 get, post 방식 둘 다 결과 값 가져올 수 있는 모듈
+
+
+
+* get
+
+  ```python
+  import requests
+  fromserver1 = requests.get("http://localhost:9002/hellopython")
+  print(fromserver1.status_code) #브라우저 상태 코드값
+  
+  fromserver2 = requests.get("http://localhost:9002/hellopython?name=python")
+  print(fromserver2.status_code)
+  
+  if fromserver2.status_code == 200 :#정상 작동하면~
+      print(fromserver2.text)
+      print(fromserver2.json) #@ResponseBody가 선언되었을 때
+      print(fromserver2.encoding)
+      print(formserver2.headers['content-type']) #produces 가져옴
+  ```
+
+* post
+
+  ```python
+  fromserver = requests.post(
+  "http://localhost:9002/hellopython", data={'name':'pythontest'})
+  #post로 전송할 데이터는 딕셔너리 형태로
+  print(fromserver.status_code)
+  
+  if fromserver.status_code == 200 :
+      print(fromserver.text)
+      print(fromserver.json) #@ResponseBody만 선언되었을 때 가능
+      print(fromserver.encoding)
+      print(fromserver.headers['content-type'])#produces 가져옴
+  ```
+
+* PythonController
+
+  ```java
+  @Controller
+  public class PythonController {
+  	
+  	@ResponseBody
+  	@RequestMapping(value="/hellopython", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
+  	//default							없으면 get, post둘다		produces ="text/html"
+  	public ArrayList<String> hello2(String name){
+  		ArrayList<String> list = new ArrayList<String>();
+  		if(name.equals("pythontest")) {
+  			list.add("자바 프로그램");
+  			list.add("sql 프로그램");
+  			list.add("web server 프로그램");
+  			list.add("web client 프로그램");
+  			list.add("spring 프로그램");
+  		}
+  		else {
+  			list.add("===============");
+  		}
+  		return list;
+  	}
+  }
+  ```
+
+  
+
+
+
+## 업로드 웹서버와 연결
+
+```python
+import requests
+
+#파이썬 테이블, 그래프 그림 이미지 저장
+data_dict={'name':'전송자', 'description':'설명'}
+
+file1 = open('day3.py', 'rt', encoding='utf-8')
+file2 = open('city_weather.png', 'rb')
+#폴더 위치가 다른 경우 절대경로로 쓸 수 있음 C:/kdigital2/python397/소스/city_weather.png
+files_dict={'file1':file1, 'file2':file2}
+fromserver = requests.post(
+    "http://localhost:9002/fileupload", data=data_dict, files=files_dict)
+print(fromserver.text)
+```
+
+* 파이썬 => 스프링서버 => 마이바티스 => 오라클db
+
+## 사용자 생성 모듈
+
+* import xxx.py란 것은
+
+  우선 xxx.py를 실행한 후에 기존 코드를 실행해라 라는 의미
+
+  즉 xxx.py 실행 결과값이 나온 후 실행한 파일이 실행됨
+
+
+
+* sub.py
+
+```python
+pi = 3.141592
+
+#원의 반지름 입력 - 정수 변환
+def radius_input():
+    r = input("반지름 : ")
+    return int(r)
+
+#원의 면적
+def get_area(r):
+    return r * r * pi
+
+#원의 둘레
+def get_circum(r):
+    return r * 2 * pi
+
+#sub.py 실행시에만 실행 시작
+#다른 py import 실행시에는 실행 x
+if __name__ == "__main__" :
+    print("현재모듈명 : ", __name__)
+    r = sub.radius_input()
+    print(r = sub.radius_input())
+    print(sub.get_area(r))
+    print(sub.get_circum(r)) 
+
+```
+
+* main.py
+
+  ```python
+  import sub
+  #sub.py 실행 문장이 먼저 실행됨
+  
+  print("현재모듈명 : ", __name__)
+  r = sub.radius_input()
+  print(r = sub.radius_input())
+  print(sub.get_area(r))
+  print(sub.get_circum(r)) 
+  ```
+
+  
