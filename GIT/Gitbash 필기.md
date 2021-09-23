@@ -57,7 +57,7 @@
 
   * git log --oneline
 
-  * git log --oneline --graph 
+  * git log --oneline --graph  
 
   * git rm -rf {폴더, 파일 이름} - 로컬저장소, 원격저장소에서 삭제
 
