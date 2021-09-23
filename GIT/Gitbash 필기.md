@@ -70,11 +70,11 @@
   git push origin master
   git remote -v
 
-## 파일 라이프사이클
+## 파일 라이프사이클 
 
 Tracked : 이전부터 버전으로 관리되고 있는 파일
 
-* Unmodified : git satus에 나타나지 않음
+* Unmodified : git satus에 나타나지 않음 
 * Modified : Changes not staged for commit
 * Staged : Changes to be commited
 
