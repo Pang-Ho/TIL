@@ -4,7 +4,11 @@
 
 * 자바와 달리 변수 이름만 선언 불가
 
-  * d; (x) // d = Null (o)
+  d; (x) // d = Null (o)
+
+* 그러나 변수 선언시 형태를 쓸 필요 없음
+
+  String text = 'text' (x) // text = 'text'
 
 * 자바스크립트와 달리 자동형변환 없음
 
@@ -23,7 +27,7 @@
 
   ```python
   list = [1, 3.14, '리스트', True, [1,2,3]]
-  print(list) => 리스트 그대로 나옴
+  print(list) => 리스트 값들 모두 호출
   list[2]
   list[1:5]
   list+list => 가능
@@ -33,7 +37,7 @@
   list[5] = "새로 추가"
   list[5] = "기존 변경"
   
-  #리스트 안에 리스
+  #리스트 안에 리스트
   list[4] => [1,2,3]
   list[4][2] => 3
   #리스트 메소드
@@ -167,9 +171,10 @@
   키보드 입력
   print("숫자 1개를 입력하시오 : ")
   first = input()
+  => first = input("숫자 1개를 입력하시오 : ")
   type(first) #str이므로 필요시 형변환 해야한다.
   ```
-
+  
   
 
 ## 논리 연산자
@@ -251,7 +256,16 @@ for i in [1,2,3,4,5,6,7,8,9,10] : #리스트 데이터
     print(i)
     print("번 째 반복중")
 
+list = [1,2,3,4,5,6,7,8,9,10]
+for i in list :
+    print(i)
+    print("번 째 반복중")
+    
 for i in {1,2,3,4,5,6,7,8,9,10} : #딕셔너리 데이터 (key를 안쓰면 key와 value는 같은 값)
+    print(i)
+    print("번 째 반복중")
+
+for i in range(1, 10):
     print(i)
     print("번 째 반복중")
 ```
@@ -281,7 +295,7 @@ while True:
 
   ```python
   print( range(1,4,1) ) => range(1,4) #range자체가 리스트는아님
-  print( list( range(1,4,1) ) ) => [1,2,3,4] #리스트로 만들어줌
+  print( list( range(1,4,1) ) ) => [1,2,3] #리스트를 붙이면 range를 리스트로 만들어줌
   
   range(11) #0부터 11이전까지 1씩 증가
   
@@ -293,8 +307,6 @@ while True:
 
 ```python
 list2 = ["python", "multi", 100, True]
-print(list2)
-
 #리스트의 값을 하나씩 출력하고 싶을 때
 for i in list2:
     print(i)
@@ -336,6 +348,8 @@ for k, v in dic2.items() :
   message("hello")
   ```
 
+  
+
   ```python
   def message_ntimes(message, n):
       for i in range(1, n+1) :
@@ -375,19 +389,21 @@ for k, v in dic2.items() :
   dynamic_message("파이썬", "자바", "sql")
   ```
   
+  
+  
   ```python
   def playerteam(**player):
       for k in player.keys():
           print('{0} 플레이어는 {1}팀이다'.format(k, player[k]))
   playerteam(박지성="한국", 이에마스="일본")
   ```
-  
+
   
 
   * 리턴값 있는 함수
 
     리턴 값이 없으면 함수를 호출해서 변수에 넣을 수 없다.
-
+  
     ```python
     def no_return():
         print("노 리턴")
@@ -423,6 +439,8 @@ def var_test():
 var_test()
 print(b) => 오류 b는 지역변수니까
 ```
+
+
 
 ```python
 global_b = "전역변수"
@@ -938,7 +956,18 @@ print(fromserver.text)
 
   즉 xxx.py 실행 결과값이 나온 후 실행한 파일이 실행됨
 
+* 그래서 직접 파일을 실행하지 않는 한 기존코드를 실행시키고 싶지 않다면
 
+  ```python
+  main()
+  	...
+  	...
+  
+  if __name__ == __??__ :
+  	main()
+  ```
+
+  
 
 * sub.py
 
@@ -983,3 +1012,225 @@ if __name__ == "__main__" :
   ```
 
   
+
+## 예외처리
+
+```python
+try :
+    #문제가 없을 경우 실행할 코드
+except :
+    #문제가 생겼을 경우 실행할 코드
+```
+
+
+
+```python
+try :
+    money = input("대출금액 상환개월수 입력하세요 : ")
+    data = money.split()
+    loan = int(data[0])
+    month = int(data[1])
+    print(loan, month)
+    monthly_return = loan / month
+    
+    #파이썬에서 정의되지 않는 예외를 정의하는 방법
+    if month <= 0:
+        raise ValuError("개월 수는 음수 및 0 입력이 불가능합니다.")
+except ValueError as ve :
+    print(ve) #위에서 설정된 에러 내용으로 나옴
+except IndexError:
+    print("양식을 맞춰 입력하세요")
+except :
+    pass #미구현
+else : #예외없이 정상 시행시 실행될 것
+    print(monthly_return, '원 씩', month, "개월 동안 갚을 예정")
+finally : #예외 발생 여부 무관해서 무조건 실행
+    print("영업시간종료")
+```
+
+
+
+## 파일 입출력
+
+* 입력 - 'r'
+* 출력 - 'w'
+* 이미지 파일 입력 - 'rb'
+* 텍스트 출력 - 'w', 'wt'
+
+'wt' => 파일이 없으면 새로 생성하고 내용 입력, 파일이 있으면 내용 삭제하고 내용 입력
+
+'at' => 파일이 없으면 새로 생성하고 내용 입력, 파일 있으면 뒤에 내용 추가
+
+* print() 함수의 숨겨진 기능 : print(line, sep=" ", end="\n" )
+
+  print(line) 하면 공백이 너무 많아서 end 값을 빈공간으로 만듦
+
+
+
+```python
+try:
+    file = open("C:/kdigital2/mymodules/main.py", 'rt', encoding="utf-8")
+    print(file.read())
+except FileNotFoundError:
+	print("파일 경로, 파일 명 확인")
+file.close()
+```
+
+
+
+```python
+file = open("C:/kdigital2/mymodules/sub.py", "rt", encoding="utf-8")
+
+file_list = []
+index = 1
+for line in file :
+    file_list.append(str(index) + "번 라인 - " + line)
+    index += 1
+file.close()
+
+for line in file_list :
+    print(line)
+```
+
+```python
+#이미지 파일은 안보인다 
+file = open("C:/kdigital2/python397/소스/city_weather.png", "rb")
+print(file.read())
+
+```
+
+
+
+
+
+```python
+#파일이 없으면 생성 'wt'
+#파일이 있으면 기존 내용 추가 'at'
+file = open('C:/kdigital2/mymodules/a.txt', 'at')
+file.write('새로운 파일을 생성합니다. \n두번 째 줄입니다. \n')
+file.close()
+
+# sub.py 파일 입력 - 라인번호 추가 - file_list 저장 - sub_copy.py
+file = open('C:/kdigital2/mymodules/sub_copy.py', 'wt', encoding='utf-8')
+file.writelines(file_list)
+file.close()
+```
+
+
+
+
+
+```python
+# sub.py 파일 입력 - 라인번호 추가 - file_list 저장 내용 가운데 print단어 포함 라인만 -sub_copy_print.py
+file = open('C:/kdigital2/mymodules/sub_copy_print.py', 'wt', encoding='utf-8')
+for line in file_list:
+    #line.find('print') >=0
+    if 'print' in line:
+        file.writelines(line)
+file.close()
+```
+
+
+
+
+
+* 실습
+
+  
+
+![image-20210917154716305](../md-images/image-20210917154716305.png)
+
+* 나
+
+```python
+file = open("c:/kdigital2/python397/소스/usedcars.csv", "rt")
+file_list = []
+index = 2
+for line in file:
+    file_list.append(line)
+file_list.pop(0)
+file.close()
+
+mileage_list = []
+for i in range(0, len(file_list)):
+    info_list = file_list[i].split(",")
+    
+    mileage_list.append(int(info_list[3]))
+    mileage = int(info_list[3])
+    if mileage >= 100000:
+        file_list[i] += '폐차직전'
+    elif mileage >= 50000:
+        file_list[i] += ('심각한 중고')
+    elif mileage >= 10000:
+        file_list[i] += ('양호한 중고')
+    else :
+        file_list[i] += ('새차같은 중고')
+
+status_list = []
+for i in range(0,len(file_list)):
+    info_list = file_list[i].split("\n")
+    status_list.append(info_list[1])
+
+print("폐차직전 - ", status_list.count("폐차직전"), "대")
+print("심각한 중고 - ", status_list.count("심각한 중고"), "대")
+print("양호한 중고 - ", status_list.count("양호한 중고"), "대")
+print("새차같은 중고 - ", status_list.count("새차같은 중고"), "대")
+
+import matplotlib.pyplot as plt
+plt.rcParams["font.family"] = "D2Coding"
+x = range(1, len(mileage_list)+1)
+y = mileage_list
+
+plt.title("차량 상태값")
+plt.rc("axes", labelsize=20)
+plt.xlabel("차 번호")
+
+plt.rc("axes", labelsize=20)
+plt.ylabel("mileage")
+plt.plot(x, y)
+plt.show()
+
+```
+
+* 강사님
+
+```python
+file = open("usedcars.csv", "rt") #텍스트를 포함하고 있기 때문에 'rt' 'r'만써도됨
+
+carstate = [] #차량상태만 저장 리스트
+mileage_list = [] #마일리지 저장 리스트
+carstate_cnt = [] # 차량 상태 수
+for line in file:
+    line_list = line.split(',')
+    mileage = line_list[3]
+    if mileage.isdigit() and int(mileage) >= 100000:
+        line_list.append("폐차직전")
+    elif mileage.isdigit() and int(mileage) >= 50000:
+        line_list.append("심각한중고")
+    elif mileage.isdigit() and int(mileage) >= 10000:
+        line_list.append("양호한중고")
+    elif mileage.isdigit() and int(mileage) < 10000:
+        line_list.append("새차같은중고")
+    else:
+        line_list.append("차량상태")
+    print(line_list)
+    carstate.append(line_list[6])
+    mileage_list.append(line_list[3])
+file.close();
+
+carstate_value = ['폐차직전', '심각한중고', '양호한중고', '새차같은중고', '차량상태']
+for one_state in carstate_value:
+    print(one_state, " : " , carstate.count(one_state))
+    carstate_cnt.append(carstate.count(one_state))
+print("폐차직전 - ", carstate.count("폐차직전"), "대")
+print("심각한중고 - ", carstate.count("심각한중고"), "대")
+print("양호한중고 - ", carstate.count("양호한중고"), "대")
+print("새차같은중고 - ", carstate.count("새차같은중고"), "대")
+
+import matplotlib.pyplot as plt
+plt.rcParams["font.family"] = "D2Coding"
+plt.hist(carstate)
+plt.show()
+
+```
+
