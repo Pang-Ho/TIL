@@ -106,3 +106,44 @@ cp 원본 / 변경 : 파일 복사
 
 1. 2, 4 번 예제를 이용해서 음성 내용을 음성 파일로 변환
 2. 2, 4 번 예제를 이용해서 음성 내용에 대한 설정한 답변을 음성으로 내보냄
+
+* 챗봇
+* 이미지 인식 - 자세분석, 얼굴분석
+
+
+
+* 파이썬 시각 표시
+
+  ```python
+  import datetime as dt
+  now = dt.datetime.now()
+  nowstr = now.strftime("%Y-%m-%d %H:%M:%S")
+  ```
+
+  ![image-20210924114903942](../md-images/image-20210924114903942.png)
+
+* ```python
+  ```
+
+  ![image-20210924134223176](../md-images/image-20210924134223176.png)
+
+
+
+* numpy가 버전이 낮아 matplot 모듈 사용이 불가
+
+  ```
+  sudo apt-get install libatlas-base-dev
+  pip3 uninstall numpy  
+  sudo apt install python3-numpy
+  pip3 install matplotlib
+  ```
+
+  
+
+1. 데스크탑(spring server)
+
+   | 1. sts<br />2. 톰캣 서버 열기<br />3. 파일 업로드 파일 선택 후 업로드 |
+   | ------------------------------------------------------------ |
+
+2. amk
+
