@@ -83,6 +83,8 @@ java.io.IOException: Server returned HTTP response code: 400 for URL: https://na
 | VO         |                           |
 | JSP        | V                         |
 
+
+
 | 데이터베이스가 필요없는 AI서비스 |                                                             |
 | -------------------------------- | ----------------------------------------------------------- |
 | NaverFaceController              | 요청 M-V정의                                                |
@@ -336,23 +338,335 @@ if(...){
 ```
 {
 "info":{"size":{"width":264,"height":200},"faceCount":1},
-"faces":[{"roi":{"x":80,"y":45,"width":61,"height":61},
+"faces":
+[
+{"roi":{"x":80,"y":45,"width":61,"height":61},
 "landmark":null,
 "gender":{"value":"female","confidence":0.999912},
 "age":{"value":"24~28","confidence":0.856547},
 "emotion":{"value":"neutral","confidence":0.999967},
-"pose":{"value":"right_face","confidence":0.61542}}]
+"pose":{"value":"right_face","confidence":0.61542}}
+]
 }
-
-
-
-{
-"info":{"size":{"width":640,"height":407},"faceCount":7},
-"faces":[{"roi":{"x":478,"y":132,"width":29,"height":29},
-"landmark":null,
-"gender":{"value":"male","confidence":0.87414},
-"age":{"value":"13~17","confidence":0.0640293},
-"emotion":{"value":"neutral","confidence":0.999991},
-"pose":{"value":"left_face","confidence":0.634878}},{"roi":{"x":312,"y":123,"width":27,"height":27},"landmark":null,"gender":{"value":"female","confidence":0.942221},"age":{"value":"25~29","confidence":0.651118},"emotion":{"value":"neutral","confidence":0.961848},"pose":{"value":"part_face","confidence":0.881817}},{"roi":{"x":556,"y":129,"width":31,"height":31},"landmark":null,"gender":{"value":"female","confidence":0.995143},"age":{"value":"26~30","confidence":0.946422},"emotion":{"value":"smile","confidence":0.995922},"pose":{"value":"left_face","confidence":0.815061}},{"roi":{"x":223,"y":121,"width":30,"height":30},"landmark":{"leftEye":{"x":230,"y":127},"rightEye":{"x":244,"y":127},"nose":{"x":239,"y":133},"leftMouth":{"x":235,"y":141},"rightMouth":{"x":244,"y":141}},"gender":{"value":"female","confidence":0.991381},"age":{"value":"24~28","confidence":0.651005},"emotion":{"value":"talking","confidence":0.478676},"pose":{"value":"frontal_face","confidence":0.999092}},{"roi":{"x":144,"y":140,"width":26,"height":26},"landmark":null,"gender":{"value":"male","confidence":0.660668},"age":{"value":"29~33","confidence":0.248786},"emotion":{"value":"neutral","confidence":0.965207},"pose":{"value":"right_face","confidence":0.494472}},{"roi":{"x":56,"y":124,"width":33,"height":33},"landmark":null,"gender":{"value":"child","confidence":0.911531},"age":{"value":"23~27","confidence":0.407081},"emotion":{"value":"neutral","confidence":0.998719},"pose":{"value":"false_face","confidence":0.77988}},{"roi":{"x":386,"y":119,"width":28,"height":28},"landmark":null,"gender":{"value":"male","confidence":0.53611},"age":{"value":"23~27","confidence":0.530643},"emotion":{"value":"neutral","confidence":0.98827},"pose":{"value":"part_face","confidence":0.825163}}]}
 ```
+
+## 좌표로 얼굴 표시
+
+* 얼굴표시
+
+  canvas 태그
+
+  ```html
+  <script>
+  window.onload = function(){
+  	var samplecanvas = document.getElementById("samplecanvas");
+  	var samplecontext = samplecanvas.getContext("2d");
+  	samplecontext.font="20px batang";
+  	samplecontext.fillStyle="blue";
+  	samplecontext.fillText("캔버스 위에 글씨를 씁니다", 100, 100);	
+  	samplecontext.fillRect(200, 200, 100, 50);
+  	
+  	samplecontext.lineWidth = 3;
+  	samplecontext.strokeStyle="green";
+  	samplecontext.strokeRect(300, 300, 100, 50);
+  	
+  	samplecontext.beginPath();
+  	//x 50 ,y 50 시작하여 x 종료지점 100, y 100
+  	x=50
+  	y=50
+  	samplecontext.moveTo(x,y);
+  	samplecontext.lineTo(x+50, y+50);
+  	
+  	
+  	samplecontext.closePath();
+  	samplecontext.lineWidth = 5;
+  	samplecontext.strokeStyle='red';
+  	samplecontext.stroke();
+  	
+  	let sampleimage = new Image();
+  	sampleimage.src="http://localhost:9002/naverimages/song.jpg"
+  	sampleimage.onload = function(){
+  		samplecontext.drawImage(sampleimage, 0, 0, sampleimage.width, sampleimage.height );
+  		let copyimage = samplecontext.getImageData(0,0, 50,50);
+  		samplecontext.putImageData(copyimage, 300, 300);
+  		
+  		samplecontext.fillStyle = "blue";
+  		samplecontext.fillRect(0,0,100,100);
+  	}
+  	
+  }
+  </script>
+  </head>
+  <body>
+  <canvas id="samplecanvas" width="400" height="400" style="border:2px solid pink"></canvas>
+  
+  </body>
+  ```
+
+  face2
+
+  ```jsp
+  <%@page import="java.math.BigDecimal"%>
+  <%@page import="org.json.JSONArray"%>
+  <%@page import="org.json.JSONObject"%>
+  <%@ page language="java" contentType="text/html; charset=UTF-8"
+      pageEncoding="UTF-8"%>
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  </head>
+  <body>
+  <%String image = request.getParameter("image"); %>
+  <script>
+  window.onload = function(){
+  	var facecanvas = document.getElementById("facecanvas")
+  	var facecontext = facecanvas.getContext("2d")
+  	
+  	let copycanvas = document.getElementById("copycanvas")
+  	let copycontext = copycanvas.getContext("2d")
+  		
+  	let faceimage = new Image();
+  	faceimage.src = "/naverimages/<%=image%>";
+  	faceimage.onload =function(){
+  		facecontext.drawImage(faceimage, 0, 0, faceimage.width, faceimage.height)
+  		
+  		<%
+  		String faceresult2 = (String)request.getAttribute("faceresult2");
+  		JSONObject obj = new JSONObject(faceresult2);
+  		JSONArray faces = (JSONArray)obj.get("faces");
+  		int a = 0;
+  		for(int i = 0 ; i < faces.length() ; i++){
+  			JSONObject oneface = (JSONObject)faces.get(i);
+  			JSONObject roi = (JSONObject)oneface.get("roi");
+  			int x = (Integer)roi.get("x");
+  			int y = (Integer)roi.get("y");
+  			int width = (Integer)roi.get("width");
+  			int height = (Integer)roi.get("height");
+  			//out.println("얼굴 위치 : (" + x + ", "+ y + ") 가로크기 : " + width + " 세로크기 : " + height + "<br>");
+  			
+  			JSONObject gender = (JSONObject)oneface.get("gender");
+  			String gendervalue = (String)gender.get("value");
+  			BigDecimal genderconfidence = (BigDecimal)gender.get("confidence");
+  			
+  			JSONObject age = (JSONObject)oneface.get("age");
+  			String agevalue = (String)age.get("value");
+  			BigDecimal ageconfidence = (BigDecimal)age.get("confidence");
+  			
+  			JSONObject emotion = (JSONObject)oneface.get("emotion");
+  			String emovalue = (String)emotion.get("value");
+  			BigDecimal emoconfidence = (BigDecimal)emotion.get("confidence");
+  			
+  			JSONObject pose = (JSONObject)oneface.get("pose");
+  			String posevalue = (String)pose.get("value");
+  			BigDecimal poseconfidence = (BigDecimal)pose.get("confidence");
+  			
+  			/* if(genderconfidence.doubleValue() >= 0.5 && ageconfidence.doubleValue() >= 0.5 && emoconfidence.doubleValue() >= 0.5 && poseconfidence.doubleValue() >= 0.5){
+  			out.println("<h3>성별 " + gendervalue + genderconfidence); 
+  			out.println("추청나이 " + agevalue + ageconfidence);
+  			out.println("감정 " + emovalue + emoconfidence);
+  			out.println("자세 " + posevalue + poseconfidence + "</h3>");
+  			a =+ 1;
+  			} */
+  		%>
+  			//자바스크립트 문장
+  			var x = <%=x%>
+  			var y = <%=y%>
+  			var width = <%=width%>
+  			var height = <%=height%>
+  			
+  			//본사진
+  			facecontext.lineWidth = 3;
+  			facecontext.strokeStyle = "pink"
+  			facecontext.strokeRect(x, y, width, height)
+  			//var(값, 선언 중복), let(같은이름변수 중복 선언 불가 for 안에 넣으면 안됨) 
+  			var copyimage = facecontext.getImageData(x, y, width, height);
+  			copycontext.putImageData(copyimage, x, y)
+  		<%
+  		}
+  		//out.println("총 " + a + "명 있습니다.");
+  		%>
+  		
+  	}
+  }
+  //<h4>${faceresult2 }</h4>
+  
+  
+  
+  </script>
+  <canvas id="facecanvas" width=500 height=500 style="border:2px solid purple"></canvas>
+  <canvas id="copycanvas" width=300 height=300 style="border:2px solid pink"></canvas>
+  <%-- <img src="/naverimages/${param.image }"> --%>
+  </body>
+  </html>
+  
+  ```
+
+  
+
+## 사물 탐지 API 활용한 mvc
+
+```json
+{
+    "predictions": [{"num_detections": 6, "detection_classes": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "detection_names": ["person", "person", "person", "person", "person", "person"],
+                     "detection_scores": [0.996249, 0.9918, 0.983505, 0.982203, 0.663236, 0.518665],
+                     "detection_boxes": [[0.124058, 0.0985503, 0.987019, 0.346438], 
+                                         [0.210716, 0.215747, 0.995167, 0.486073], 
+                                         [0.193967, 0.566847, 0.993421, 0.874073], 
+                                         [0.342605, 0.439295, 0.986231, 0.638756], 
+                                         [0.0406851, 0.344942, 0.431135, 0.583015],
+                                         [0.0850018, 0.567567, 0.605374, 0.741739]]}]}
+
+```
+
+objectdection.jsp
+
+```jsp
+<body>
+<!-- el json 형태 -->
+${odresult }
+
+<!-- jsp에서 string을 json변환 -->
+<%-- <%
+String odresult = (String)request.getAttribute("odresult");
+JSONObject obj = new JSONObject(odresult);
+JSONArray predictions = (JSONArray)obj.get("prideictions");
+
+int num_detections = (Integer)predictions.get("num_detections");
+for(int i = 0 ; i < num_detections ; i++){
+	String detections_classes = (String)predictions.get("detection_classes");
+	
+}
+%> --%>
+
+<!-- java script에서 string을 json 변환 -->
+<script src="/jquery-3.2.1.min.js"></script>
+<script>
+$(document).ready(function(){
+	$("#names").text('<%=request.getAttribute("odresult")%>');
+	<% String odresult = (String)request.getAttribute("odresult");
+	String imagefile = request.getParameter("image");
+	%>
+	
+	var json = JSON.parse('<%=odresult%>');
+	$("#names").text(json.predictions[0].detection_names);
+	for(var i = 0 ; i<json.predictions[0].num_detections ; i++){
+		// json 데이터를 1. 실수로 변환 2. *100 3. 정수로 변환 4. % 5. 출력 
+		$("#conf").append(parseInt(parseFloat(json.predictions[0].detection_scores[i]) * 100) + "%, ");
+		//html태그, text(문자열), append(태그 이전내용추가)
+	}
+	
+	//캔버스 이미지 표시
+	let canvas = document.getElementById("objectcanvas");
+	let context = canvas.getContext("2d");
+	let image = new Image();
+	image.src = "/naverimages/<%=imagefile%>";
+	image.onload = function(){
+		context.drawImage(image, 0, 0, image.width, image.height);
+		var boxes = json.predictions[0].detection_boxes;
+		var names = json.predictions[0].detection_names;
+		for(var i = 0 ; i < json.predictions[0].num_detections ; i++){
+			if(parseFloat(json.predictions[0].detection_scores[i]) >= 0.5){
+				var y1 = boxes[i][0] * image.height ;
+				var x1 = boxes[i][1] * image.width ;
+				var x2 = boxes[i][3] * image.width ;
+				var y2 = boxes[i][2] * image.height ;
+				context.strokeStyle = "green";
+				context.lineWidth=5;
+				context.strokeRect(x1, y1, x2-x1, y2-y1)
+				//사물 이름 출력				
+				context.font="10px batang";
+				context.fillStyle="red";
+				context.fillText(names[i]+":"+parseInt(json.predictions[0].detection_scores[i]*100)+"%", x1+10, y1+10);
+				//context.strokeRect(x1, y1, 100, -30);
+			}
+		}
+	}
+});
+
+</script>
+
+<div id="names" style="border:2px solid green"></div>
+<div id="conf" style="border:2px solid blue"></div>
+<canvas id="objectcanvas" width=1000 height=1000 style="border:2px solid pink"></canvas>
+<!-- jsp에서 string을 json변환 -->
+<%
+JSONObject obj = new JSONObject(odresult);
+JSONArray predictions = (JSONArray)obj.get("predictions");
+JSONObject predict = (JSONObject)predictions.get(0);
+out.println(predict.get("detection_names"));
+%>
+</body>
+```
+
+
+
+## 포즈 탐지 API 활용한 mvc
+
+```json
+{ "predictions": [ { "0": { "score": 0.8925939202308655, "x": 0.41935483870967744, "y": 0.19014084507042253 }, "1": { "score": 0.8796489834785461, "x": 0.49193548387096775, "y": 0.2676056338028169 }, "2": { "score": 0.7281489372253418, "x": 0.45161290322580644, "y": 0.2746478873239437 }, "3": { "score": 0.8822159171104431, "x": 0.3387096774193548, "y": 0.31690140845070425 }, "4": { "score": 0.7332707047462463, "x": 0.3225806451612903, "y": 0.22535211267605634 }, "5": { "score": 0.7157197594642639, "x": 0.532258064516129, "y": 0.2535211267605634 }, "6": { "score": 0.8861460089683533, "x": 0.6532258064516129, "y": 0.3028169014084507 }, "7": { "score": 0.7167596817016602, "x": 0.7419354838709677, "y": 0.39436619718309857 }, "8": { "score": 0.5962599515914917, "x": 0.5806451612903226, "y": 0.5 }, "9": { "score": 0.7547611594200134, "x": 0.6854838709677419, "y": 0.6830985915492958 }, "10": { "score": 0.7340120077133179, "x": 0.8548387096774194, "y": 0.823943661971831 }, "11": { "score": 0.5576349496841431, "x": 0.5483870967741935, "y": 0.49295774647887325 }, "12": { "score": 0.8563839197158813, "x": 0.3225806451612903, "y": 0.528169014084507 }, "13": { "score": 0.8043299913406372, "x": 0.3951612903225806, "y": 0.7253521126760564 }, "15": { "score": 0.8117127418518066, "x": 0.43548387096774194, "y": 0.16901408450704225 }, "17": { "score": 0.899573028087616, "x": 0.49193548387096775, "y": 0.176056338028169 } } ]}
+```
+
+```jsp
+<body>
+<!-- el json 형태 -->
+${poseresult }
+
+
+<% 
+String poseresult = (String)request.getAttribute("poseresult");
+String image = request.getParameter("image");
+
+%>
+<!-- java script에서 string을 json 변환 -->
+<script src="/jquery-3.2.1.min.js"></script>
+<script>
+$(document).ready(function(){
+	$('#result').text('<%=poseresult%>');
+	var json = JSON.parse('<%=poseresult%>');
+	
+	var posecanvas = document.getElementById("posecanvas");
+	var posecontext = posecanvas.getContext("2d");
+	posecontext.fillStyle = "red";
+	posecontext.font = "15px batang";
+
+	
+	var image = new Image();
+	image.src="/naverimages/<%=image%>";
+	
+	image.onload = function(){
+		posecanvas.width = image.width;
+		posecanvas.height = image.height;
+		posecontext.drawImage(image, 0, 0, image.width, image.height);
+		
+		var poseinforms=['','']
+		for(var i = 0  ; i < json.predictions.length ; i++){
+			var oneperson = json.predictions[i];
+			//for(var j = 0 ; j < oneperson.length ; j++){
+				for(var j in oneperson){
+				var body = oneperson[j]
+				var x = body.x * image.width
+				var y = body.y * image.height
+				posecontext.fillText(j+"번", x, y);//0~17 (0:코) 
+				//posecontext.fillText(poseinforms[j], x, y)
+				
+				
+			}
+		}
+	}
+});
+
+</script>
+
+<div id="result" style="border:2px solid green"></div>
+<canvas id="posecanvas" width=1000 height=1000 style="border:2px solid pink"></canvas>
+<!-- jsp에서 string을 json변환 -->
+
+</body>
+```
+
+
+
+
 
