@@ -670,3 +670,332 @@ $(document).ready(function(){
 
 
 
+## STT API 활용한 mvc
+
+
+
+* speechinput.jsp
+
+  ```jsp
+  <% 
+  String languages[] = {"Kor", "Jpn", "Chn", "Eng"};
+  String languagenames[] = {"한국어", "일본어", "중국어", "영어"};
+  %>
+  <form action="/speech">
+  	언어 선택 : <br>
+  	<%for(int i = 0 ; i < languages.length ; i++) {%>
+  		<input type=radio name="lang" value=<%=languages[i] %> > <%=languagenames[i] %>
+  	<%} %>
+  	<select name="image">
+  		<%
+  		String[] filelist = (String[])request.getAttribute("filelist");
+  		//mp3만 출력
+  		for(int i = 0 ; i < filelist.length ; i++){
+  			String onefile = filelist[i];
+  			String[] onefile_split = onefile.split("[.]"); // "."=>모든 1글자 가능이란 의미를 내포해서 [.]로 표현해야함
+  			String fileext = onefile_split[onefile_split.length - 1];
+  			if(fileext.equals("mp3")){
+  		%>	
+  				<option value="<%=onefile %>"> <%=onefile %></option>
+  			<%}
+  		} %>
+  	</select>
+  	<input type=submit value="텍스트로 변환">
+  </form> 
+  ```
+
+* speech.jsp
+
+  ```jsp
+  <body>
+  <div id="result">${speechresult }</div>
+  <audio src="/naverimages/${param.image }" controls="controls"></audio>
+  </body>
+  ```
+
+* NaverSpeechService
+
+  ```java
+  @Service
+  public class NaverSpeechService implements NaverService {
+         
+  	@Override
+  	public String test(String file) {
+  		return test(file, "Kor");
+  	}
+  	public String test(String file, String language) {
+  		StringBuffer response = new StringBuffer();
+          
+  //language를 받아서 api에서 쓰기 위해... 
+  ```
+
+* NaverSpeechController
+
+  ```java
+  @Controller
+  public class NaverSpeechController {
+  	
+  	@Autowired
+  	NaverSpeechService speechservice;
+  	
+  	@RequestMapping("/speech")
+  	public ModelAndView face(String image, String lang) {
+  		
+  		String jsonModel = "";
+  		if(lang ==null) {
+  			jsonModel = speechservice.test(image);
+  		}
+  		else {
+  			jsonModel = speechservice.test(image, lang);
+  		}
+  		ModelAndView mv = new ModelAndView();
+  		mv.addObject("speechresult", jsonModel);
+  		mv.setViewName("/stt_csr/speech");
+  		return mv;
+  	}
+  	
+  	@RequestMapping("/speechinput")
+  	public ModelAndView faceinfut() {
+  		File f = new File("C:/Users/Pang/Desktop/images (2)/images");
+  		String[] namelist = f.list(); //song.jpg 처럼 파일 이름들 가져옴 이 때 다른 폴더가있다면 조건도... jpg, tfif, png
+  		ModelAndView mv = new ModelAndView();
+  		mv.addObject("filelist", namelist);
+  		mv.setViewName("/stt_csr/speechinput");
+  		return mv;
+  	}
+  }
+  ```
+
+### 파일 저장 
+
+* 파일 저장(NaverSpeechController)
+
+  ```java
+  		//json내용 뽑아내기
+  		JSONObject obj = new JSONObject(jsonModel);
+  		String text = (String)obj.get("text");
+  		
+  		//Calendar cal = Calendar.getInstance();
+  		//SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHH:mm:ss");
+  		//String date = sdf.format(cal.getTime());
+  		//File f = new File("C:/Users/Pang/Desktop/images (2)/images/"+ date.substring(0, 8) +".txt");
+  		//FileWriter fw = new FileWriter(f);
+  		
+  		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmss");
+  		String date = sdf.format(new Date());
+  		FileWriter fw = new FileWriter("C:/Users/Pang/Desktop/images (2)/images/"+ date +".txt", true);
+  		fw.write(text);
+  		fw.close();
+  ```
+
+  
+
+* text는 FileWriter mp3는 binary이므로 FileOutputStream
+
+  ```java
+  InputStream is = con.getInputStream();
+  int read = 0;
+  byte[] bytes = new byte[1024];
+  // 랜덤한 이름으로 mp3 파일 생성
+  String tempname = Long.valueOf(new Date().getTime()).toString();
+  File f = new File(tempname + ".mp3");
+  f.createNewFile();
+  OutputStream outputStream = new FileOutputStream(f);
+  while ((read =is.read(bytes)) != -1) {
+      outputStream.write(bytes, 0, read);
+  }
+  is.close();
+  ```
+
+  
+
+## TTS API 활용한 mvc
+
+* voice.jsp
+
+  ```jsp
+  <body>
+  <%=request.getAttribute("voiceresult") %>
+  실행되었습니다.
+  <audio src="/naverimages/<%=request.getAttribute("voiceresult") %>" controls="controls" ></audio>
+  
+  </body>
+  ```
+
+  
+
+* voiceinput.jsp
+
+  ```jsp
+  <body>
+  <% 
+  String speakers[] = {"mijin", "jinho", "clara", "matt", "shinji", "meimei", "liangliang", "jose", "carmen", "nnaomi",
+  		"nhajun", "ndain"};
+  String speakerinforms[] = {
+  		"미진 : 한국어, 여성 음색", 
+  		"진호 : 한국어, 남성 음색",
+  		"클라라 : 영어, 여성 음색",
+  		"매트 : 영어, 남성 음색",
+  		"신지 : 일본어, 남성 음색",
+  		"메이메이 : 중국어, 여성 음색",
+  		"량량 : 중국어, 남성 음색",
+  		"호세 : 스페인어, 남성 음색",
+  		"카르멘 : 스페인어, 여성 음색",
+  		"나오미 : 일본어, 여성 음색",
+  		"하준 : 한국어, 아동 음색(남)",
+  		"다인 : 한국어, 아동 음색(여)",
+  		};
+  %>
+  <form action="/voice">
+  	언어 선택 : <br>
+  	<%for(int i = 0 ; i < speakers.length ; i++) {%>
+  		<input type=radio name="speaker" value=<%=speakers[i] %> > <%=speakerinforms[i] %><br>
+  	<%} %>
+  	<select name="text">
+  		<%
+  		String[] filelist = (String[])request.getAttribute("filelist");
+  		//txt만 출력
+  		for(int i = 0 ; i < filelist.length ; i++){
+  			String onefile = filelist[i];
+  			String[] onefile_split = onefile.split("[.]"); // "."=>모든 1글자 가능이란 의미를 내포해서 [.]로 표현해야함
+  			String fileext = onefile_split[onefile_split.length - 1];
+  			if(fileext.equals("txt")){
+  		%>	
+  				<option value="<%=onefile %>"> <%=onefile %></option>
+  			<%}
+  		} %>
+  	</select>
+  	<input type=submit value="음성으로 변환">
+  </form> 
+  </body>
+  ```
+
+  
+
+* NaverVoiceService
+
+  ```java
+  @Service
+  public class NaverVoiceService implements NaverService {
+         
+  	@Override
+  	public String test(String file) {
+  		return test(file, "mijin");
+  	}
+  	public String test(String file, String speaker) {
+  	    	String clientId = "1ha8ur3dox";//애플리케이션 클라이언트 아이디값";
+  	        String clientSecret = "jp0VCunkagZpYP8S9esAMFJIYQxnA5NtX17ft61A";//애플리케이션 클라이언트 시크릿값";
+  	        String filename = "";
+  	        StringBuffer response = new StringBuffer();
+  	        try {
+  	            
+  	            String text = "";
+  	            String textfile = "C:/Users/Pang/Desktop/images (2)/images/" + file;
+  	            FileReader fr = new FileReader(textfile);
+  	            //fr.read(); 1글자씩 읽어줌
+  	            Scanner sfr = new Scanner(fr);
+  	            while(sfr.hasNextLine() == true) {
+  	            	text += sfr.nextLine(); //1줄 읽고 text에 저장
+  	            	
+  	            }
+  	            text = URLEncoder.encode(text, "UTF-8"); // 13자
+  	            
+  	            String apiURL = "https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts";
+  	            URL url = new URL(apiURL);
+  	            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+  	            con.setRequestMethod("POST");
+  	            con.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
+  	            con.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
+  	            // post request
+  	            String postParams = "speaker=" + speaker + "&volume=0&speed=0&pitch=0&format=mp3&text=" + text;
+  	            con.setDoOutput(true);
+  	            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+  	            wr.writeBytes(postParams);
+  	            wr.flush();
+  	            wr.close();
+  	            int responseCode = con.getResponseCode();
+  	            BufferedReader br;
+  	            if(responseCode==200) { // 정상 호출
+  	                InputStream is = con.getInputStream();
+  	                int read = 0;
+  	                byte[] bytes = new byte[1024];
+  	                // 랜덤한 이름으로 mp3 파일 생성
+  	               // String tempname = Long.valueOf(new Date().getTime()).toString();
+  	        		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmss");
+  	        		String tempname = sdf.format(new Date());
+  	        		
+  	                File f = new File("C:/Users/Pang/Desktop/images (2)/images/" + tempname + ".mp3");
+  	                filename = tempname + ".mp3";
+  	                f.createNewFile();
+  	                OutputStream outputStream = new FileOutputStream(f);
+  	                while ((read =is.read(bytes)) != -1) {
+  	                    outputStream.write(bytes, 0, read);
+  	                }
+  	                is.close();
+  	            } else {  // 오류 발생
+  	                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+  	                String inputLine;
+  	                
+  	                while ((inputLine = br.readLine()) != null) {
+  	                    response.append(inputLine);
+  	                }
+  	                br.close();
+  	                System.out.println(response.toString());
+  	            }
+  	        } catch (Exception e) {
+  	            System.out.println(e);
+  	            return filename;
+  	        }
+  	        return filename;
+  	    }
+  	}
+  ```
+
+  
+
+* NaverVoiceController
+
+  ```java
+  @Controller
+  public class NaverVoiceController {
+  	
+  	@Autowired
+  	NaverVoiceService voiceservice;
+  	
+  	@RequestMapping("/voice")
+  	public ModelAndView face(String text, String speaker) throws Exception {
+  		
+  		String jsonModel = "";
+  		
+  		if(speaker ==null) {
+  			jsonModel = voiceservice.test(text); 
+  		} 
+  		else { 
+  			jsonModel = voiceservice.test(text, speaker); 
+  		}
+  		
+  		ModelAndView mv = new ModelAndView();
+  		mv.addObject("voiceresult", jsonModel);
+  		mv.setViewName("/tts_voice/voice");
+  		return mv;
+  	}
+  	
+  	@RequestMapping("/voiceinput")
+  	public ModelAndView faceinfut() {
+  		File f = new File("C:/Users/Pang/Desktop/images (2)/images");
+  		String[] namelist = f.list(); //song.jpg 처럼 파일 이름들 가져옴 이 때 다른 폴더가있다면 조건도... jpg, tfif, png
+  		ModelAndView mv = new ModelAndView();
+  		mv.addObject("filelist", namelist);
+  		mv.setViewName("/tts_voice/voiceinput");
+  		return mv;
+  	}
+  }
+  ```
+
+  
+
+## 실습
+
+![image-20210929164123448](../md-images/image-20210929164123448.png)
+
+![image-20210929164129837](../md-images/image-20210929164129837.png)
