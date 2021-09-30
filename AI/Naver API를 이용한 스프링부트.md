@@ -994,8 +994,181 @@ $(document).ready(function(){
 
   
 
-## 실습
+## 실습(TTS, ajax)
 
 ![image-20210929164123448](../md-images/image-20210929164123448.png)
 
 ![image-20210929164129837](../md-images/image-20210929164129837.png)
+
+* input.jsp
+
+  ```jsp
+  <body>
+  <form action="/output">
+  	질문 : <input type="text" name="text">
+  	<input type=submit value="대화">
+  </form>
+  <table border="1">
+  <tr><th>목록</th></tr>
+  <tr><td>이름이 뭐니?</td></tr>
+  <tr><td>무슨 일 하니?</td></tr>
+  <tr><td>멋진 일을 하는구나</td></tr>
+  <tr><td>난 훌륭한 개발자가 될거야</td></tr>
+  <tr><td>잘 자</td></tr>
+  </table>
+  ```
+
+* output.jsp
+
+  ```jsp
+  <body>
+  답변 텍스트 : ${voiceresult.value}<br>
+  답변 음성 : <audio src="/naverimages/${voiceresult.soundfilename}" controls="controls"></audio>
+  </body>
+  ```
+
+  
+
+* ExamMapService
+
+  ```java
+  @Service("mapservice")
+  public class ExamMapService implements NaverService {
+      
+  	HashMap<String, String> map = new HashMap<String, String>();
+  	ExamMapService(){
+  		map.put("이름이 뭐니?", "클로바야");
+  		map.put("무슨 일 하니?", "ai 서비스 관련 일을 해");
+  		map.put("멋진 일을 하는구나", "고마워");
+  		map.put("난 훌륭한 개발자가 될거야", "넌 할 수 있어");
+  		map.put("잘 자", "내꿈 꿔");
+  	}//MapService service = new MapService();
+  	
+  	@Override
+  	public String test(String key) {
+  		//키보드 입력 내용 전달하면 map에서 해당 key의 value 리턴
+  		//못찾으면 답변할 수 없습니다 리턴
+  		if(map.containsKey(key)) {
+  			return map.get(key);
+  		}
+  		else {
+  			return "답변할 수 없습니다.";
+  		}
+  	}
+  ```
+
+  
+
+* ExamMyController
+
+  ```java
+  @Controller
+  public class ExamMyController {
+  	
+  	@Autowired
+  	ExamMapService mapservice;
+  	@Autowired
+  	NaverVoiceService voiceservice;
+  	
+  	@RequestMapping("/output")
+  	public ModelAndView face(String text) throws Exception {
+  		String value = mapservice.test(text); 
+  		//text파일 만들기
+  		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmss");
+  		String date = sdf.format(new Date());
+  		
+  		FileWriter fw = new FileWriter("C:/Users/Pang/Desktop/images (2)/images/" + date + ".txt", true);
+  		String textfilename = date + ".txt";
+  		fw.write(value);
+  		fw.close();
+  		
+  		String soundfilename = voiceservice.test(textfilename); 
+  		HashMap<String,String> map = new HashMap<String,String>();
+  		map.put("value", value);
+  		map.put("soundfilename", soundfilename);
+  		ModelAndView mv = new ModelAndView();
+  		mv.addObject("voiceresult", map);
+  		mv.setViewName("/exam_my/output");
+  		return mv;
+  	}
+  	
+  	@RequestMapping("/input")
+  	public ModelAndView input() {
+  		//File f = new File("C:/Users/Pang/Desktop/images (2)/images");
+  		//String[] namelist = f.list(); //song.jpg 처럼 파일 이름들 가져옴 이 때 다른 폴더가있다면 조건도... jpg, tfif, png
+  		//mv.addObject("filelist", namelist);
+  		ModelAndView mv = new ModelAndView();
+  		mv.setViewName("/exam_my/input");
+  		return mv;
+  	}
+  ```
+
+
+
+### ajax 사용
+
+![image-20210930101922692](../md-images/image-20210930101922692.png)
+
+* 요청 클라이언트
+
+  ```jsp
+  jquery
+  <script>
+  $.ajax({
+  url : '서버 url',
+  data : 요청 파라미터 => {'text':'값' , ...},
+  dataType : 'json',
+  type:'get',
+  success:function(){ }
+      })
+  </script>
+  ```
+
+  
+
+* total.jsp
+
+* total2.jsp
+
+![image-20210930113058441](../md-images/image-20210930113058441.png)
+
+
+
+## OCR API 활용한 mvc
+
+![image-20210930162045802](../md-images/image-20210930162045802.png)
+
+```
+Secret Key = YnVydVZtSldmUGhFV3hNTEFaSG9kQ2NzdWhWSEptY1k=
+APIGW Invoke URL = https://cdc0270b45cc4dc4b755630677837d5c.apigw.ntruss.com/custom/v1/11450/3213b0c65b9c921ce393047fc9c04b5c93d90c1404c279fa2453eaa511c70c3b/general
+```
+
+```json
+{
+    "version":"V2",
+    "requestId":"bd364ee6-eb5a-4852-9289-fa2fed8ceeda",
+    "timestamp":1632975929446,
+    "images":[{"uid":"97e7d512c8b14072b0848293c179d94b",
+               "name":"demo",
+               "inferResult":"SUCCESS",
+               "message":"SUCCESS",
+               "validationResult":{"result":"NO_REQUESTED"},
+               "fields":[{"valueType":"ALL",
+                          "boundingPoly":{"vertices":[{"x":155.0,"y":203.0},
+                                                      {"x":215.0,"y":204.0},
+                                                      {"x":214.0,"y":220.0},
+                                                      {"x":155.0,"y":219.0}]},
+                          "inferText":"우드 츄리",
+                          "inferConfidence":0.909,
+                          "type":"NORMAL",
+                          "lineBreak":true}
+                        ]}
+             ]}
+```
+
+
+
+## Chatbot API 활용한 mvc
+
+![image-20210930162441685](../md-images/image-20210930162441685.png)
+
