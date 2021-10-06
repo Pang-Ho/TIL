@@ -1172,3 +1172,50 @@ APIGW Invoke URL = https://cdc0270b45cc4dc4b755630677837d5c.apigw.ntruss.com/cus
 
 ![image-20210930162441685](../md-images/image-20210930162441685.png)
 
+invoke uri : https://e6ceb3e3ccb24f549d109dd851f41dad.apigw.ntruss.com/custom/v1/5505/d41aff3aa1526071d489474f9626670ef6ea1aa7d857632c7e4bcca42a96f9cd
+
+secrey key : cktLekp6ZkxSamVsU3hwbldDVE1qY3liTklVbmRHS2k=
+
+
+
+* 질문 json
+
+```json
+{"bubbles":[{"data":{"description":"오늘 날씨 어때요?"},
+             "type":"text"}],
+ "event":"send",
+ "version":"v2",
+ "userId":"U47b00b58c90f8e47428af8b7bddc1231heo2",
+ "timestamp":1633402245783
+}
+```
+
+* 답변 json
+  * 멀티링크 답변
+
+```json
+"version":"v2",
+"userId":"U47b00b58c90f8e47428af8b7bddc1231heo2",
+"timestamp":1633407366825,
+"bubbles":[{"type":"template",
+            "data":{"cover":{"type":"text","data":{"description":"기상청"}},
+                    "contentTable":[
+                        [{"rowSpan":1,"colSpan":1,"data":{"type":"button","title":"기상청 장기전망","data":{"type":"basic","action":{"type":"link","data":{"url":"http://www.kma.go.kr/repositary/xml/fct/mon/img/fct_mon3rss_108_20210923.xml"}}}}}]]},"information":[{"key":"imageOnly","value":"false"},{"key":"chatType","value":"MULTILINKS"},{"key":"chatType","value":"MULTILINKS"},{"key":"score","value":"1.0"},{"key":"scenarioName","value":"질문-멀티링크답변"},{"key":"endOfBubble","value":"endOfBubble"},{"key":"matchingType","value":"exactMatch"},{"key":"domainCode","value":"kdigital-sixteenchatbot"}],"context":[]}],"scenario":{"name":"질문-멀티링크답변","chatUtteranceSetId":3429351,"intent":[]},"entities":[],"keywords":[],"conversation":{"scenarioName":"질문-멀티링크답변","chatUtteranceSetId":3429351,"types":[]},"normalizer":"null","event":"send"}
+```
+
+* 답변 json
+  * 이미지 답변
+
+```json
+{"version":"v2","userId":"U47b00b58c90f8e47428af8b7bddc1231heo2","timestamp":1633408305737,"bubbles":[{"type":"template","data":{"cover":{"type":"image","title":"이미지 검색","data":{"imageUrl":"https://clovachatbot.ncloud.com/i75c590f5ax4b1-6d4d-4bce-a17a-beebddae69ed","description":"구글 이미지 검색 화면입니다."}},"contentTable":[[{"rowSpan":1,"colSpan":1,"data":{"type":"button","title":"구글","data":{"type":"basic","action":{"type":"link","data":{"url":"https://www.google.co.kr"}}}}}],[{"rowSpan":1,"colSpan":1,"data":{"type":"button","title":"구글2","data":{"type":"basic","action":{"type":"link","data":{"url":"https://www.google.co.kr"}}}}}]]},"information":[{"key":"imageOnly","value":"false"},{"key":"chatType","value":"IMAGECARD"},{"key":"carousel","value":"1"},{"key":"chatType","value":"IMAGECARD"},{"key":"score","value":"1.0"},{"key":"scenarioName","value":"질문-이미지답변"},{"key":"endOfBubble","value":"endOfBubble"},{"key":"matchingType","value":"exactMatch"},{"key":"domainCode","value":"kdigital-sixteenchatbot"}],"context":[]}],"scenario":{"name":"질문-이미지답변","chatUtteranceSetId":3429333,"intent":[]},"entities":[],"keywords":[],"conversation":{"scenarioName":"질문-이미지답변","chatUtteranceSetId":3429333,"types":[]},"normalizer":"null","event":"send"}
+```
+
+
+
+* 답변 json
+  * 기본답변
+
+```json
+{"version":"v2","userId":"U47b00b58c90f8e47428af8b7bddc1231heo2","timestamp":1633408305788,"bubbles":[{"type":"text","data":{"description":"챗봇이란 기업이 친절하고 익숙한 방식으로 고객을 위해 자동화 또는 셀프서비스 계층을 배치하도록 지원하는 일종의 대화형 AI를 말합니다. 또한 기업들이 메시징 채널을 추가해 더욱 신속한 해결과 상시 지원을 제공하면서 봇은 빠른 속도로 모든 메시징 전략의 핵심 구성 요소가 되었습니다. 챗봇은 어떤 메시징 앱이나 채널에도 배포할 수 있으며, 상담원이 다른 고객을 돕느라(또는 브리저튼을 시청하느라) 바쁠 때 고객에게 신속한 응답을 제공합니다."},"information":[{"key":"chatType","value":"TEXT"},{"key":"chatType","value":"TEXT"},{"key":"score","value":"1.0"},{"key":"scenarioName","value":"질문-기본답변"},{"key":"endOfBubble","value":"endOfBubble"},{"key":"matchingType","value":"exactMatch"},{"key":"domainCode","value":"kdigital-sixteenchatbot"}],"context":[]}],"scenario":{"name":"질문-기본답변","chatUtteranceSetId":3429305,"intent":[]},"entities":[],"keywords":[],"conversation":{"scenarioName":"질문-기본답변","chatUtteranceSetId":3429305,"types":[]},"normalizer":"null","event":"send"}
+```
+
