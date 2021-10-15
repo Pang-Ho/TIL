@@ -1,0 +1,4 @@
+$ curl "https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze ?key=발급받은키 " -s -X POST -H "Content-Type:application/json" --data '{"document":{"type":"PLAIN_TEXT","content":"오늘은 기분이 좋네요"}}'
+
+input 태그 입력 -> 스프링서버 전달 -> 스프링서버컴퓨터 python 실행 -> 결과텍스트 파일을 스프링서버로 업로드 -> 스프링서버가 결과 분석
+System.exec("python3 *.py");
