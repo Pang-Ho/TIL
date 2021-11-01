@@ -121,10 +121,44 @@ find / which- 파일 찾기
 	10. 확인2
 	    (환경변수 설정한 값)mvn -version
 	
-
 * 참고 	
   vi edior
   아래 1줄 삽입 - o
   한 문자 삽입 - i
   한줄 삭제 - dd
+
+
+
+
+
+## jenkins
+
+* jenkins
+  * jdk + maven + tomcat + mysql 자동 실행
+  * 컴파일, 스프링 라이브러리, 압축, tomcat 실행 자동화
+
+
+
+* 현재 네이버 서버
+  *  = 리눅스 centos 7.8 + jenkins 설치 상태
+  * 에서 java jre / maven / tomcat / mysql 이렇게 깔아야한다.
+  * sts가 없기 때문에 수동으로 maven 명령어를 써서 깃허브로부터 가져와야함
+
+
+
+jenkins
+
+jenkins12
+
+젠킨스 사이트 안에서 configureTools 화면에 maven, jdk 경로, maven setting경로 설정하는 부분 있음
+
+echo $JAVA_HOME
+
+echo $MAVEN_HOME
+
+
+
+깃헙 토큰 새로 받아서
+
+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
 
