@@ -1,0 +1,10 @@
+create table marketuser(
+id varchar2(20) constraint mem_id_pk primary key,
+pw varchar2(20) constraint mem_pw_nn not null,
+name varchar2(20) constraint mem_name_nn not null,
+mail varchar2(20) constraint mem_mail_ck check(mail like '%@%')
+)
+
+insert into marketuser values('admin', 'admin', '이광호', 'slsl01@naver.com')
+
+select * from marketuser

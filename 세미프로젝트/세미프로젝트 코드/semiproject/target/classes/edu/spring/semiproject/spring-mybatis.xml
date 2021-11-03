@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<!-- 스프링은 모든 객체를 사용할 때 ioc, di, @, <bean 을 이용해서 객체를 만들 수 있음 -->
+<!-- 1.DATASOURCE 설정을 mybatis-config.xml로 -->
+
+<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+	<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+	<property name="username" value="hr"/>
+	<property name="password" value="hr"/>
+</bean>
+<!-- 2.config파일, sql매핑파일 -->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<property name="dataSource" ref="dataSource"/>
+	<property name="configLocation" value="classpath:edu/spring/semiproject/mybatis-config.xml"/>
+	<property name="mapperLocations" value="classpath:edu/spring/semiproject/*-mapping.xml"/>
+</bean>
+
+<!-- 3.SqlSessionTemplate(스프링에서 제공) SqlSession객체(mybatis에서 제공)를 통해 sql생성 -->
+<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+	<constructor-arg ref="sqlSessionFactory"></constructor-arg>
+</bean>
+
+<!-- 4.DAO, VO, SERVICE @쓸 수 있게 / @Component, @Service, @Repository, @Autowired 
+controller 시작 전에 설정 읽어오는 것 그래서 @Controller는 다른곳에 씀/  mvc 관련 어노테이션은 인식못함 
+무조건 servlet-context에서 써야함 -->
+<context:component-scan base-package="edu.spring.semiproject" />
+
+<!-- 파일 업로드 객체 생성 -->
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<property name="defaultEncoding" value="utf-8" />
+</bean>
+</beans>

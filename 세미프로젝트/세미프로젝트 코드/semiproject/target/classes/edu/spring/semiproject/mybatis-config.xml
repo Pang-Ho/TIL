@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <!-- mybatis db 연결정보 세팅 파일 -->
+  
+ <configuration>
+
+<!-- 1. sql 실행 결과 Resultset으로 받았었는데 EmpVO타입으로 결과를 매핑할 것이다. -->
+<typeAliases>
+<typeAlias type="edu.spring.semiproject.MarketVO" alias="marketVO"/>
+<typeAlias type="edu.spring.semiproject.BoardVO" alias="boardVO"/>
+</typeAliases>
+
+<!-- 2. DataSource 설정은 spring-mybatis가 가져감 -->
+
+<!-- 3. sql 정의 매퍼 설정은 spring-mybatis가 가져감-->
+
+
+</configuration>
