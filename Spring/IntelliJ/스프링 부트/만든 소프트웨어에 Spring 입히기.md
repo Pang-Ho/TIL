@@ -100,9 +100,7 @@
 
    
 
-## Web 붙이기
-
-
+## Web 사용 준비를 위한 설정
 
 1. 그래들에 의존성 추가하자
 
@@ -174,12 +172,31 @@
 
 ## Spring Web MVC 사용하기
 
+1. WebApplication 초기화
+
 https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#spring-web
 이 링크에는 spring.io 스프링의 공식 홈페이지에서 제공하는 스프링 web mvc 사용법에 대해 나와있다.
 
 밑 코드는 사용법에 나와있는 코드이다.
 DispatcherServlet을 초기화하고 자바 설정에 대한 예제이다.
 우리도 똑같이 web 패키지를 만들고 이 클래스를 넣어주자.
+
+또한 이 onStartup 메서드는 Servlet container에 의해 자동으로 발견된다.
+무슨 얘기냐면, 처음에 보이는 AnnotationConfigWebApplicationContext로 ApplicationContext를 불러내는데, 위에서 main에서 비슷한 코드를 쓴 적이 있다.
+Main 클래스 또한, Config.class를 통해 스프링 설정 내용을 불러내는데, 이 클래스 자체가 필요 없어졌다는 뜻이다.
+
+~~~java
+public class Main {
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+        SortService sortService = context.getBean(SortService.class);
+
+        System.out.println("[result]" + sortService.doSort(Arrays.asList(args)));
+    }
+}
+~~~
+
+
 
 ~~~java
 public class MyWebApplicationInitializer implements WebApplicationInitializer {
@@ -189,14 +206,61 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 
         // Load Spring web application configuration
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(AppConfig.class);
+        context.register(Config.class); //스프링 설정 클래스로 만든 Config.class
 
         // Create and register the DispatcherServlet
         DispatcherServlet servlet = new DispatcherServlet(context);
         ServletRegistration.Dynamic registration = servletContext.addServlet("app", servlet);
         registration.setLoadOnStartup(1);
-        registration.addMapping("/app/*");
+        registration.addMapping("/");
     }
 }
 ~~~
 
+
+
+2. Config.class에 web mvc를 위한 설정 추가
+
+   @EnableWebMvc 어노테이션 추가
+
+~~~java
+@EnableWebMvc //스프링 웹 mvc 이용하기 위한 설정
+@ComponentScan("com.pang.springpractice")
+@Configuration
+public class Config {
+
+}
+~~~
+
+
+
+3. Controller 만들기
+
+   @RestController는 @Controller + @ResponseBody이다.
+   @ResponseBody 어노테이션의 역할
+
+   * 해당 리턴 내용을 그대로 응답으로 넣어준다. (Rest API를 만들 때 사용하는 방법이다.)
+
+   * Controller 사용시 api의 응답을 view resolver가 view로 변환해준다.
+     view를 찾아가서 화면에 데이터를 뿌려주는데, 복잡한 일을 하려는 것이 아니기에 화면에 바로 데이터를 뿌리는 동작을 하기위해 @ResponseBody를 추가한 것이다.
+
+   ~~~java
+   @RestController
+   public class MainController {
+   
+       private final SortService sortService;
+   
+       //SortService의 의존성을 추가
+       public MainController(SortService sortService) {
+           this.sortService = sortService;
+       }
+   
+       @GetMapping("/")
+       public String hello(@RequestParam List<String> list) {
+           return sortService.doSort(list).toString();
+       }
+   }
+   
+   ~~~
+
+   
