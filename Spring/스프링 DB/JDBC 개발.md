@@ -10,7 +10,7 @@ DB를 사용할 때 3가지 방법을 얘기했었다.
 
 
 
-Member.class
+Member.class (내가 알고 있는 VO)
 
 ~~~java
 @Data
@@ -99,7 +99,16 @@ public class MemberRepositoryVO {
 * 커넥션 획득
 
   * getConnection() : 이전에 만들어둔 DBConnectionUtil을 통해서 데이터베이스 커넥션을 획득한다.
-    
+
+    ~~~java
+    //오라클
+    Connection con = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "hr", "hr");
+    //h2 db
+    public static final String URL = "jdbc:h2:tcp://localhost/~/test";
+    public static final String USERNAME = "sa";
+    public static final String PASSWORD = "";
+    Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+    ~~~
 
 * save() - SQL 전달
 
@@ -126,3 +135,46 @@ public class MemberRepositoryVO {
 
   * PreparedStatement는 Statement의 자식 타입인데, ? 를 통한 파라미터 바인딩을 가능하게 해준다.
   * SQL Injection 공격을 예방하려면 PreparedStatement를 통한 파라미터 바인딩 방식을 사용해야한다.
+
+
+
+
+
+## 조회 기능 개발
+
+MemberRepositoryVO.class
+
+~~~java
+public Member findById(String memberId) throws SQLException {
+  String sql = "selecet * from member where member_id = ?";
+  
+  Connection con = null;
+  PreparedStatement pstmt = null;
+  ResultSet rs = null;
+  
+  try {
+    con = getConnection();
+    pstmt = con.preparedStatement(sql);
+    pstmt.setString(1, memberId);
+    
+    rs = pstmt.executeQuery();
+    if (rs.next()) {
+      Member member = new Member();
+      member.setMemberId(rs.getString("member_id"));
+      member.setMoney(rs.getInt("money"));
+      return member
+    } else {
+      throw new NoSuchElementException("member not found memberId=" + memberId);
+    }
+  } catch (SQLException e) {
+    log.error("db error", e);
+    thorw e;
+  } finally {
+    close(con, pstmt, rs);
+  }
+}
+~~~
+
+조회를 하기 때문에 받아오는 결과가 있다. insert와 달리 ResultSet을 통해 가져오기 때문에 pstmt.executeUpdate()를 하지 않고, pstmt.executeQuery()를 통해 ResultSet을 받아온다.
+받아온 결과 내용은 있는지 없는지 if 구문으로 확인한다.
+있다면 Member VO에 받아서 리턴해주고, 없으면 상세한 내용을 가진 자바 예외를 내보낸다.
