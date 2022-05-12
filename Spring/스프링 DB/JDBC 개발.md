@@ -178,3 +178,93 @@ public Member findById(String memberId) throws SQLException {
 조회를 하기 때문에 받아오는 결과가 있다. insert와 달리 ResultSet을 통해 가져오기 때문에 pstmt.executeUpdate()를 하지 않고, pstmt.executeQuery()를 통해 ResultSet을 받아온다.
 받아온 결과 내용은 있는지 없는지 if 구문으로 확인한다.
 있다면 Member VO에 받아서 리턴해주고, 없으면 상세한 내용을 가진 자바 예외를 내보낸다.
+
+
+
+## 수정, 삭제 기능 개발
+
+수정
+
+~~~java
+public void update(String memberId, int money) throws SQLException{
+        String sql = "update member set money=? where member_id=?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, money);
+            pstmt.setString(2, memberId);
+            int resultSize = pstmt.executeUpdate();
+            log.info("resultSize={}", resultSize);
+        } catch (SQLException e) {
+            log.error("db error", e);
+            throw e;
+        } finally {
+            close(con, pstmt, null);
+        }
+    }
+~~~
+
+삭제
+
+~~~java
+public void delete(String memberId) throws SQLException {
+        String sql = "delete from member where member_id = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, memberId);
+            int resultSize = pstmt.executeUpdate();
+            log.info("resultSize={}", resultSize);
+        } catch (SQLException e) {
+            log.error("db error", e);
+            throw e;
+        } finally {
+            close(con, pstmt, null);
+        }
+    }
+~~~
+
+
+
+## 테스트
+
+저장이든 수정이든 조회든 테스트 코드 작성하는 것은 간단하다.
+
+그러나 삭제는 삭제하고 나서 조회하면 오류가 생긴다. 위에서 우리는 NoSuchElementException을 날리도록 한 적이 있다.
+그래서 조회를 하면 오류가 넘겨지는지 Assertions.assertThatThrownBy().isInstanceOf(NoSuchElementException.class)로 확인한다.
+
+~~~java
+class MemberRepositoryVOTest {
+  MemberRepositoryVO repository = new MemberRepositoryVO();
+  
+  @Test
+  void crud() throws SQLException {
+    //save
+    Member member = new Member("memberV0", 10000);
+    repository.save(member);
+    
+    //findById
+    Member findMember = repository.findById(member.getMemberId());
+    Assertions.assertThat(findMember).isEqualTo(member);
+    
+    //update
+    repository.update(member.getMemberId(), 20000);
+    Member updateMember = repository.findById(member.getMemberId());
+    Assertions.assertThat(updateMember.getMoney()).isEqualTo(20000);
+    
+    //delete
+    repository.delete(member.getMemberId());
+    Assertions.assertThatThrownBy(() -> repository.findById(member.getMemberId()))
+      .isInstanceOf(NoSuchElementException.class);
+  }
+}
+~~~
+
