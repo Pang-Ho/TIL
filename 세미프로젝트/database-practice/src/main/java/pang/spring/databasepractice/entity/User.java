@@ -1,15 +1,12 @@
 package pang.spring.databasepractice.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import pang.spring.databasepractice.statusCode.Status;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class User {
@@ -18,6 +15,6 @@ public class User {
     private String email, pw, name;
     private int age, point;
     private Status status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
 }

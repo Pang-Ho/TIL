@@ -1,7 +1,6 @@
 package pang.spring.databasepractice.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pang.spring.databasepractice.dto.UserErrorResponse;
@@ -21,6 +20,8 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public UserErrorResponse handleExceptions(Exception e, HttpServletRequest request) {
-
+        log.info("url:{}, message:{}",
+                request.getRequestURI(), e.getMessage());
+        return new UserErrorResponse(UserErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }

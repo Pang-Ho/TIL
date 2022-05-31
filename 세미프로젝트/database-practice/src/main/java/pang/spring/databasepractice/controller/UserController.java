@@ -1,6 +1,7 @@
 package pang.spring.databasepractice.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
 
@@ -22,10 +24,11 @@ public class UserController {
     }
 
     @PostMapping("/create_user")
-    public void create_user(
+    public CreateUser.Response create_user(
             @RequestBody CreateUser.Request request
     ) {
-        userService.create(request);
+        log.info("request:{}", request);
+        return userService.create(request);
     }
 
     @GetMapping("/user/{email}")

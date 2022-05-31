@@ -3,24 +3,20 @@ package pang.spring.databasepractice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pang.spring.databasepractice.entity.User;
-import pang.spring.databasepractice.statusCode.Status;
-
-import java.time.LocalDateTime;
 
 
 public class CreateUser {
     //@Valid 적용하는 dto
     @Getter
     @Setter
-    public class Request {
-        private Long id;
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Request {
         private String email, pw, name;
         private int age, point;
-        private Status status;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
     }
 
     @Getter
