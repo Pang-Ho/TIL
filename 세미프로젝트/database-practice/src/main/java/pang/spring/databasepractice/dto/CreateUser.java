@@ -1,10 +1,7 @@
 package pang.spring.databasepractice.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import pang.spring.databasepractice.entity.User;
 
 
@@ -21,17 +18,20 @@ public class CreateUser {
 
     @Getter
     @Setter
+    @Builder
+    @AllArgsConstructor
+    @RequiredArgsConstructor
     public static class Response {
         private String email, name;
         private int age, point;
 
         public static Response fromEntity(User user) {
-            Response response = new Response();
-            response.setEmail(user.getEmail());
-            response.setAge(user.getAge());
-            response.setName(user.getName());
-            response.setPoint(user.getPoint());
-            return response;
+            return Response.builder()
+                    .email(user.getEmail())
+                    .name(user.getName())
+                    .age(user.getAge())
+                    .point(user.getPoint())
+                    .build();
         }
     }
 }

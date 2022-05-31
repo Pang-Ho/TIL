@@ -2,12 +2,9 @@ package pang.spring.databasepractice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pang.spring.databasepractice.dto.CreateUser;
 import pang.spring.databasepractice.dto.UserDto;
-import pang.spring.databasepractice.repository.UserRepository;
 import pang.spring.databasepractice.service.UserService;
 
 import java.util.List;
@@ -32,7 +29,10 @@ public class UserController {
     }
 
     @GetMapping("/user/{email}")
-    public UserDto find_user(@PathVariable String email) {
+    public UserDto find_user(
+            @PathVariable String email
+    ) {
+        log.info("email:{}", email);
         return userService.findByEmail(email);
     }
 }

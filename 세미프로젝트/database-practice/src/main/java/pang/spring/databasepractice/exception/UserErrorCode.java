@@ -13,5 +13,5 @@ public enum UserErrorCode {
     INTERNAL_SERVER_ERROR("서버 내부에 오류가 발생했습니다."),
     INVALID_REQUEST("잘못된 요청입니다.");
 
-    private String messgae;
+    private final String message;
 }

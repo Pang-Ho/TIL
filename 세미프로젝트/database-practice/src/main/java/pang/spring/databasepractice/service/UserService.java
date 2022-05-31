@@ -19,19 +19,21 @@ public class UserService {
     private final UserRepository userRepository;
 
     public List<UserDto> users() {
-        return userRepository.findAllUsers().stream().map(UserDto::fromEntity).collect(Collectors.toList());
+        return userRepository.findAllUsers()
+                .stream().map(UserDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     public CreateUser.Response create(CreateUser.Request request) {
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPw(request.getPw());
-        user.setName(request.getName());
-        user.setAge(request.getAge());
-        user.setPoint(request.getPoint());
-        user.setStatus(Status.JOIN);
-        user.setCreated_at(LocalDateTime.now());
-        user.setUpdated_at(LocalDateTime.now());
+        User user = User.builder()
+                .email(request.getEmail())
+                .pw(request.getPw())
+                .name(request.getName())
+                .age(request.getAge())
+                .point(request.getPoint())
+                .status(Status.JOIN)
+                .build();
+
         return CreateUser.Response.fromEntity(userRepository.save(user));
     }
 
@@ -47,6 +49,7 @@ public class UserService {
     }
 
     public UserDto findByEmail(String email) {
+
         return UserDto.fromEntity(userRepository.findByEmail(email));
     }
 }
