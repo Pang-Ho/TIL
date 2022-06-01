@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class UserExceptionHandler {
 
+
     @ExceptionHandler(UserException.class)
     public UserErrorResponse handleExceptions(UserException e, HttpServletRequest request) {
         log.info("errorCode: {}, url:{}, message:{}",

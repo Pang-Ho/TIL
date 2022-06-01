@@ -6,10 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import pang.spring.databasepractice.dto.CreateUser;
 import pang.spring.databasepractice.dto.UserDto;
 import pang.spring.databasepractice.entity.User;
+import pang.spring.databasepractice.exception.UserErrorCode;
+import pang.spring.databasepractice.exception.UserException;
 import pang.spring.databasepractice.repository.UserRepository;
 import pang.spring.databasepractice.statusCode.Status;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,10 @@ public class UserService {
     }
 
     public CreateUser.Response create(CreateUser.Request request) {
+        if (findByEmail(request.getEmail()) != null) {
+            throw new UserException(UserErrorCode.DUPLICATED_USER_EMAIL);
+        }
+
         User user = User.builder()
                 .email(request.getEmail())
                 .pw(request.getPw())
@@ -33,7 +38,6 @@ public class UserService {
                 .point(request.getPoint())
                 .status(Status.JOIN)
                 .build();
-
         return CreateUser.Response.fromEntity(userRepository.save(user));
     }
 
@@ -49,7 +53,8 @@ public class UserService {
     }
 
     public UserDto findByEmail(String email) {
-
-        return UserDto.fromEntity(userRepository.findByEmail(email));
+        User byEmail = userRepository.findByEmail(email);
+        if (byEmail == null) throw new UserException(UserErrorCode.NO_USER);
+        return UserDto.fromEntity(byEmail);
     }
 }

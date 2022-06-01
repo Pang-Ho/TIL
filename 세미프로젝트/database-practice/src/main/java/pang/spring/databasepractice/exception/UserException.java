@@ -1,11 +1,15 @@
 package pang.spring.databasepractice.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
-public class UserException extends RuntimeException{
+public class UserException extends RuntimeException {
     private UserErrorCode userErrorCode;
     private String message;
+
+    public UserException(UserErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.userErrorCode = errorCode;
+        this.message = errorCode.getMessage();
+    }
 }
