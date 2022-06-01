@@ -22,6 +22,14 @@ public class UserRepository {
 
     private final DataSource dataSource;
 
+    public static User user(String email, String name, int age) {
+        return User.builder()
+                .email(email)
+                .name(name)
+                .age(age)
+                .build();
+    }
+
     public List<User> findAllUsers() {
         String sql = "select * from user";// where status = ?";
         Connection con = null;
@@ -36,11 +44,12 @@ public class UserRepository {
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                User user = new User();
-                user.setEmail(rs.getString("email"));
-                user.setName(rs.getString("name"));
-                user.setAge(rs.getInt("age"));
-                list.add(user);
+                list.add(
+                        user(
+                                rs.getString("email"),
+                                rs.getString("name"),
+                                rs.getInt("age")
+                        ));
             }
             return list;
         } catch (SQLException e) {
@@ -88,11 +97,13 @@ public class UserRepository {
             pstmt.setString(1, email);
             pstmt.setString(2, "JOIN");
             rs = pstmt.executeQuery();
-            User user = new User();
+            User user = null;
             while (rs.next()) {
-                user.setEmail(rs.getString("email"));
-                user.setName(rs.getString("name"));
-                user.setAge(rs.getInt("age"));
+                user = user(
+                        rs.getString("email"),
+                        rs.getString("name"),
+                        rs.getInt("age")
+                );
             }
             return user;
         } catch (SQLException e) {
