@@ -1,0 +1,8 @@
+PUT http://localhost:8080/edit_user/test2
+Content-Type: application/json
+
+{
+  "pw": "password2",
+  "name": "pang",
+  "age": 30
+}
