@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 public enum Status {
 
-    JOIN("가입"),
-    QUIT("탈퇴");
+    JOIN("join"),
+    QUIT("quit");
 
     private final String status;
 }
