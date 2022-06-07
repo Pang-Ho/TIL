@@ -1,0 +1,2 @@
+PUT http://localhost:8080/recover_user/test3
+Content-Type: application/json

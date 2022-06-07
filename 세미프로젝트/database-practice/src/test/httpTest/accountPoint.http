@@ -1,0 +1,2 @@
+PUT http://localhost:8080/account_point/test2/test4/10
+Content-Type: application/json

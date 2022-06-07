@@ -1,0 +1,16 @@
+drop table user;
+
+create table user (
+ id int not null auto_increment,
+ email varchar(20) not null,
+ pw varchar(20) not null,
+ name varchar(20),
+ age int not null,
+ point int not null,
+ status varchar(20) not null,
+ created_at timestamp not null default current_timestamp,
+ updated_at timestamp not null default current_timestamp on update current_timestamp,
+
+ primary key(id),
+ unique key uk_email(email)
+);
