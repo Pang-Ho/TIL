@@ -56,3 +56,24 @@ create table user (
 
 1. `Entity`와 `DTO`의 차이
 2. `@Valid`를 위해 유효성 검사 적용
+
+## HTTP
+
+1. 테스트를 위한 HTTP 요청 작성
+
+   * CRUD, 탈퇴유저 복구, 포인트 전송 / HTTP 요청
+
+   ~~~http
+   POST http://localhost:8080/create_user
+   Content-Type: application/json
+   
+   {
+     "email" : "test4",
+     "pw" : "password1@",
+     "name" : "test",
+     "age" : 25,
+     "point" : 1000
+   }
+   ~~~
+
+   
