@@ -1,2 +1,2 @@
-PUT http://localhost:8080/recover_user/test3
+PUT http://localhost:8080/users/test3/recover
 Content-Type: application/json

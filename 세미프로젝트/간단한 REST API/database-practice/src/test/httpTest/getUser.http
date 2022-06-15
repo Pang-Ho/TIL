@@ -1,0 +1,2 @@
+GET http://localhost:8080/users/test2
+Accept: application/json
