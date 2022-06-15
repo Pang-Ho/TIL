@@ -1,2 +1,2 @@
-DELETE http://localhost:8080/delete_user/test3
+DELETE http://localhost:8080/users/test3
 Content-Type: application/json

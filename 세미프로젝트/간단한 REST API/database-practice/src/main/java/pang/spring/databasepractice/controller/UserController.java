@@ -17,19 +17,11 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    public List<UserDto> users() {
+    public List<UserDto> find_users() {
         return userService.users();
     }
 
-    @PostMapping("/create_user")
-    public CreateUser.Response create_user(
-           @Valid @RequestBody CreateUser.Request request
-    ) {
-        log.info("create : request:{}", request);
-        return userService.create(request);
-    }
-
-    @GetMapping("/user/{email}")
+    @GetMapping("/users/{email}")
     public UserDetailDto find_userDetail(
             @PathVariable String email
     ) {
@@ -37,7 +29,15 @@ public class UserController {
         return userService.getUserDetail(email);
     }
 
-    @PutMapping("/edit_user/{email}")
+    @PostMapping("/users")
+    public CreateUser.Response create_user(
+           @Valid @RequestBody CreateUser.Request request
+    ) {
+        log.info("create : request:{}", request);
+        return userService.create(request);
+    }
+
+    @PutMapping("/users/{email}")
     public UpdateUser.Response edit_user(
             @Valid @RequestBody UpdateUser.Request request,
             @PathVariable String email
@@ -46,7 +46,7 @@ public class UserController {
         return userService.editInfo(email, request);
     }
 
-    @DeleteMapping("/delete_user/{email}")
+    @DeleteMapping("/users/{email}")
     public UserDto delete_user(
             @PathVariable String email
     ) {
@@ -54,7 +54,7 @@ public class UserController {
         return userService.editStatus(email, Status.JOIN);
     }
 
-    @PutMapping("/recover_user/{email}")
+    @PutMapping("/users/{email}/recover")
     public UserDto recover_user(
             @PathVariable String email
     ) {
@@ -62,13 +62,12 @@ public class UserController {
         return userService.editStatus(email, Status.QUIT);
     }
 
-    @PutMapping("/account_point/{fromEmail}/{toEmail}/{point}")
-    public AccountPointResponse account_point(
-            @PathVariable String fromEmail,
-            @PathVariable String toEmail,
-            @PathVariable int point
+    @PostMapping("/users/{email}/account-point")
+    public AccountPoint.Response account_point(
+            @PathVariable String email,
+            @RequestBody AccountPoint.Request request
     ) {
-        log.info("account_point : from : {}, to : {}, point : {}", fromEmail, toEmail, point);
-        return userService.accountPoint(fromEmail, toEmail, point);
+        log.info("account-point : from : {}, to : {}, point : {}", email, request.getToEmail(), request.getPoint());
+        return userService.accountPoint(email, request);
     }
 }

@@ -73,8 +73,9 @@ public class UserService {
     }
 
     @Transactional
-    public AccountPointResponse accountPoint(String from, String to, int point) {
-
+    public AccountPoint.Response accountPoint(String from, AccountPoint.Request request) {
+        String to = request.getToEmail();
+        int point = request.getPoint();
         User fromUser = userRepository.findByEmailAndStatus(from, Status.JOIN);
         userException(fromUser == null, UserErrorCode.NO_USER);
         if (fromUser.getPoint() < point) throw new UserException(UserErrorCode.LACKED_POINT);
@@ -87,11 +88,7 @@ public class UserService {
         fromUser = userRepository.updatePoint(fromUser);
         userRepository.updatePoint(toUser);
 
-        return AccountPointResponse.builder()
-                .fromEmail(from)
-                .toEmail(to)
-                .emptyPoint(fromUser.getPoint())
-                .build();
+        return AccountPoint.Response.fromEntity(from, to, fromUser.getPoint());
     }
 
     private void userException(boolean isTure, UserErrorCode errorCode) {
