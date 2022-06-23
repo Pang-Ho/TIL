@@ -61,8 +61,18 @@
 
     from => where => group by => having => select => order by
 
-  * 예시
+  * select
 
+    ![image-20220623154206704](../../md-images/image-20220623154206704.png)
+  
+  * where
+  
+    ![](../../md-images/image-20220623152406770.png)
+  
+  
+  
+  * 예시
+  
     ~~~sql
     #함수, 중복제거, 별칭 등
     select * from employees; #전체조회
@@ -131,6 +141,37 @@
       ) a
     where rn berween 10 and 20;
     
+    #group by 
+    select emp_no, sum(salary)
+    from
+    (
+    select emp_no, salary
+    from salaries
+    ) b
+    group by emp_no
+    
+    #having = group by의 조건식
+    select emp_no, sum(salary)
+    from
+    (
+    select emp_no, salary
+    from salaries
+    ) b
+    group by emp_no
+    having emp_no >= 10500;
+    
+    #inner join - 조건 만족 범위 내부 레코드 조인
+    select e.enumber, ename, pcount
+    from temployee e, tproduction p
+    where e.enumber = p.enumber;
+    #중복되는 ename 때문에 sum(pcount) 하고싶다면
+    select ename, sum(pcount)
+    from temployee e, tproduction p
+    where e.enumber=p.enumber
+    group by ename;
+    
+    #outer join - 조건 만족 범위 외부 레코드 조인
+    
     ~~~
-
+    
     
