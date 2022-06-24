@@ -69,8 +69,70 @@
   
     ![](../../md-images/image-20220623152406770.png)
   
+  * 서브쿼리
   
+    * 서브쿼리가 조인에 비해 직관적이라서 이해하기 쉽지만, 때로는 조인이 훨씬 효과적이다.
   
+    * 조인은 쿼리문이 복잡해지더라도 서브 쿼리에 비해 읽어내기 수월하다.
+  
+    * 내부 쿼리가 단일한 값을 반환한다면 조인으로도 충분히 구현할 수 있다.
+  
+      <img src="../../md-images/image-20220624013051310.png" alt="image-20220624013051310" style="zoom:80%;" />
+  
+      ~~~sql
+      #2000원에 팔린 제품의 이름과 가격을 추출
+      #속도 테이블 둘 0.00080 > 조인 0.0010 > 내부쿼리 0.0012
+      #테이블 둘
+      select name, cost
+      from product p, sale s
+      where p.id=s.product_id and s.price=2000;
+      #내부쿼리 - 외부쿼리의 id와 내부쿼리의 product_id가 같은지 확인하기 위해 비교할 때마다 내부쿼리가 실행된다.
+      select name, cost
+      from product
+      where id=
+      	(select product_id
+        from sale
+        where price=2000 and product.id=product_id #여기서 id가 같다를 안해주면 행이 여러개 나와서 
+         																					 #id=( ... )가 1:n개 매칭이 된다. 즉 오류!
+        );
+      #조인
+      select name, cost
+      from product p
+      inner join sale s
+      	on p.id=s.product_id;
+      where s.price=2000;
+      
+      #in 연산자 안에 서브쿼리가 있다면 조인으로 바꿀 수 있다!
+      select name, cost
+      from product
+      where id in(select product_id from sale);
+      #join으로 변경한다면, 혹시나 있을 중복값이 나오기 때문에 distinct!
+      select distinct name, cost
+      from product p
+      inner join sale s
+      	on p.id=s.product_id;
+      	
+      #not in 또한 내부에 서브쿼리가 있다면 조인으로 바꾸기
+      select name, cost
+      from product
+      where id not in(select product_id from sale);
+      
+      #어? 왜 !=, <>을 쓰지 않나요?
+      #같지 않다라는 조건연산자는 null을 처리할 수 없다.
+      #즉, 왼쪽 테이블 내용 모두 가져온 후 같다는 조건을 설정하고 null인것만 밖으로 빼내면 같지 않다가 된다.
+      select distinct name, cost
+      from product p
+      left join sals s
+      	on p.id=s.product_id
+      where s.product_id is null;
+      ~~~
+  
+      
+  
+  * inner join, outer join
+  
+    ![image-20220624010213166](../../md-images/image-20220624010213166.png)
+
   * 예시
   
     ~~~sql
@@ -159,8 +221,7 @@
     ) b
     group by emp_no
     having emp_no >= 10500;
-    
-    #inner join - 조건 만족 범위 내부 레코드 조인
+    #서브쿼리
     select e.enumber, ename, pcount
     from temployee e, tproduction p
     where e.enumber = p.enumber;
@@ -170,7 +231,29 @@
     where e.enumber=p.enumber
     group by ename;
     
+    #inner join - 조건 만족 범위 내부 레코드 조인
+    select e.enumber, ename, pcount
+    from temployee e, tproduction p
+    where e.enumber = p.enumber;
+    #이 sql의 서브쿼리와 inner join 결과는 같다 on 절의 조건이 일치하는 결과만 출력!
+    select e.enumber, ename, pcount
+    from temployee e
+    	inner join tproduction p
+    	on e.enumber=p.enumber
+    order by pcount;
     #outer join - 조건 만족 범위 외부 레코드 조인
+    select e.enumber, ename, pcount
+    from temployee e, tproduction p
+    where e.enumber = p.enumber;
+    #이것과 outer join은 다르다.
+    #left join은 from 테이블에 있는 것들을 다 포함한 후에 on절에 조건에 맞는 것도 가져옴
+    #즉, temployee에 존재하지만 tproduction에 존재하지 않으면 p.enumber는 null로 출력됨
+    select e.enumber, ename, pcount
+    from temployee e
+    	left outer join tproduction p
+    	on e.enumber=p.enumber
+    order by pcount;
+    
     
     ~~~
     
