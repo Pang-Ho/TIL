@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Todo List</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+	<style type="text/css">
+		.alert {
+			display: none;
+		}
+
+		.del_btn {
+			border: none;
+			display: none;
+		}
+
+		.arrow {
+			border: none;
+		}
+		tr.on {
+			background-color: pink;
+		}
+	</style>
+
+
+</head>
+<body>
+<h1>My To Do List</h1>
+<p>add your to-do List!</p>
+
+<div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Title</label>
+  <input type="text" class="form-control" id="title" placeholder="Leave a title here">
+</div>
+<div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Content</label>
+  <textarea class="form-control" id="content" rows="3" placeholder="Leave a content here"></textarea>
+</div>
+
+<div class="col-12">
+	<button type="button" class="btn btn-primary" id="plus">Plus To-Do</button>
+</div>
+
+<!-- display:none -->
+<div class="alert alert-warning alert-dismissible fade show" id="warn1" role="alert">
+	<strong>Error: check input datas</strong>
+	<button type="button" class="btn-close" aria-label="Close" id="close1"></button>
+</div>
+
+<div class="alert alert-warning alert-dismissible fade show" id="warn2" role="alert">
+	<strong>Error: can't add any more</strong>
+	<button type="button" class="btn-close" aria-label="Close" id="close2"></button>
+</div>
+
+<input class="btn btn-danger" type="button" id="clear" value="Clear">
+<table class="table table-striped" id="table">
+  	<tr>
+  		<th>No
+			<button type="button" class="arrow" onclick="up()"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/up.png?raw=true" width="10px" height="10px"></button>
+			<button type="button" class="arrow" onclick="down()"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/down.png?raw=true" width="10px" height="10px"></button>
+  		</th>
+  		<th>Title</th>
+  		<th>Content</th>
+  		<th>Date of register</th>
+  		<th>Delete</th>
+  	</tr>
+  	<tr onclick="focuss(this)">
+  		<td>1</td>
+  		<td id="title1"></td>
+  		<td id="content1"></td>
+  		<td id="time1"></td>
+  		<td id="delete1"><button type="button" onclick="delete_one(0)" class="del_btn" id="del_btn1"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+  	<tr onclick="focuss(this)">
+  		<td>2</td>
+  		<td id="title2"></td>
+  		<td id="content2"></td>
+  		<td id="time2"></td>
+  		<td id="delete2"><button type="button" onclick="delete_one(1)" class="del_btn" id="del_btn2"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+  	<tr onclick="focuss(this)">
+  		<td>3</td>
+  		<td id="title3"></td>
+  		<td id="content3"></td>
+  		<td id="time3"></td>
+  		<td id="delete3"><button type="button" onclick="delete_one(2)" class="del_btn" id="del_btn3"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+  	<tr onclick="focuss(this)">
+  		<td>4</td>
+  		<td id="title4"></td>
+  		<td id="content4"></td>
+  		<td id="time4"></td>
+  		<td id="delete4"><button type="button" onclick="delete_one(3)" class="del_btn" id="del_btn4"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+  	<tr onclick="focuss(this)">
+  		<td>5</td>
+  		<td id="title5"></td>
+  		<td id="content5"></td>
+  		<td id="time5"></td>
+  		<td id="delete5"><button type="button" onclick="delete_one(4)" class="del_btn" id="del_btn5"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+  	<tr onclick="focuss(this)">
+  		<td>6</td>
+  		<td id="title6"></td>
+  		<td id="content6"></td>
+  		<td id="time6"></td>
+  		<td id="delete6"><button type="button" onclick="delete_one(5)" class="del_btn" id="del_btn6"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+  	<tr onclick="focuss(this)">
+  		<td>7</td>
+  		<td id="title7"></td>
+  		<td id="content7"></td>
+  		<td id="time7"></td>
+  		<td id="delete7"><button type="button" onclick="delete_one(6)" class="del_btn" id="del_btn7"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+  	<tr onclick="focuss(this)">
+  		<td>8</td>
+  		<td id="title8"></td>
+  		<td id="content8"></td>
+  		<td id="time8"></td>
+  		<td id="delete8"><button type="button" onclick="delete_one(7)" class="del_btn" id="del_btn8"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+  	<tr onclick="focuss(this)">
+  		<td>9</td>
+  		<td id="title9"></td>
+  		<td id="content9"></td>
+  		<td id="time9"></td>
+  		<td id="delete9"><button type="button" onclick="delete_one(8)" class="del_btn" id="del_btn9"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+  	<tr onclick="focuss(this)">
+		<td>10</td>
+		<td id="title10"></td>
+		<td id="content10"></td>
+		<td id="time10"></td>
+		<td id="delete10"><button type="button" onclick="delete_one(9)" class="del_btn" id="del_btn10"><img src="https://github.com/dlrhkd03/TIL/blob/master/%ED%9A%8C%EC%82%AC/%EC%9B%B9%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%20Javascript/trash.png?raw=true" width="20px" height="20px"/></button></td>
+  	</tr>
+</table>
+
+<script type="text/javascript">
+	var title = new Array();
+    var content = new Array();
+    var time = new Array();
+	var foc = 0;
+
+	function focuss(obj) {
+		//alert(obj)
+		if (obj.firstChild.nextSibling.nextSibling.nextSibling.innerText != '') {
+			for (var i = 0; i < 11; i++) {
+				obj.parentNode.children[i].className='';
+			}
+			foc = obj.firstChild.nextSibling.innerText;
+			obj.className = 'on';
+		}
+		
+	}
+
+	function up() {
+		if (foc > 1) {
+			var tempTitle = title[foc-1];
+			var tempContent = content[foc-1];
+			var tempTime = time[foc-1];
+
+			title[foc-1] = title[foc-2];
+			content[foc-1] = content[foc-2];
+			time[foc-1] = time[foc-2];
+
+			title[foc-2] = tempTitle;
+			content[foc-2] = tempContent;
+			time[foc-2] = tempTime;
+
+			foc = foc - 1;
+			var t = document.getElementById('table');
+			focuss(t.firstChild.nextSibling.children[foc]);
+			refresh();
+		}
+	}
+
+	function down() {
+		if (foc < title.length && foc > 0) {
+			var tempTitle = title[foc-1];
+			var tempContent = content[foc-1];
+			var tempTime = time[foc-1];
+
+			title[foc-1] = title[foc];
+			content[foc-1] = content[foc];
+			time[foc-1] = time[foc];
+
+			title[foc] = tempTitle;
+			content[foc] = tempContent;
+			time[foc] = tempTime;
+
+			foc = foc;
+			var t = document.getElementById('table');
+			console.log(t.firstChild.nextSibling.children[foc]);
+			focuss(t.firstChild.nextSibling.children[foc]);
+			refresh();
+		}
+	}
+
+	function currentTime() {
+		var dt = new Date();
+		var month = dt.getMonth()<9?'0'+(dt.getMonth()+1):dt.getMonth()+1;
+		var date = dt.getDate()<10?'0'+dt.getDate():dt.getDate();
+		var hour = dt.getHours()<10?'0'+dt.getHours():dt.getHours();
+		var min = dt.getMinutes()<10?'0'+dt.getMinutes():dt.getMinutes();
+	    return dt.getFullYear()+'-'+month+'-'+date +' ' + hour + ':' + min;
+	}
+    
+    
+
+
+    function deleteList(num) {
+    	title.splice(num, 1);
+    	content.splice(num, 1);
+    	time.splice(num, 1);
+    }
+
+
+    function validation() {
+    	if (title.length === 10) {
+    		$('#warn2').show();
+    	} else {
+    		if (document.getElementById('title').value === '' || document.getElementById('content').value ==='') {
+				$('#warn1').show();
+			} else {
+				return true;
+			}
+    	}
+    	return false;
+    }
+
+
+    function refresh() {
+    	allDel();
+    	var len = title.length;
+    	for (var i = 0; i < len; i++) {
+    		document.getElementById('title'+(i+1)).innerText = title[i];
+    		document.getElementById('content'+(i+1)).innerText = content[i];
+    		document.getElementById('time'+(i+1)).innerText = time[i];
+    		$('#del_btn'+(i+1)).show();
+    	}
+    }
+
+    function delete_one(num) {
+    	deleteList(num);
+    	$('#table').find('tr').attr('class', '');
+		foc=0
+    	refresh();
+    }
+
+    function allDel() {
+    	for (var i = 0; i < 10; i++) {
+    		document.getElementById('title'+(i+1)).innerText = '';
+    		document.getElementById('content'+(i+1)).innerText = '';
+    		document.getElementById('time'+(i+1)).innerText = '';
+    		$('#del_btn'+(i+1)).hide();
+    	}
+    		
+    }
+
+    $('#plus').on('click', function(e) {
+    	if (validation()) {
+    		$('#warn1').hide();
+    		$('#warn2').hide();
+    		title.push(document.getElementById('title').value);
+    		content.push(document.getElementById('content').value);
+    		time.push(currentTime());
+
+    		refresh();
+    	}
+    })
+
+    $('#clear').on('click', function(e) {
+    	if (confirm("모두 삭제하시겠습니까") == true) {
+    		allDel();
+    		title.splice(0, 10);
+    		content.splice(0, 10);
+    		time.splice(0, 10);
+    		$('#table').find('tr').attr('class', '');
+    		foc=0
+    	}
+    })
+
+    $('#close1').on('click', function(e) {
+    	$('#warn1').hide();
+    })
+
+    $('#close2').on('click', function(e) {
+    	$('#warn2').hide();
+    })
+
+    
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+</body>
+</html>
