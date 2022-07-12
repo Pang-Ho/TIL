@@ -1,2 +1,7 @@
-PUT http://localhost:8080/account_point/test2/test4/10
+POST http://localhost:8080/users/test2/account_point
 Content-Type: application/json
+
+{
+  "toEmail" : "test4",
+  "point" : 10
+}

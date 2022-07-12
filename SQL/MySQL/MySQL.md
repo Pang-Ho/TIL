@@ -6,8 +6,8 @@
 ## workbench 사용
 
 1. DB 생성(schema 생성)
-2. user 생성![image-20211008102011044](../md-images/image-20211008102011044.png)
-3. springuser에게 springdb 접근 권한을 생성![image-20211008102218429](../md-images/image-20211008102218429.png)
+2. user 생성![image-20211008102011044](../../md-images/image-20211008102011044.png)
+3. springuser에게 springdb 접근 권한을 생성![image-20211008102218429](../../md-images/image-20211008102218429.png)
 4. 
 
 
@@ -21,7 +21,7 @@ show tables => mysql에서 전체 테이블
 
 ## mysql 데이터타입
 
-![image-20211008103236028](../md-images/image-20211008103236028.png)
+![image-20211008103236028](../../md-images/image-20211008103236028.png)
 
 
 
