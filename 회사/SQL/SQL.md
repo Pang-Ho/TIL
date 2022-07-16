@@ -2,6 +2,44 @@
 
 
 
+## 함수
+
+* power(값, 제곱횟수) - 제곱
+* sqrt(값) - 제곱근
+* abs(값) - 절대값
+* DATE_ADD(now(), INTERVAL 1 DAY) - 날짜 하루 증가
+* DATE_SUB(..) - 날짜 빼는 함순
+
+**중간값 rownum 이용**
+
+~~~sql
+set @rownum:=-1;
+
+select round(abs(ln), 4)
+from (
+    select @rownum:=@rownum+1 as rn, lat_n as ln
+    from station
+    order by lat_n
+    ) rs
+    /*갯수가 홀수인경우 짝수인경우 확인*/
+where rs.rn in (floor(@rownum/2), ceil(@rownum/2))
+~~~
+
+**inner join 응용**
+
+* grade가 8이상이면 이름을 보여주고 아니면 null
+  * grades 표는 각 grade에 점수 구간이 있음.
+
+~~~sql
+select if(g.grade >= 8, s.name, 'NULL'), g.grade, s.marks
+from students s
+    inner join grades g
+    on s.marks between min_mark and max_mark
+order by g.grade desc, name, s.marks;
+~~~
+
+
+
 ## 정규 표현식
 
 정규표현식 튜토리얼: https://regexone.com/lesson/introduction_abcs
@@ -26,5 +64,59 @@ where city regexp '[aeiou]$';
 select distinct city
 from station
 where city regexp '^[aeiou]' and city regexp '[aeiou]$'
+~~~
+
+
+
+## JOIN
+
+테이블 둘을 서로 붙이는 것으로 알면 된다.
+
+
+
+![image-20220716155128274](../../md-images/image-20220716155128274.png)
+
+~~~sql
+select *
+from a
+inner join b on a.key = b.key
+~~~
+
+![image-20220716155245719](../../md-images/image-20220716155245719.png)
+
+~~~sql
+select *
+from a
+left join b on a.key=b.key
+where b.key is null
+~~~
+
+
+
+## UNION
+
+JOIN이 테이블 둘을 가로로 붙이는 것이라면, UNION은 테이블 둘을 세로로 붙이는 것이다.
+
+**UNION**은 중복을 없애주고, **UNION ALL**은 중복도 넣어준다.
+
+![image-20220716155458648](../../md-images/image-20220716155458648.png)
+
+
+
+**FULL OUTERJOIN**
+
+교집합만 뺀 결과를 만들기 위해서는 FULL OUTERJOIN을 사용할 수 있다.
+그러나 이것은 mysql에서 제공하지 않아 사용하기 위해서는 다른 방법을 이용해야한다.
+
+~~~sql
+select *
+from a
+	left join b on a.key=b.key
+
+union
+
+select *
+from b
+	right join b on a.key=b.key
 ~~~
 
