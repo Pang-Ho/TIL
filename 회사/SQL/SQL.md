@@ -120,3 +120,58 @@ from b
 	right join b on a.key=b.key
 ~~~
 
+
+
+## Update
+
+**update 내에서 when then**
+
+~~~sql
+update salary
+set sex = case
+			when sex='f' then 'm'
+			when sex='m' then 'f'
+			end
+~~~
+
+
+
+## Delete
+
+where 절 서브쿼리를 통해 조건을 만들어서 삭제
+
+~~~sql
+#중복되는 이메일이 있다면 삭제해라
+delete
+from person p
+where p.id not in (
+	select sub.id
+	from (
+    	select email, min(id) id
+    	from person
+    	group by email
+    	) sub
+	)
+#delete에서 inner join
+delete p1
+from person p1
+	inner join person p2 on p1.email=p2.email
+where p1.id > p2.id
+~~~
+
+
+
+## 데이터 타입
+
+* 정수
+  * tinyint(), smallint(), mediumint, int(), bigint()
+* 실수
+  * decimal(), double(), float()
+* 문자
+  * varchar(), char()
+* 날짜, 시간
+  * date() 1000-01-01 ~ 9999-12-31
+  * datetime() 1000-01-01 00:00:00.000000 ~ 9999-12-31 23:59:59.999999
+  * timestamp() = datetime()+timezone
+  * string을 datetime으로 바꾸는 함수도 있다.
+    * str_to_date()
