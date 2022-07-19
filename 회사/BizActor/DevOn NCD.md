@@ -8,9 +8,12 @@ DevOn UI Prototper, UI-BIZ Connector, BizActor를 이용하여 모델을 기반�
 
 
 
-**DevOn Studio**
+**DevOn NCD로 할 수 있는 개발**
 
-Eclipse기반 개발 도구
+* DevOn BizActor(DevOn Studio)로 비즈니스 로직 작성
+* UI-BIZ Connector로 Controller단 개발
+* DevOn UI Prototyper를 통해 화면 개발
+* 
 
 
 
@@ -106,4 +109,49 @@ DataSet 형태로 파라미터 전송됨
     2. 사용할 서버에서 디자이너 아이디로 접속하고, Service Access에서 추가한다.
     3. 연계할 서버의 호출할 서비스를 입력한다. Service ID는 'EXT.호출할 Service ID', 반드시 S상태여야함
     4. 호출 Service 정보를 참고하여 DataSet을 추가해서 Service 생성
+  
+* History Rollback, View
 
+  * 버전 관리를 History에서 확인할 수 있다.
+
+* 확장 트리
+
+  * 서비스 이동 및 다른 디자이너의 서비스나 컴포넌트 소유권 가져오기 가능
+
+* 유효성 검증
+
+  * internal data로 유효성 검증을 만들 수 있다..???
+
+* substitute step
+
+  * 하나의 데이터 테이블에 담긴 데이터를 또 다른 데이터 테이블에 복사해서 가공할 때 
+  * internal data에 input data를 담는 행위를 할 수 있다.
+  * internal data를 플로우에 넣고 input data의 substitute all 메뉴를 실행하면 된다.
+
+* test data 저장
+
+  * test시 input datatable에 데이터를 매번 입력하는 경우 
+  * 한 번 입력한 데이터를 계속 사용하고 싶은 경우
+  * save test data 이용하면 된다.
+
+* 데이터 테이블 합치고 정렬
+
+  * 스크립트 스텝을 추가해서 여러 테이블을 merge 함수를 통해 합칠 수 있다.
+  * 스크립트 스텝을 통해 테이블을 sortRow("기준컬럼", 1 or 2) 함수를 통해 정렬할 수 있다.
+
+* 스텝별 디버깅
+
+  * Request by step에서 가능
+  * 다른 곳에서 호출한 BR인 경우 step into 버튼을 눌러서 호출한 BR의 flow를 확인할 수 있다.
+
+
+
+
+## DAC
+
+서비스
+
+* AdHoc
+  * where전 이전까지만 스크립트 작성
+  * optional에 들어가 있으면 or조건
+  * 다음 스크립트를 추가하면 and조건으로 들어감
