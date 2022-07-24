@@ -155,3 +155,12 @@ DataSet 형태로 파라미터 전송됨
   * where전 이전까지만 스크립트 작성
   * optional에 들어가 있으면 or조건
   * 다음 스크립트를 추가하면 and조건으로 들어감
+
+
+
+**CUD_KEY**
+
+* 1: SELECT
+* 2 : INSERT
+* 3 : UPDATE
+* 4 : DELETE
