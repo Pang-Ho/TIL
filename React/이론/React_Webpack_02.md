@@ -16,7 +16,7 @@
 npm init
 ```
 
-![Alt text](./images/webpack_init.png)
+![Alt text](./../images/webpack_init.png)
 
 커맨드 창에서 `npm init` 을 하면 기본 `package.json`이 생성된다.
 
